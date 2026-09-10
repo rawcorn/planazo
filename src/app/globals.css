@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --background: #DFD7FA; /* Fondo lavanda principal de la app */
+  --foreground: #1A1A1A; /* Texto oscuro casi negro */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Colores extraídos de la UI de referencia */
+  --color-app-bg: #DFD7FA;       /* Fondo general lavanda */
+  
+  /* Tarjetas y fondos de paneles */
+  --color-card-cream: #FCF8F2;   /* Fondo crema/beige de la app */
+  --color-card-ice: #F0F4FF;     /* Celeste hielo para el top del login */
+  
+  /* Inputs y Botones */
+  --color-input-blue: #DCE4FF;   /* Celeste de los campos de texto */
+  --color-mint-btn: #86E2B5;     /* Verde menta del botón principal */
+  --color-mint-btn-hover: #75D1A4;
+  --color-mint-text: #065F46;    /* Verde oscuro para textos sobre menta */
+  
+  /* Cajas secundarias */
+  --color-lavender-box: #EFE9FB; /* Caja inferior del login */
+  --color-purple-active: #D5CAFA; /* Item activo del menú */
+
+  /* Textos */
+  --color-text-main: #1A1A1A;
+  --color-text-muted: #6B7280;
+
+  --font-sans: var(--font-principal), ui-sans-serif, system-ui, sans-serif;
+
+
+  /* Bordes ultra redondeados */
+  --radius-3xl: 2.5rem;
+  --radius-2xl: 1.75rem;
+  --radius-xl: 1.25rem;
+  --radius-lg: 1rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #D5CAFA; 
+    border-radius: 10px;
+  }
+}
