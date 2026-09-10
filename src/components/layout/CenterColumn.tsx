@@ -70,11 +70,16 @@ export function CenterColumn() {
   if (isDMRoom) {
     let otherUserId: string | null = null;
     const dmChannel = dmChannels?.find((ch: any) => ch.rooms?.id === activeRoomId);
-    if (dmChannel && dmChannel.other_user_id) {
-      otherUserId = dmChannel.other_user_id;
+    if (dmChannel && (dmChannel as any).other_user_id) {
+      otherUserId = (dmChannel as any).other_user_id;
     } else {
-      const firstOtherMsg = messages[activeRoomId]?.find(m => m.senderId && m.senderId !== currentUser.id);
-      if (firstOtherMsg) otherUserId = firstOtherMsg.senderId!;
+      const roomMsgs: any[] = (messages as Record<string, any[]>)?.[activeRoomId] || [];
+      const firstOtherMsg = roomMsgs.find(
+        (m: any) => (m.senderId || m.sender_id) && (m.senderId || m.sender_id) !== currentUser.id
+      );
+      if (firstOtherMsg) {
+        otherUserId = firstOtherMsg.senderId || firstOtherMsg.sender_id;
+      }
     }
     if (otherUserId) dmUser = getUser(otherUserId);
   }
