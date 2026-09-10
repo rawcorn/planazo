@@ -58,7 +58,7 @@ export function CenterColumn() {
   }, [activeRoomId]);
 
   if (!currentUser) return null;
-  if (!activeRoomId) return <div className=""flex-1 flex items-center justify-center bg-slate-50""><p className=""text-slate-500 font-medium"">Selecciona una sala para chatear</p></div>;
+  if (!activeRoomId) return <div className="flex-1 flex items-center justify-center bg-slate-50""><p className=""text-slate-500 font-medium"">Selecciona una sala para chatear</p></div>;
   const activeRegion = regions.find(r => r.room_id === activeRoomId);
   const isRegionRoom = !!activeRegion;
   const isEventRoom = !isRegionRoom && events.some(e => e.id === activeRoomId);
