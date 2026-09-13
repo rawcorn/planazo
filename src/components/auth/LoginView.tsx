@@ -100,13 +100,6 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
             </div>
           </form>
 
-          <div className="mt-4 bg-[#ECEBF8] rounded-2xl p-4 text-center border border-[#CFCAED]">
-             <p className="text-[12px] text-[#555555] mb-2 font-bold">Cuentas de prueba (MVP):</p>
-             <div className="flex justify-center gap-6">
-                <button type="button" onClick={() => { setEmail('martina@test.com'); setPassword('password123'); }} className="text-[13px] font-bold text-[#555555] hover:text-[#111111] transition-colors">martina99</button>
-                <button type="button" onClick={() => { setEmail('lucas@test.com'); setPassword('password123'); }} className="text-[13px] font-bold text-[#555555] hover:text-[#111111] transition-colors">lucas_dev</button>
-             </div>
-          </div>
         </div>
       </div>
     </div>

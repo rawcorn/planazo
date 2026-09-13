@@ -115,7 +115,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
               <h3 className="text-sm font-bold text-[#8D96D6] border-b border-slate-100 pb-2">1. Datos Básicos</h3>
               <div>
                 <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Usuario</label>
-                <input required className="w-full bg-slate-100 border-[1.5px] border-[#8D96D6] rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all placeholder:text-slate-400" placeholder="Ej: martina99" value={formData.username} onChange={e => setFormData({...formData, username: e.target.value})} />
+                <input required className="w-full bg-slate-100 border-[1.5px] border-[#8D96D6] rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all placeholder:text-slate-400" placeholder="Ej: maria99" value={formData.username} onChange={e => setFormData({...formData, username: e.target.value})} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
