@@ -219,11 +219,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
               <Button disabled={loading} type="submit" className="w-full h-12 text-[16px] rounded-full bg-[#7ac7ac] hover:bg-[#7ac7ac] text-white font-bold border-0 transition-all shadow-none">
                 {loading ? 'Cargando...' : 'Registrarme y Entrar'}
               </Button>
-              {globalError && (
-                <div className="mt-3 p-3 bg-rose-50 border border-rose-200 rounded-xl text-center">
-                  <p className="text-rose-600 text-xs font-bold">{globalError}</p>
-                </div>
-              )}
+              {globalError && <p className="text-rose-500 text-[10px] mt-1 font-medium text-center">{globalError}</p>}
             </div>
             
             <div className="text-center pt-6 border-t border-slate-100">
