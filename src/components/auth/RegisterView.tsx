@@ -20,7 +20,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
     }
   }, [regions]);
 
-  const [passwordError, setPasswordError] = useState('');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [globalError, setGlobalError] = useState('');
   const [loading, setLoading] = useState(false);
   
   const login = useUIStore(state => state.login);
@@ -34,12 +35,26 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
+    setGlobalError('');
+
+    let newErrors: Record<string, string> = {};
+
+    if (!formData.username.trim()) newErrors.username = 'Requerido';
+    if (!formData.password) newErrors.password = 'Requerido';
+    if (!formData.age) newErrors.age = 'Requerido';
+
     const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*]).{8,}$/;
-    if (!passwordRegex.test(formData.password)) {
-      setPasswordError('Debe tener al menos 8 caracteres, 1 mayúscula y 1 especial (!@#$&*)');
+    if (formData.password && !passwordRegex.test(formData.password)) {
+      newErrors.password = 'Debe tener al menos 8 caracteres, 1 mayúscula y 1 especial (!@#$&*)';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setGlobalError('Por favor, completa correctamente los campos marcados en rojo.');
       return;
     }
-    setPasswordError('');
+
     setLoading(true);
 
     try {
@@ -53,13 +68,13 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
       });
 
       if (res.error) {
-        setPasswordError(res.error);
+        setGlobalError(res.error);
         return;
       }
 
       const signInRes = await signIn({ email: formData.email, password: formData.password });
       if (signInRes.error) {
-        setPasswordError(signInRes.error === 'Email not confirmed' 
+        setGlobalError(signInRes.error === 'Email not confirmed' 
           ? 'Por favor, confirma tu correo para entrar.' 
           : signInRes.error);
         return;
@@ -84,10 +99,10 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
           facebook: userRes.facebook || ''
         });
       } else {
-        setPasswordError('Usuario creado pero no se pudo cargar la sesión. Intenta iniciar sesión manualmente.');
+        setGlobalError('Usuario creado pero no se pudo cargar la sesión. Intenta iniciar sesión manualmente.');
       }
     } catch (err: any) {
-      setPasswordError('Error al crear cuenta');
+      setGlobalError('Error al crear cuenta');
     } finally {
       setLoading(false);
     }
@@ -109,13 +124,14 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
         </div>
         
         <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
-          <form onSubmit={handleRegister} className="space-y-6">
+          <form onSubmit={handleRegister} noValidate className="space-y-6">
             
             <div className="space-y-4">
               <h3 className="text-sm font-bold text-[#8D96D6] border-b border-slate-100 pb-2">1. Datos Básicos</h3>
               <div>
                 <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Usuario</label>
-                <input required className="w-full bg-slate-100 border-[1.5px] border-[#8D96D6] rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all placeholder:text-slate-400" placeholder="Ej: maria99" value={formData.username} onChange={e => setFormData({...formData, username: e.target.value})} />
+                <input required className={`w-full bg-slate-100 border-[1.5px] ${errors.username ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all placeholder:text-slate-400`} placeholder="Ej: maria99" value={formData.username} onChange={e => { setFormData({...formData, username: e.target.value}); setErrors({...errors, username: ''}); setGlobalError(''); }} />
+                {errors.username && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.username}</p>}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -124,8 +140,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Contraseña</label>
-                  <input required type="password" className={`w-full bg-slate-100 border-[1.5px] ${passwordError ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all placeholder:text-slate-400`} placeholder="••••••••" value={formData.password} onChange={e => { setFormData({...formData, password: e.target.value}); setPasswordError(''); }} />
-                  {passwordError && <p className="text-rose-500 text-[10px] mt-1 font-medium">{passwordError}</p>}
+                  <input required type="password" className={`w-full bg-slate-100 border-[1.5px] ${errors.password ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all placeholder:text-slate-400`} placeholder="••••••••" value={formData.password} onChange={e => { setFormData({...formData, password: e.target.value}); setErrors({...errors, password: ''}); setGlobalError(''); }} />
+                  {errors.password && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.password}</p>}
                 </div>
               </div>
             </div>
@@ -135,7 +151,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Edad</label>
-                  <input required type="number" min="18" className="w-full bg-slate-100 border-[1.5px] border-[#8D96D6] rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all placeholder:text-slate-400" placeholder="18+" value={formData.age} onChange={e => setFormData({...formData, age: e.target.value})} />
+                  <input required type="number" min="18" className={`w-full bg-slate-100 border-[1.5px] ${errors.age ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all placeholder:text-slate-400`} placeholder="18+" value={formData.age} onChange={e => { setFormData({...formData, age: e.target.value}); setErrors({...errors, age: ''}); setGlobalError(''); }} />
+                  {errors.age && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.age}</p>}
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Género</label>
@@ -198,9 +215,16 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
               </div>
             </div>
 
-            <Button disabled={loading} type="submit" className="w-full h-12 mt-6 text-[16px] rounded-full bg-[#7ac7ac] hover:bg-[#7ac7ac] text-white font-bold border-0 transition-all shadow-none">
-              {loading ? 'Cargando...' : 'Registrarme y Entrar'}
-            </Button>
+            <div className="mt-6">
+              <Button disabled={loading} type="submit" className="w-full h-12 text-[16px] rounded-full bg-[#7ac7ac] hover:bg-[#7ac7ac] text-white font-bold border-0 transition-all shadow-none">
+                {loading ? 'Cargando...' : 'Registrarme y Entrar'}
+              </Button>
+              {globalError && (
+                <div className="mt-3 p-3 bg-rose-50 border border-rose-200 rounded-xl text-center">
+                  <p className="text-rose-600 text-xs font-bold">{globalError}</p>
+                </div>
+              )}
+            </div>
             
             <div className="text-center pt-6 border-t border-slate-100">
               <p className="text-sm text-slate-600 font-medium">
