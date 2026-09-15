@@ -43,6 +43,8 @@ export default function Home() {
             facebook: userRes.facebook || ''
           })
           
+          useUIStore.getState().resetRightColumn();
+          
           // Initial fetch for the user's region
           const storeRegions = useUIStore.getState().regions;
           const userRegionObj = storeRegions.find(r => r.name === userRes.region);

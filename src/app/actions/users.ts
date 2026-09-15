@@ -35,7 +35,9 @@ export async function getCurrentUser() {
         email: user.email || '',
         age: user.user_metadata?.age || 18,
         gender: user.user_metadata?.gender || 'X',
-        region: user.user_metadata?.region || 'CABA'
+        region: user.user_metadata?.region || 'CABA',
+        instagram: user.user_metadata?.instagram || null,
+        facebook: user.user_metadata?.facebook || null
       }).select().single();
 
       if (insertErr || !newProfile) {

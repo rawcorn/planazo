@@ -98,6 +98,15 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
           instagram: userRes.instagram || '',
           facebook: userRes.facebook || ''
         });
+
+        const state = useUIStore.getState();
+        state.resetRightColumn();
+        const userRegionObj = state.regions.find(r => r.name === userRes.region);
+        if (userRegionObj) {
+          state.setActiveRoom(userRegionObj.room_id);
+        } else if (state.regions.length > 0) {
+          state.setActiveRoom(state.regions[0].room_id);
+        }
       } else {
         setGlobalError('Usuario creado pero no se pudo cargar la sesión. Intenta iniciar sesión manualmente.');
       }
