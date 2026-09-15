@@ -136,13 +136,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setFormData(prev => ({ ...prev, avatarUrl: url }));
-    }
-  };
+
 
   return (
     <div className="min-h-screen bg-[#F4DED4] flex flex-col items-center justify-center py-10 px-4">
