@@ -56,7 +56,7 @@ export async function getRoomMessages(roomId: string, page: number = 0, limit: n
       .from('messages')
       .select(`
         *,
-        sender:users(username, avatar_url, regions),
+        sender:users(username, avatar_url, region),
         event:events(title, description)
       `)
       .eq('room_id', roomId)
