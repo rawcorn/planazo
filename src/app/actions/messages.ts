@@ -22,24 +22,25 @@ export async function sendMessage(roomId: string, text: string, parentId?: strin
     }
 
     // ACÁ ESTABA EL PROBLEMA: Faltaba guardar el parent_id en la base de datos
-    const { error } = await supabase.from('messages').insert({
+    const { error, data } = await supabase.from('messages').insert({
       room_id: parsed.data.roomId,
       sender_id: user.id,
       text: parsed.data.text,
       type: 'text',
       // @ts-ignore
       parent_id: parentId || null // <-- AHORA SÍ SE GUARDA LA RESPUESTA
-    })
+    }).select()
 
     if (error) {
-      console.error(error)
+      console.error("SERVER ACTION INSERT ERROR:", error)
       return { error: 'Error al enviar el mensaje' }
     }
+    console.log("SERVER ACTION INSERT SUCCESS:", data)
 
     revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
-    console.error(err)
+    console.error("SERVER ACTION CATCH ERROR:", err)
     return { error: 'Error interno del servidor' }
   }
 }

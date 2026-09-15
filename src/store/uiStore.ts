@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { create } from 'zustand'
 import { createEvent, joinEvent, leaveEvent, getEventsByRegion } from '@/app/actions/events'
-import { sendMessage, getRoomMessages, getOrCreateDMRoom } from '@/app/actions/messages'
+import { sendMessage as sendMessageAPI, getRoomMessages, getOrCreateDMRoom } from '@/app/actions/messages'
 import { getRegions, getInterests } from '@/app/actions/catalog'
 import { uploadImage } from '@/app/actions/storage'
 import { signOut } from '@/app/actions/auth'
@@ -242,7 +242,8 @@ export const useUIStore = create<AppState>((set, get) => ({
   // ¡ESTA ES LA FUNCIÓN CORREGIDA!
   sendMessage: async (roomId, text, parentId) => {
     // 1. Llama a la acción real del backend (importada arriba de todo)
-    await sendMessage(roomId, text, parentId);
+    const result = await sendMessageAPI(roomId, text, parentId);
+    console.log("SEND MESSAGE RESULT:", result);
     
     // 2. Refresca la lista de mensajes de la base de datos
     const { fetchMessagesForRoom } = get();
