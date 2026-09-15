@@ -5,6 +5,7 @@ import { sendMessage as sendMessageAPI, getRoomMessages, getOrCreateDMRoom } fro
 import { getRegions, getInterests } from '@/app/actions/catalog'
 import { uploadImage } from '@/app/actions/storage'
 import { signOut } from '@/app/actions/auth'
+import { createClient as createBrowserClient } from '@/lib/supabase/client'
 
 export interface Region {
   id: string
@@ -316,8 +317,7 @@ export const useUIStore = create<AppState>((set, get) => ({
 
   fetchMessagesForRoom: async (roomId: string) => {
     // Usar el cliente directamente para evitar el caché agresivo del App Router de Next.js
-    const { createClient } from '@/lib/supabase/client';
-    const supabase = createClient();
+    const supabase = createBrowserClient();
     
     const { data, error } = await supabase
       .from('messages')
@@ -382,8 +382,7 @@ export const useUIStore = create<AppState>((set, get) => ({
 
   activeSubscription: null as any,
   subscribeToRoom: (roomId: string) => {
-    const { createClient } = require('@/lib/supabase/client');
-    const supabase = createClient();
+    const supabase = createBrowserClient();
     const { activeSubscription, fetchMessagesForRoom } = get();
     if (activeSubscription) {
       supabase.removeChannel(activeSubscription);
@@ -398,8 +397,7 @@ export const useUIStore = create<AppState>((set, get) => ({
   unsubscribeFromRoom: () => {
     const { activeSubscription } = get();
     if (activeSubscription) {
-      const { createClient } = require('@/lib/supabase/client');
-      createClient().removeChannel(activeSubscription);
+      createBrowserClient().removeChannel(activeSubscription);
       set({ activeSubscription: null });
     }
   },
