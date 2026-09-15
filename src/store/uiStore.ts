@@ -256,7 +256,24 @@ export const useUIStore = create<AppState>((set, get) => ({
   },
 
   fetchEventsForRegion: async (regionId: string) => {
-    const res = await getEventsByRegion(regionId);
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from('events')
+      .select(`
+        *,
+        creator:users!events_creator_id_fkey(username, avatar_url),
+        event_attendees(user_id, users!event_attendees_user_id_fkey(username, avatar_url, age, gender))
+      `)
+      .eq('region_id', regionId)
+      .order('event_datetime', { ascending: true })
+      .range(0, 49);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+    const res = { events: data };
+
     if (res.events) {
        const newUsers: User[] = [];
        const mapped: Event[] = res.events.map((e: any) => {
