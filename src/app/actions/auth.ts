@@ -11,7 +11,7 @@ export async function signUp(data: any) {
       return { error: parsed.error.issues[0].message }
     }
 
-    const { password, username, age, gender, region } = parsed.data
+    const { password, username, age, gender, region, instagram, facebook, avatarUrl } = parsed.data
     let { email } = parsed.data
 
     if (!email) {
@@ -29,7 +29,10 @@ export async function signUp(data: any) {
           username,
           age,
           gender,
-          region
+          region,
+          instagram,
+          facebook,
+          avatar_url: avatarUrl
         }
       }
     })

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useUIStore } from '@/store/uiStore';
+import { uploadImage } from '@/app/actions/storage';
 
 import { signUp, signIn } from '@/app/actions/auth';
 import { getCurrentUser, updateUserInterests } from '@/app/actions/users';
+import { signUpSchema } from '@/lib/validations';
 
 export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void }) => {
   const regions = useUIStore(state => state.regions);
@@ -33,38 +35,52 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
     }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, avatarUrl: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
     setGlobalError('');
 
-    let newErrors: Record<string, string> = {};
+    const parsed = signUpSchema.safeParse({
+      ...formData,
+      age: formData.age ? parseInt(formData.age) : undefined
+    });
 
-    if (!formData.username.trim()) newErrors.username = 'Requerido';
-    if (!formData.password) newErrors.password = 'Requerido';
-    if (!formData.age) newErrors.age = 'Requerido';
-
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$&*]).{8,}$/;
-    if (formData.password && !passwordRegex.test(formData.password)) {
-      newErrors.password = 'Debe tener al menos 8 caracteres, 1 mayúscula y 1 especial (!@#$&*)';
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setGlobalError('Por favor, completa correctamente los campos marcados en rojo.');
+    if (!parsed.success) {
+      const newErrs: Record<string, string> = {};
+      parsed.error.issues.forEach(iss => {
+        if (iss.path[0]) newErrs[iss.path[0].toString()] = iss.message;
+      });
+      setErrors(newErrs);
       return;
     }
 
     setLoading(true);
 
     try {
+      let finalAvatarUrl = formData.avatarUrl;
+      if (finalAvatarUrl && finalAvatarUrl.startsWith('data:image')) {
+        const uploadedUrl = await uploadImage(finalAvatarUrl, 'avatars');
+        if (uploadedUrl) {
+           finalAvatarUrl = uploadedUrl;
+        }
+      }
+
       const res = await signUp({
-        email: formData.email,
-        password: formData.password,
-        username: formData.username,
-        age: parseInt(formData.age),
-        gender: formData.gender as 'F' | 'M' | 'X',
-        region: formData.region
+        ...parsed.data,
+        avatarUrl: finalAvatarUrl,
+        instagram: formData.instagram,
+        facebook: formData.facebook
       });
 
       if (res.error) {
@@ -72,7 +88,10 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
         return;
       }
 
-      const signInRes = await signIn({ email: formData.email, password: formData.password });
+      const signInRes = await signIn({ 
+        email: parsed.data.email || `${parsed.data.username.toLowerCase()}@planazo.local`, 
+        password: parsed.data.password 
+      });
       if (signInRes.error) {
         setGlobalError(signInRes.error === 'Email not confirmed' 
           ? 'Por favor, confirma tu correo para entrar.' 
