@@ -107,6 +107,10 @@ interface AppState {
   joinEvent: (eventId: string) => Promise<void>
   leaveEvent: (eventId: string) => Promise<void>
   sendMessage: (roomId: string, text: string, parentId?: string) => Promise<void>
+  activeSubscription: any
+  subscribeToRoom: (roomId: string) => void
+  unsubscribeFromRoom: () => void
+
   startDirectMessage: (targetUserId: string) => Promise<void>
   fetchEventsForRegion: (regionId: string) => Promise<void>
   fetchMessagesForRoom: (roomId: string) => Promise<void>
@@ -311,10 +315,31 @@ export const useUIStore = create<AppState>((set, get) => ({
   },
 
   fetchMessagesForRoom: async (roomId: string) => {
-    const res = await getRoomMessages(roomId);
-    if (res.messages) {
+    // Usar el cliente directamente para evitar el caché agresivo del App Router de Next.js
+    const { createClient } from '@/lib/supabase/client';
+    const supabase = createClient();
+    
+    const { data, error } = await supabase
+      .from('messages')
+      .select(`
+        *,
+        sender:users(username, avatar_url, regions),
+        event:events(title, description)
+      `)
+      .eq('room_id', roomId)
+      .order('created_at', { ascending: false })
+      .range(0, 49);
+
+    if (error) {
+      console.error("Error al cargar mensajes:", error);
+      return;
+    }
+
+    const messagesArray = data ? data.reverse() : [];
+
+    if (messagesArray) {
         const newUsers: User[] = [];
-        const mapped: Message[] = res.messages.map((m: any) => {
+        const mapped: Message[] = messagesArray.map((m: any) => {
            const rawSender = m.sender || m.users;
            if (m.sender_id && rawSender) {
               const senderObj = Array.isArray(rawSender) ? rawSender[0] : rawSender;
@@ -352,6 +377,30 @@ export const useUIStore = create<AppState>((set, get) => ({
            users: mergedUsers
          };
        });
+    }
+  },
+
+  activeSubscription: null as any,
+  subscribeToRoom: (roomId: string) => {
+    const { createClient } = require('@/lib/supabase/client');
+    const supabase = createClient();
+    const { activeSubscription, fetchMessagesForRoom } = get();
+    if (activeSubscription) {
+      supabase.removeChannel(activeSubscription);
+    }
+    const channel = supabase.channel(`room_${roomId}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `room_id=eq.${roomId}` }, (payload: any) => {
+         fetchMessagesForRoom(roomId);
+      })
+      .subscribe();
+    set({ activeSubscription: channel });
+  },
+  unsubscribeFromRoom: () => {
+    const { activeSubscription } = get();
+    if (activeSubscription) {
+      const { createClient } = require('@/lib/supabase/client');
+      createClient().removeChannel(activeSubscription);
+      set({ activeSubscription: null });
     }
   },
 
