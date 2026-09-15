@@ -79,12 +79,19 @@ export default function Home() {
        // if it's a region, fetch events for it
        fetchMessagesForRoom(activeRoomId);
        
-       const storeRegions = useUIStore.getState().regions;
+       const state = useUIStore.getState();
+       state.subscribeToRoom(activeRoomId);
+       
+       const storeRegions = state.regions;
        const activeRegionObj = storeRegions.find(r => r.room_id === activeRoomId);
        
        if (activeRegionObj) {
           fetchEventsForRegion(activeRegionObj.id);
        }
+       
+       return () => {
+         useUIStore.getState().unsubscribeFromRoom();
+       };
     }
   }, [activeRoomId, currentUser])
 
