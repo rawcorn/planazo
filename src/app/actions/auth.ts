@@ -50,6 +50,78 @@ export async function signUp(data: any) {
   }
 }
 
+export async function registerFullFlow(data: any, interests: string[]) {
+  try {
+    const parsed = signUpSchema.safeParse(data)
+    if (!parsed.success) {
+      return { error: parsed.error.issues[0].message }
+    }
+
+    const { password, username, age, gender, region, instagram, facebook, avatarUrl } = parsed.data
+    let { email } = parsed.data
+
+    if (!email) {
+      email = `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}@planazo.local`
+    }
+
+    const supabase = await createClient()
+
+    // 1. Sign up
+    const { error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username,
+          age,
+          gender,
+          region,
+          instagram,
+          facebook,
+          avatar_url: avatarUrl
+        }
+      }
+    })
+
+    if (authError) {
+      console.error("Signup error:", authError)
+      return { error: 'Error al registrar el usuario. Es posible que el usuario o email ya estén en uso.', step: 'signup' }
+    }
+
+    // 2. Sign in immediately
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (signInError) {
+      console.error("Signin error:", signInError)
+      return { error: 'Credenciales inválidas', step: 'signin' }
+    }
+
+    // 3. Update interests if provided
+    if (interests && interests.length > 0) {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { error: interestsErr } = await supabase.from('user_interests').insert(
+          interests.map((id) => ({
+            user_id: user.id,
+            interest_id: id,
+          }))
+        )
+        if (interestsErr) console.error("Interests error:", interestsErr)
+      }
+    }
+
+    revalidatePath('/', 'layout')
+    return { success: true }
+  } catch (err) {
+    console.error(err)
+    return { error: 'Error interno del servidor' }
+  }
+}
+
+
 export async function signIn(data: any) {
   try {
     const parsed = signInSchema.safeParse(data)

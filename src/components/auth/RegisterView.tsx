@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useUIStore } from '@/store/uiStore';
 import { uploadImage } from '@/app/actions/storage';
 
-import { signUp, signIn } from '@/app/actions/auth';
+import { signUp, signIn, registerFullFlow } from '@/app/actions/auth';
 import { getCurrentUser, updateUserInterests } from '@/app/actions/users';
 import { signUpSchema } from '@/lib/validations';
 
@@ -77,32 +77,21 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
         }
       }
 
-      const res = await signUp({
+      const res = await registerFullFlow({
         ...parsed.data,
         avatarUrl: finalAvatarUrl,
         instagram: formData.instagram,
         facebook: formData.facebook
-      });
+      }, formData.interests);
 
       if (res.error) {
-        if (res.error.includes('ya estén en uso') || res.error.includes('ya esté en uso')) {
+        if (res.step === 'signup' && (res.error.includes('ya estén en uso') || res.error.includes('ya esté en uso'))) {
           setErrors(prev => ({
             ...prev,
             username: 'Usuario no disponible',
             email: formData.email ? 'Email en uso' : ''
           }));
-        }
-        setGlobalError(res.error);
-        return;
-      }
-
-      const signInRes = await signIn({ 
-        email: parsed.data.email || `${parsed.data.username.toLowerCase().replace(/[^a-z0-9]/g, '')}@planazo.local`, 
-        password: parsed.data.password 
-      });
-      if (signInRes.error) {
-        if (signInRes.error === 'Credenciales inválidas') {
-          // Silent signup failure due to email enumeration protection means the user already existed
+        } else if (res.step === 'signin' && res.error === 'Credenciales inválidas') {
           setErrors(prev => ({
             ...prev,
             username: 'Usuario no disponible',
@@ -111,15 +100,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
           setGlobalError('El usuario o email ya están registrados.');
           return;
         }
-
-        setGlobalError(signInRes.error === 'Email not confirmed' 
-          ? 'Por favor, confirma tu correo para entrar.' 
-          : signInRes.error);
+        setGlobalError(res.error);
         return;
-      }
-
-      if (formData.interests.length > 0) {
-        await updateUserInterests(formData.interests);
       }
 
       const userRes = await getCurrentUser();
