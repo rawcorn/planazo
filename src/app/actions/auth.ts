@@ -39,7 +39,7 @@ export async function signUp(data: any) {
 
     if (authError) {
       console.error(authError)
-      return { error: 'Error al registrar el usuario. Es posible que el email ya esté en uso.' }
+      return { error: 'Error al registrar el usuario. Es posible que el usuario o email ya estén en uso.' }
     }
 
     revalidatePath('/', 'layout')

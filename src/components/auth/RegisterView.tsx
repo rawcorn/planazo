@@ -62,6 +62,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
         if (iss.path[0]) newErrs[iss.path[0].toString()] = iss.message;
       });
       setErrors(newErrs);
+      setGlobalError('Hay errores en el formulario, por favor revisa los campos marcados.');
       return;
     }
 
@@ -89,7 +90,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
       }
 
       const signInRes = await signIn({ 
-        email: parsed.data.email || `${parsed.data.username.toLowerCase()}@planazo.local`, 
+        email: parsed.data.email || `${parsed.data.username.toLowerCase().replace(/[^a-z0-9]/g, '')}@planazo.local`, 
         password: parsed.data.password 
       });
       if (signInRes.error) {
@@ -130,7 +131,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
         setGlobalError('Usuario creado pero no se pudo cargar la sesión. Intenta iniciar sesión manualmente.');
       }
     } catch (err: any) {
-      setGlobalError('Error al crear cuenta');
+      console.error(err);
+      setGlobalError(err?.message || 'Error al crear cuenta. Intenta de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -158,7 +160,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Correo (Opcional)</label>
-                  <input type="email" className="w-full bg-slate-100 border-[1.5px] border-[#8D96D6] rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all placeholder:text-slate-400" placeholder="tu@email.com" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                  <input type="email" className={`w-full bg-slate-100 border-[1.5px] ${errors.email ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all placeholder:text-slate-400`} placeholder="tu@email.com" value={formData.email} onChange={e => { setFormData({...formData, email: e.target.value}); setErrors({...errors, email: ''}); setGlobalError(''); }} />
+                  {errors.email && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.email}</p>}
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Contraseña</label>
