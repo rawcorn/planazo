@@ -97,6 +97,7 @@ export async function updateProfile(data: any) {
       return { error: 'Error al actualizar el perfil' }
     }
 
+    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -141,6 +142,7 @@ export async function updateUserInterests(interestIds: string[]) {
       }
     }
 
+    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
