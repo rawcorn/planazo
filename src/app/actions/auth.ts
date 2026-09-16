@@ -42,7 +42,6 @@ export async function signUp(data: any) {
       return { error: 'Error al registrar el usuario. Es posible que el usuario o email ya estén en uso.' }
     }
 
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -76,7 +75,6 @@ export async function signIn(data: any) {
       return { error: 'Credenciales inválidas' }
     }
 
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -93,7 +91,6 @@ export async function signOut() {
       return { error: 'Error al cerrar sesión' }
     }
     
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)

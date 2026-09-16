@@ -46,7 +46,7 @@ export async function getCurrentUser() {
         return null;
       }
       
-      return { ...newProfile, interests: [] };
+      return JSON.parse(JSON.stringify({ ...newProfile, interests: [] }));
     }
 
     // Fetch actual interests if needed, but the UI might just need IDs or we can join them
@@ -62,10 +62,11 @@ export async function getCurrentUser() {
       console.error(interestsError)
     }
 
-    return {
+    const result = {
       ...profile,
       interests: interestsData || [],
-    }
+    };
+    return JSON.parse(JSON.stringify(result));
   } catch (err) {
     console.error(err)
     return null
@@ -96,7 +97,6 @@ export async function updateProfile(data: any) {
       return { error: 'Error al actualizar el perfil' }
     }
 
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -141,7 +141,6 @@ export async function updateUserInterests(interestIds: string[]) {
       }
     }
 
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
