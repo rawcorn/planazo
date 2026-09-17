@@ -246,7 +246,9 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
             <div className="space-y-4">
               <h3 className="text-sm font-bold text-[#8D96D6] border-b border-slate-100 pb-2 mt-6">3. Redes y Avatar (Opcional)</h3>
               <div>
-                <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Foto de Perfil</label>
+                <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">
+                  Foto de Perfil <span className="text-slate-400 font-medium normal-case">(Máx. 4MB)</span>
+                </label>
                 <div className="flex items-center gap-4">
                   <div className="h-16 w-16 bg-slate-100 rounded-full overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center text-slate-400">
                     {formData.avatarUrl ? (

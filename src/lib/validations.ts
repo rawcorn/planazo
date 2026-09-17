@@ -7,7 +7,7 @@ export const signUpSchema = z.object({
     .regex(/[A-Z]/, 'La contraseña debe contener al menos una letra mayúscula')
     .regex(/[^a-zA-Z0-9]/, 'La contraseña debe contener al menos un carácter especial'),
   username: z.string().min(3, 'El nombre de usuario debe tener al menos 3 caracteres').max(30),
-  age: z.number().int().min(18, 'Debes ser mayor de 18 años'),
+  age: z.number({ required_error: 'La edad es obligatoria', invalid_type_error: 'La edad es obligatoria' }).int('Debe ser un número entero').min(18, 'Debes ser mayor de 18 años'),
   gender: z.enum(['F', 'M', 'X'], { error: 'Género inválido' }),
   region: z.string().min(1, 'La región es obligatoria'),
   instagram: z.string().optional().or(z.literal('')),
