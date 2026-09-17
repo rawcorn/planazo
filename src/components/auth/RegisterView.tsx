@@ -51,9 +51,15 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
     setErrors({});
     setGlobalError('');
 
+    if (!formData.age) {
+      setErrors({ age: 'La edad es obligatoria' });
+      setGlobalError('Hay errores en el formulario, por favor revisa los campos marcados.');
+      return;
+    }
+
     const parsed = signUpSchema.safeParse({
       ...formData,
-      age: formData.age ? parseInt(formData.age) : undefined
+      age: parseInt(formData.age)
     });
 
     if (!parsed.success) {
@@ -247,7 +253,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
               <h3 className="text-sm font-bold text-[#8D96D6] border-b border-slate-100 pb-2 mt-6">3. Redes y Avatar (Opcional)</h3>
               <div>
                 <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">
-                  Foto de Perfil <span className="text-slate-400 font-medium normal-case">(Máx. 4MB)</span>
+                  Foto de Perfil
                 </label>
                 <div className="flex items-center gap-4">
                   <div className="h-16 w-16 bg-slate-100 rounded-full overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center text-slate-400">
@@ -257,7 +263,10 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                       <span className="text-2xl font-black">?</span>
                     )}
                   </div>
-                  <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 transition-all cursor-pointer" />
+                  <div className="flex-1">
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 transition-all cursor-pointer" />
+                    <p className="text-[10px] text-rose-500 mt-1.5 font-bold uppercase tracking-wider">⚠️ Límite de tamaño: Máx 4MB</p>
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-1 gap-4">
