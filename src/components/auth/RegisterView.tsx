@@ -71,18 +71,33 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
     try {
       let finalAvatarUrl = formData.avatarUrl;
       if (finalAvatarUrl && finalAvatarUrl.startsWith('data:image')) {
-        const uploadedUrl = await uploadImage(finalAvatarUrl, 'avatars');
-        if (uploadedUrl) {
-           finalAvatarUrl = uploadedUrl;
+        try {
+          const uploadedUrl = await uploadImage(finalAvatarUrl, 'avatars');
+          if (uploadedUrl) {
+             finalAvatarUrl = uploadedUrl;
+          }
+        } catch (e: any) {
+          console.error("Upload Image Error:", e);
+          setGlobalError('Error de Vercel al subir la imagen. Si es muy grande (más de 4MB), Vercel la rechaza. Intenta sin foto de perfil.');
+          setLoading(false);
+          return;
         }
       }
 
-      const res = await registerFullFlow({
-        ...parsed.data,
-        avatarUrl: finalAvatarUrl,
-        instagram: formData.instagram,
-        facebook: formData.facebook
-      }, formData.interests);
+      let res;
+      try {
+        res = await registerFullFlow({
+          ...parsed.data,
+          avatarUrl: finalAvatarUrl,
+          instagram: formData.instagram,
+          facebook: formData.facebook
+        }, formData.interests);
+      } catch (e: any) {
+        console.error("Register Error:", e);
+        setGlobalError('Fallo de conexión en Vercel. Asegúrate de haber agregado NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en las Environment Variables de tu proyecto en Vercel.');
+        setLoading(false);
+        return;
+      }
 
       if (res.error) {
         if (res.step === 'signup' && (res.error.includes('ya estén en uso') || res.error.includes('ya esté en uso'))) {
@@ -104,7 +119,16 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
         return;
       }
 
-      const userRes = await getCurrentUser();
+      let userRes;
+      try {
+        userRes = await getCurrentUser();
+      } catch (e: any) {
+        console.error("GetCurrentUser Error:", e);
+        setGlobalError('Error en Vercel al cargar el usuario. Por favor, asegúrate de que las variables de entorno de Supabase estén bien copiadas.');
+        setLoading(false);
+        return;
+      }
+
       if (userRes) {
         login({
           id: userRes.id,
@@ -132,7 +156,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
       }
     } catch (err: any) {
       console.error(err);
-      setGlobalError(err?.message || 'Error al crear cuenta. Intenta de nuevo.');
+      setGlobalError('Error interno inesperado en Vercel. Verifica los logs de Vercel en la pestaña "Runtime Logs".');
     } finally {
       setLoading(false);
     }
