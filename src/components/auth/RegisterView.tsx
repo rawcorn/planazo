@@ -38,18 +38,46 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Bajamos el límite a 2MB para evitar Timeouts de Vercel (10s) o Payload Too Large
-      if (file.size > 2 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, avatarUrl: 'El archivo supera los 2MB' }));
+      if (file.size > 4 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, avatarUrl: 'El archivo supera los 4MB' }));
         e.target.value = ''; // Limpiamos el input
         setFormData(prev => ({ ...prev, avatarUrl: '' })); // Borramos la foto anterior si había
         return;
       }
       // Limpiamos cualquier error de avatar si la foto es válida
       setErrors(prev => ({ ...prev, avatarUrl: '' }));
+      
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, avatarUrl: reader.result as string }));
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          const MAX_SIZE = 800; // Reducimos a 800px máximo
+          if (width > height) {
+            if (width > MAX_SIZE) {
+              height *= MAX_SIZE / width;
+              width = MAX_SIZE;
+            }
+          } else {
+            if (height > MAX_SIZE) {
+              width *= MAX_SIZE / height;
+              height = MAX_SIZE;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          // Comprimir a JPEG con calidad 0.7 para que pase a pesar < 200KB
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          setFormData(prev => ({ ...prev, avatarUrl: compressedBase64 }));
+        };
+        img.src = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
@@ -101,7 +129,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
           }
         } catch (e: any) {
           console.error("Upload Image Error:", e);
-          setGlobalError('No se pudo subir la foto de perfil. Intenta con una imagen más liviana (Máx. 2MB).');
+          setGlobalError('No se pudo subir la foto de perfil. Intenta con una imagen más liviana (Máx. 4MB).');
           setLoading(false);
           return;
         }
@@ -285,7 +313,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                     {errors.avatarUrl ? (
                       <p className="text-[10px] text-rose-500 mt-1.5 ml-4 font-bold uppercase tracking-wider">{errors.avatarUrl}</p>
                     ) : (
-                      <p className="text-[10px] text-slate-400 mt-1.5 ml-4 font-medium tracking-wide">Max. 2MB</p>
+                      <p className="text-[10px] text-slate-400 mt-1.5 ml-4 font-medium tracking-wide">Max. 4MB</p>
                     )}
                   </div>
                 </div>
