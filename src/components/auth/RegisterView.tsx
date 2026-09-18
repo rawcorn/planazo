@@ -39,7 +39,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 4 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, avatarUrl: 'La foto elegida supera el límite de 4MB. Por favor, elegí una más liviana.' }));
+        setErrors(prev => ({ ...prev, avatarUrl: 'El archivo supera los 4MB' }));
         e.target.value = ''; // Limpiamos el input
         return;
       }
@@ -277,9 +277,9 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                   <div className="flex-1">
                     <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 transition-all cursor-pointer" />
                     {errors.avatarUrl ? (
-                      <p className="text-[10px] text-rose-500 mt-1.5 font-bold uppercase tracking-wider">{errors.avatarUrl}</p>
+                      <p className="text-[10px] text-rose-500 mt-1.5 ml-4 font-bold uppercase tracking-wider">{errors.avatarUrl}</p>
                     ) : (
-                      <p className="text-[10px] text-slate-400 mt-1.5 font-medium tracking-wide">Max. 4MB</p>
+                      <p className="text-[10px] text-slate-400 mt-1.5 ml-4 font-medium tracking-wide">Max. 4MB</p>
                     )}
                   </div>
                 </div>
