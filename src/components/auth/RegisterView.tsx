@@ -42,6 +42,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
       if (file.size > 3 * 1024 * 1024) {
         setErrors(prev => ({ ...prev, avatarUrl: 'El archivo supera los 3MB' }));
         e.target.value = ''; // Limpiamos el input
+        setFormData(prev => ({ ...prev, avatarUrl: '' })); // Borramos la foto anterior si había
         return;
       }
       // Limpiamos cualquier error de avatar si la foto es válida
@@ -56,6 +57,10 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (errors.avatarUrl) {
+      setGlobalError('Por favor, selecciona una foto más liviana antes de continuar.');
+      return;
+    }
     setErrors({});
     setGlobalError('');
 
