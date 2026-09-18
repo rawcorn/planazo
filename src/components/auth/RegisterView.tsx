@@ -53,7 +53,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
 
     if (!formData.age) {
       setErrors({ age: 'La edad es obligatoria' });
-      setGlobalError('Hay errores en el formulario, por favor revisa los campos marcados.');
+      setGlobalError('La edad es obligatoria');
       return;
     }
 
@@ -68,7 +68,11 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
         if (iss.path[0]) newErrs[iss.path[0].toString()] = iss.message;
       });
       setErrors(newErrs);
-      setGlobalError('Hay errores en el formulario, por favor revisa los campos marcados.');
+      if (newErrs.age) {
+        setGlobalError('La edad es obligatoria');
+      } else {
+        setGlobalError('Hay errores en el formulario, por favor revisa los campos marcados.');
+      }
       return;
     }
 
@@ -84,7 +88,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
           }
         } catch (e: any) {
           console.error("Upload Image Error:", e);
-          setGlobalError('Error de Vercel al subir la imagen. Si es muy grande (más de 4MB), Vercel la rechaza. Intenta sin foto de perfil.');
+          setGlobalError('No se pudo subir la foto de perfil. Intenta con una imagen más liviana (Máx. 4MB).');
           setLoading(false);
           return;
         }
@@ -265,7 +269,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                   </div>
                   <div className="flex-1">
                     <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 transition-all cursor-pointer" />
-                    <p className="text-[10px] text-rose-500 mt-1.5 font-bold uppercase tracking-wider">⚠️ Límite de tamaño: Máx 4MB</p>
+                    <p className="text-[10px] text-slate-400 mt-1.5 font-medium tracking-wide">Max. 4MB</p>
                   </div>
                 </div>
               </div>
