@@ -38,6 +38,13 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 4 * 1024 * 1024) {
+        setGlobalError('La foto elegida supera el límite de 4MB. Por favor, elegí una más liviana.');
+        e.target.value = ''; // Limpiamos el input
+        return;
+      }
+      // Limpiamos cualquier error global si la foto es válida
+      setGlobalError('');
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData(prev => ({ ...prev, avatarUrl: reader.result as string }));
