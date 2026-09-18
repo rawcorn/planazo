@@ -38,9 +38,9 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Limite real de 3MB porque en Base64 aumenta un ~33% y Vercel lo rechaza si llega a 4MB
-      if (file.size > 3 * 1024 * 1024) {
-        setErrors(prev => ({ ...prev, avatarUrl: 'El archivo supera los 3MB' }));
+      // Bajamos el límite a 2MB para evitar Timeouts de Vercel (10s) o Payload Too Large
+      if (file.size > 2 * 1024 * 1024) {
+        setErrors(prev => ({ ...prev, avatarUrl: 'El archivo supera los 2MB' }));
         e.target.value = ''; // Limpiamos el input
         setFormData(prev => ({ ...prev, avatarUrl: '' })); // Borramos la foto anterior si había
         return;
@@ -101,7 +101,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
           }
         } catch (e: any) {
           console.error("Upload Image Error:", e);
-          setGlobalError('No se pudo subir la foto de perfil. Intenta con una imagen más liviana (Máx. 3MB).');
+          setGlobalError('No se pudo subir la foto de perfil. Intenta con una imagen más liviana (Máx. 2MB).');
           setLoading(false);
           return;
         }
@@ -285,7 +285,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                     {errors.avatarUrl ? (
                       <p className="text-[10px] text-rose-500 mt-1.5 ml-4 font-bold uppercase tracking-wider">{errors.avatarUrl}</p>
                     ) : (
-                      <p className="text-[10px] text-slate-400 mt-1.5 ml-4 font-medium tracking-wide">Max. 3MB</p>
+                      <p className="text-[10px] text-slate-400 mt-1.5 ml-4 font-medium tracking-wide">Max. 2MB</p>
                     )}
                   </div>
                 </div>
