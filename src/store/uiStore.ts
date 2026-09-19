@@ -261,8 +261,8 @@ export const useUIStore = create<AppState>((set, get) => ({
       .from('events')
       .select(`
         *,
-        creator:users!events_creator_id_fkey(username, avatar_url),
-        event_attendees(user_id, users!event_attendees_user_id_fkey(username, avatar_url, age, gender))
+        creator:users!events_creator_id_fkey(username, avatar_url, instagram, facebook),
+        event_attendees(user_id, users!event_attendees_user_id_fkey(username, avatar_url, age, gender, instagram, facebook))
       `)
       .eq('region_id', regionId)
       .order('event_datetime', { ascending: true })
@@ -278,11 +278,12 @@ export const useUIStore = create<AppState>((set, get) => ({
        const newUsers: User[] = [];
        const mapped: Event[] = res.events.map((e: any) => {
           if (e.creator) {
-             newUsers.push({
+              newUsers.push({
                id: e.creator_id,
                username: e.creator.username,
                avatarUrl: e.creator.avatar_url,
-               email: '', age: 0, gender: 'X', region: '', interests: []
+               email: '', age: 0, gender: 'X', region: '', interests: [],
+               instagram: e.creator.instagram, facebook: e.creator.facebook
              });
           }
           if (e.event_attendees && Array.isArray(e.event_attendees)) {
@@ -294,7 +295,8 @@ export const useUIStore = create<AppState>((set, get) => ({
                    avatarUrl: ea.users.avatar_url,
                    age: ea.users.age || 0,
                    gender: ea.users.gender || 'X',
-                   email: '', region: '', interests: []
+                   email: '', region: '', interests: [],
+                   instagram: ea.users.instagram, facebook: ea.users.facebook
                  });
                }
              });
@@ -340,7 +342,7 @@ export const useUIStore = create<AppState>((set, get) => ({
       .from('messages')
       .select(`
         *,
-        sender:users(username, avatar_url, region),
+        sender:users(username, avatar_url, region, instagram, facebook),
         event:events(title, description)
       `)
       .eq('room_id', roomId)
@@ -360,11 +362,12 @@ export const useUIStore = create<AppState>((set, get) => ({
            const rawSender = m.sender || m.users;
            if (m.sender_id && rawSender) {
               const senderObj = Array.isArray(rawSender) ? rawSender[0] : rawSender;
-              newUsers.push({
+               newUsers.push({
                  id: m.sender_id,
                  username: senderObj?.username || 'Usuario Desconocido',
                  avatarUrl: senderObj?.avatar_url || '',
-                 email: '', age: 0, gender: 'X', region: senderObj?.region || '', interests: []
+                 email: '', age: 0, gender: 'X', region: senderObj?.region || '', interests: [],
+                 instagram: senderObj?.instagram, facebook: senderObj?.facebook
               });
            }
            return {
