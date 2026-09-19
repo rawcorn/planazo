@@ -49,6 +49,27 @@ export async function getCurrentUser() {
       return JSON.parse(JSON.stringify({ ...newProfile, interests: [] }));
     }
 
+    // Sync fields if they exist in auth but not in profile
+    let needsUpdate = false;
+    const updates: any = {};
+    if (user.user_metadata?.instagram && profile.instagram !== user.user_metadata.instagram) {
+      updates.instagram = user.user_metadata.instagram;
+      needsUpdate = true;
+    }
+    if (user.user_metadata?.avatar_url && profile.avatar_url !== user.user_metadata.avatar_url) {
+      updates.avatar_url = user.user_metadata.avatar_url;
+      needsUpdate = true;
+    }
+    if (user.user_metadata?.facebook && profile.facebook !== user.user_metadata.facebook) {
+      updates.facebook = user.user_metadata.facebook;
+      needsUpdate = true;
+    }
+
+    if (needsUpdate) {
+       await supabase.from('users').update(updates).eq('id', user.id);
+       Object.assign(profile, updates);
+    }
+
     // Fetch actual interests if needed, but the UI might just need IDs or we can join them
     const { data: interestsData, error: interestsError } = await supabase
       .from('interests')

@@ -197,14 +197,17 @@ CREATE POLICY "Users can send messages" ON public.messages FOR INSERT TO authent
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
-  INSERT INTO public.users (id, username, email, age, gender, region)
+  INSERT INTO public.users (id, username, email, age, gender, region, instagram, facebook, avatar_url)
   VALUES (
     NEW.id,
     NEW.raw_user_meta_data->>'username',
     NEW.email,
     (NEW.raw_user_meta_data->>'age')::integer,
     (NEW.raw_user_meta_data->>'gender')::public.gender_type,
-    NEW.raw_user_meta_data->>'region'
+    NEW.raw_user_meta_data->>'region',
+    NEW.raw_user_meta_data->>'instagram',
+    NEW.raw_user_meta_data->>'facebook',
+    NEW.raw_user_meta_data->>'avatar_url'
   );
   RETURN NEW;
 END;
