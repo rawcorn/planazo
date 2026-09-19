@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera } from 'lucide-react'
+import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, Instagram } from 'lucide-react'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
@@ -252,7 +252,7 @@ export function RightColumn() {
               <h3 className="text-2xl font-black text-slate-900 mb-1 tracking-tight">@{profileToShow.username}</h3>
               {profileToShow.instagram && (
                 <a href={`https://instagram.com/${profileToShow.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mb-2 text-sm font-bold text-slate-600 hover:text-pink-600 transition-colors">
-                   <Camera className="h-4 w-4" /> @{profileToShow.instagram.replace('@', '')}
+                   <Instagram className="h-4 w-4" /> @{profileToShow.instagram.replace('@', '')}
                 </a>
               )}
               <p className="text-sm font-medium text-slate-600 flex items-center justify-center gap-2">
@@ -282,7 +282,7 @@ export function RightColumn() {
                 <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Redes Sociales</h4>
                 {profileToShow.instagram && (
                   <a href={`https://instagram.com/${profileToShow.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 hover:border-pink-300 hover:text-pink-600 transition-colors font-bold text-sm">
-                    <Camera className="h-5 w-5 text-pink-500" /> @{profileToShow.instagram.replace('@', '')}
+                    <Instagram className="h-5 w-5 text-pink-500" /> @{profileToShow.instagram.replace('@', '')}
                   </a>
                 )}
                 {profileToShow.facebook && (
