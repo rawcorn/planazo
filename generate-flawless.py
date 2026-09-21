@@ -3,65 +3,63 @@ import numpy as np
 
 # 1. Load the high-res transparent logo
 logo = Image.open('public/logo-planazo.png').convert('RGBA')
+arr = np.array(logo)
+
+# Find true bounding box where alpha > 10 (ignores invisible noise)
+alpha = arr[:,:,3]
+rows = np.any(alpha > 10, axis=1)
+cols = np.any(alpha > 10, axis=0)
+ymin, ymax = np.where(rows)[0][[0, -1]]
+xmin, xmax = np.where(cols)[0][[0, -1]]
+
+# Crop to tight bounding box
+cropped_logo = logo.crop((xmin, ymin, xmax + 1, ymax + 1))
+cropped_alpha = alpha[ymin:ymax+1, xmin:xmax+1]
+
+# Calculate center of mass of the TIGHT cropped area
+y_indices, x_indices = np.indices(cropped_alpha.shape)
+total_mass = cropped_alpha.sum()
+cy_crop = (y_indices * cropped_alpha).sum() / total_mass
+cx_crop = (x_indices * cropped_alpha).sum() / total_mass
 
 # Lilac background
 lilac_bg = (228, 230, 248, 255)
 
-def create_centered_image(target_size, logo, bg_color):
+def create_centered_image(target_size, cropped_logo, cx_crop, cy_crop, bg_color):
     img = Image.new('RGBA', target_size, bg_color)
     
-    # Calculate center of mass of the ORIGINAL uncropped logo
-    arr = np.array(logo)[:,:,3]
-    y_indices, x_indices = np.indices(arr.shape)
-    total_mass = arr.sum()
-    cy_orig = (y_indices * arr).sum() / total_mass
-    cx_orig = (x_indices * arr).sum() / total_mass
-    
-    # Crop to bounding box to remove excess transparency for scaling calculation
-    bbox = logo.getbbox()
-    cropped_logo = logo.crop(bbox)
-    
-    # The center of mass in the cropped image
-    cx_crop = cx_orig - bbox[0]
-    cy_crop = cy_orig - bbox[1]
-    
-    # 10% padding means logo should take up 80% of the smallest dimension
+    # 10% padding means longest dimension is 80%
     max_logo_dim = min(target_size) * 0.8
-    aspect = cropped_logo.width / cropped_logo.height
     
-    if cropped_logo.width > cropped_logo.height:
-        lw = int(max_logo_dim)
-        lh = int(lw / aspect)
-    else:
-        lh = int(max_logo_dim)
-        lw = int(lh * aspect)
+    # Calculate scale factor
+    scale = max_logo_dim / max(cropped_logo.width, cropped_logo.height)
+    
+    lw = int(cropped_logo.width * scale)
+    lh = int(cropped_logo.height * scale)
         
     logo_resized = cropped_logo.resize((lw, lh), Image.Resampling.LANCZOS)
     
     # Scale the center of mass coordinates
-    scale_x = lw / cropped_logo.width
-    scale_y = lh / cropped_logo.height
+    cx_resized = cx_crop * scale
+    cy_resized = cy_crop * scale
     
-    cx_resized = cx_crop * scale_x
-    cy_resized = cy_crop * scale_y
-    
-    # We want to place cx_resized exactly at target_size[0]/2
-    # and cy_resized exactly at target_size[1]/2
+    # Place center of mass exactly at canvas center
     paste_x = int(target_size[0]/2 - cx_resized)
     paste_y = int(target_size[1]/2 - cy_resized)
     
-    # Paste using the logo itself as a mask to preserve transparency
+    # Paste using the logo itself as a mask
     img.paste(logo_resized, (paste_x, paste_y), logo_resized)
     return img
 
 # Create high-res 512x512 PWA Icon
-icon_512 = create_centered_image((512, 512), logo, lilac_bg)
+icon_512 = create_centered_image((512, 512), cropped_logo, cx_crop, cy_crop, lilac_bg)
 icon_512.save('src/app/icon.png')
 icon_512.save('src/app/apple-icon.png')
 icon_512.save('public/icon.png')
 
 # Create high-res 1200x630 Open Graph Image
-og_1200 = create_centered_image((1200, 630), logo, lilac_bg)
+# For OG, we want it to fit nicely within the height (with padding)
+og_1200 = create_centered_image((1200, 630), cropped_logo, cx_crop, cy_crop, lilac_bg)
 og_1200.save('public/og-image.png')
 
-print("Visually centered high-res images generated successfully!")
+print("Perfectly sized and centered high-res images generated successfully!")
