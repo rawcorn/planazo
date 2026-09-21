@@ -31,9 +31,9 @@ else:
     
     new_img = Image.new('RGBA', (512, 512), bg_color)
     
-    # We want it to be as large as possible. 
-    # Max width or max height can be 490px
-    target_size = 490
+    # We want it to have about 10% padding on all sides.
+    # 10% of 512 is 51. 512 - 51*2 = 410
+    target_size = 410
     
     aspect_ratio = cropped.width / cropped.height
     
