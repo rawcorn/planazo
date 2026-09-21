@@ -12,6 +12,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
   title: "Planazo",
   description: "Conectá y salí.",
+  other: {
+    "thumbnail": "https://planazo.vercel.app/icon.png",
+    "image_src": "https://planazo.vercel.app/icon.png",
+  }
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
