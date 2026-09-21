@@ -12,6 +12,27 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
   title: "Planazo",
   description: "Conectá y salí.",
+  openGraph: {
+    title: "Planazo",
+    description: "Conectá y salí.",
+    url: "/",
+    siteName: "Planazo",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Planazo Logo",
+      }
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Planazo",
+    description: "Conectá y salí.",
+    images: ["/og-image.png"],
+  },
   other: {
     "thumbnail": "/icon.png",
     "image_src": "/icon.png",
