@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     siteName: "Planazo",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og-whatsapp.png",
         width: 1200,
         height: 630,
         alt: "Planazo Logo",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Planazo",
     description: "Conectá y salí.",
-    images: ["/og-image.png"],
+    images: ["/og-whatsapp.png"],
   },
   other: {
     "thumbnail": "/icon.png",

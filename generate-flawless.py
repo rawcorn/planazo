@@ -40,6 +40,6 @@ icon_512.save('public/icon.png')
 # Create high-res 1200x630 Open Graph Image
 # Use exact_logo_height = 373 to match the sharpness and size they loved in 5b34117!
 og_1200 = create_geometrically_centered_image((1200, 630), cropped_logo, lilac_bg, exact_logo_height=373)
-og_1200.save('public/og-image.png')
+og_1200.save('public/og-whatsapp.png')
 
 print("Perfectly sized and centered images generated successfully!")
