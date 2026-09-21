@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   title: "Planazo",
   description: "Conectá y salí.",
   other: {
-    "thumbnail": "https://planazo.vercel.app/icon.png",
-    "image_src": "https://planazo.vercel.app/icon.png",
+    "thumbnail": "/icon.png",
+    "image_src": "/icon.png",
   }
 };
 
