@@ -11,6 +11,15 @@ const miFuente = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: "Planazo",
   description: "Conectá y salí.",
+  manifest: "/manifest.json",
+  icons: {
+    apple: "/apple-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Planazo",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
