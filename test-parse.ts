@@ -1,0 +1,1 @@
+import { signUpSchema } from './src/lib/validations'; console.log(signUpSchema.safeParse({username: 'test', password: 'Password1!', age: 20, gender: 'X', region: 'CABA', instagram: '@testig', avatarUrl: 'https://example.com/image.jpg'}));
