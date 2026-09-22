@@ -562,7 +562,7 @@ export function CenterColumn() {
               disabled={!chatText.trim()}
               className="h-14 w-14 flex items-center justify-center bg-[#86E2B5] text-white rounded-full hover:bg-[#75D1A4] disabled:opacity-50 transition-colors shrink-0"
             >
-              <Send className="h-6 w-6 ml-1" />
+              <Send className="h-6 w-6" />
             </button>
           </form>
         </div>
