@@ -231,6 +231,11 @@ export function RightColumn() {
               <X className="h-5 w-5" />
             </button>
           )}
+          {activeView === 'profile' && (
+            <button onClick={resetRightColumn} className="hidden lg:flex p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -239,10 +244,6 @@ export function RightColumn() {
         {/* PERFIL */}
         {activeView === 'profile' && profileToShow && (
           <div className="space-y-6">
-            <Button onClick={resetRightColumn} variant="ghost" className="w-full justify-start text-sm -ml-2">
-              <ChevronLeft className="h-4 w-4" /> Volver
-            </Button>
-            
             <div className="text-center pt-2">
               {profileToShow.avatarUrl ? (
                 <img src={profileToShow.avatarUrl} alt={profileToShow.username} className="h-32 w-32 rounded-full mx-auto mb-5 object-cover border-4 border-slate-50 shadow-sm" />
