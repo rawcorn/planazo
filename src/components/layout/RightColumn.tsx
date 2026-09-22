@@ -214,7 +214,10 @@ export function RightColumn() {
               <ArrowLeft className="h-4 w-4" />
             </button>
           ) : (
-            <button onClick={() => setMobileView('chat')} className="lg:hidden p-1.5 -ml-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-xl transition-all">
+            <button onClick={() => {
+              resetRightColumn();
+              setMobileView('chat');
+            }} className="lg:hidden p-1.5 -ml-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-xl transition-all">
               <ChevronLeft className="h-5 w-5" />
             </button>
           )}
