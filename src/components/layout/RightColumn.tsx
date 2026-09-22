@@ -27,7 +27,8 @@ export function RightColumn() {
     duplicateWarning,
     setDuplicateWarning,
     setRightColumnView,
-    startDirectMessage
+    startDirectMessage,
+    logout
   } = useUIStore(useShallow(state => ({
     currentUser: state.currentUser,
     users: state.users,
@@ -48,7 +49,8 @@ export function RightColumn() {
     duplicateWarning: state.duplicateWarning,
     setDuplicateWarning: state.setDuplicateWarning,
     setRightColumnView: state.setRightColumnView,
-    startDirectMessage: state.startDirectMessage
+    startDirectMessage: state.startDirectMessage,
+    logout: state.logout
   })))
 
   const defaultRegionId = regions.find(r => r.name === currentUser?.region)?.id || regions[0]?.id || '';
@@ -293,10 +295,16 @@ export function RightColumn() {
               </div>
             )}
 
-            {currentUser.id !== profileToShow.id && (
+            {currentUser.id !== profileToShow.id ? (
               <div className="pt-4">
                 <Button className="w-full py-3.5" onClick={() => startDirectMessage(profileToShow.id)}>
                   Enviar Mensaje Privado
+                </Button>
+              </div>
+            ) : (
+              <div className="pt-4">
+                <Button variant="destructive" className="w-full py-3.5 lg:hidden" onClick={logout}>
+                  Cerrar Sesión
                 </Button>
               </div>
             )}
