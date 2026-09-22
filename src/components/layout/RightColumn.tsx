@@ -303,7 +303,7 @@ export function RightColumn() {
               </div>
             ) : (
               <div className="pt-4">
-                <Button variant="destructive" className="w-full py-3.5 lg:hidden" onClick={logout}>
+                <Button variant="destructive" className="w-full py-3.5" onClick={logout}>
                   Cerrar Sesión
                 </Button>
               </div>
