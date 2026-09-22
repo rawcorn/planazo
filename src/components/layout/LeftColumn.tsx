@@ -45,7 +45,7 @@ export function LeftColumn() {
       {/* HEADER */}
       <div className="p-5 flex items-center justify-between shrink-0 bg-transparent">
         <div 
-          className="flex items-center gap-3 cursor-pointer group p-2 -ml-2 rounded-2xl hover:bg-[#EFE9FB] transition-colors" 
+          className="flex items-center gap-3 cursor-pointer group p-2 -ml-2 rounded-2xl hover:bg-[#EFE9FB] transition-colors flex-1 min-w-0" 
           onClick={() => {
             setSelectedUser(currentUser.id);
             if(window.innerWidth < 1024) setMobileView('details');
@@ -58,12 +58,12 @@ export function LeftColumn() {
               {currentUser.username.charAt(0).toUpperCase()}
             </div>
           )}
-          <div>
-            <h1 className="font-black text-xl leading-tight text-slate-900">Planazo</h1>
-            <p className="text-xs text-slate-600 font-medium">@{currentUser.username}</p>
+          <div className="min-w-0">
+            <h1 className="font-black text-xl leading-tight text-slate-900 truncate">Planazo</h1>
+            <p className="text-xs text-slate-600 font-medium truncate">@{currentUser.username}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button onClick={() => setMobileView('chat')} className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-[#EFE9FB] rounded-xl transition-colors">
             <X className="h-5 w-5" />
           </button>
