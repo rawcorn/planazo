@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera } from 'lucide-react'
+import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut } from 'lucide-react'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
@@ -303,8 +303,8 @@ export function RightColumn() {
               </div>
             ) : (
               <div className="pt-4">
-                <Button variant="danger" className="w-full py-3.5" onClick={logout}>
-                  Cerrar Sesión
+                <Button variant="ghost" className="w-full py-3.5 text-slate-500 hover:text-slate-800" onClick={logout}>
+                  <LogOut className="h-5 w-5 mr-2" /> Cerrar Sesión
                 </Button>
               </div>
             )}
