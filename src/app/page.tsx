@@ -113,13 +113,13 @@ export default function Home() {
     <main className="flex h-[100dvh] w-full overflow-hidden bg-app-bg text-text-main font-sans selection:bg-purple-300/50">
       
       {/* Contenedor principal con sombra y bordes redondeados si querés que quede flotando, o que ocupe todo el alto */}
-      <div className="flex w-full h-full max-w-[1600px] mx-auto bg-card-cream shadow-2xl overflow-hidden">
+      <div className="relative flex w-full h-full max-w-[1600px] mx-auto bg-card-cream shadow-2xl overflow-hidden">
         
         {/* LEFT COLUMN */}
         <div className={`
-          w-full lg:w-80 flex-shrink-0 flex flex-col h-full bg-card-cream border-r border-purple-100
-          absolute lg:relative z-30 transition-transform duration-300 ease-in-out
-          ${mobileView === 'menu' ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          w-full lg:w-80 flex-shrink-0 flex-col h-full bg-card-cream border-r border-purple-100
+          lg:relative z-30
+          ${mobileView === 'menu' ? 'flex absolute inset-0' : 'hidden lg:flex'}
         `}>
           <LeftColumn />
         </div>
@@ -134,9 +134,9 @@ export default function Home() {
 
         {/* RIGHT COLUMN */}
         <div className={`
-          w-full lg:w-96 flex-shrink-0 flex flex-col h-full bg-card-cream border-l border-purple-100
-          absolute lg:relative z-30 transition-transform duration-300 ease-in-out
-          ${mobileView === 'details' ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+          w-full lg:w-96 flex-shrink-0 flex-col h-full bg-card-cream border-l border-purple-100
+          lg:relative z-30
+          ${mobileView === 'details' ? 'flex absolute inset-0' : 'hidden lg:flex'}
         `}>
           <RightColumn />
         </div>

@@ -360,6 +360,7 @@ export function CenterColumn() {
                       onTouchStart={canReply ? (e) => handlePointerDown(e, msg.id) : undefined}
                       onTouchMove={canReply ? handlePointerMove : undefined}
                       onTouchEnd={canReply ? (e) => handlePointerUp(e, msg) : undefined}
+                      onTouchCancel={canReply ? (e) => handlePointerUp(e, msg) : undefined}
                       onMouseDown={canReply ? (e) => handlePointerDown(e, msg.id) : undefined}
                       onMouseMove={canReply ? handlePointerMove : undefined}
                       onMouseUp={canReply ? (e) => handlePointerUp(e, msg) : undefined}
