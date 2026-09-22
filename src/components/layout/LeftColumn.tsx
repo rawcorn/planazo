@@ -60,7 +60,7 @@ export function LeftColumn() {
           )}
           <div className="min-w-0">
             <h1 className="font-black text-xl leading-tight text-slate-900 truncate">Planazo</h1>
-            <p className="text-xs text-slate-600 font-medium truncate">@{currentUser.username}</p>
+            <p className="text-xs text-slate-600 font-medium truncate">{currentUser.username}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">

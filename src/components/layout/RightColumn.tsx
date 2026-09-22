@@ -251,12 +251,7 @@ export function RightColumn() {
                   {profileToShow.username.charAt(0).toUpperCase()}
                 </div>
               )}
-              <h3 className="text-2xl font-black text-slate-900 mb-1 tracking-tight">@{profileToShow.username}</h3>
-              {profileToShow.instagram && (
-                <a href={`https://instagram.com/${profileToShow.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 mb-2 text-sm font-bold text-slate-600 hover:text-pink-600 transition-colors">
-                   <AtSign className="h-4 w-4" /> @{profileToShow.instagram.replace('@', '')}
-                </a>
-              )}
+              <h3 className="text-2xl font-black text-slate-900 mb-1 tracking-tight">{profileToShow.username}</h3>
               <p className="text-sm font-medium text-slate-600 flex items-center justify-center gap-2">
                  <span>{profileToShow.age} años</span> • 
                  <span>{profileToShow.gender === 'F' ? 'Mujer' : profileToShow.gender === 'M' ? 'Hombre' : 'No Binario'}</span> • 
