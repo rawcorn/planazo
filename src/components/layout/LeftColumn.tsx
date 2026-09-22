@@ -67,8 +67,9 @@ export function LeftColumn() {
           <button onClick={() => setMobileView('chat')} className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-[#EFE9FB] rounded-xl transition-colors">
             <X className="h-5 w-5" />
           </button>
-          <button onClick={logout} className="p-2 text-slate-400 hover:text-slate-700 hover:bg-[#EFE9FB] rounded-xl transition-colors" title="Cerrar sesión">
-            <LogOut className="h-5 w-5" />
+          <button onClick={logout} className="p-2 flex items-center gap-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-xl transition-colors" title="Cerrar sesión">
+            <LogOut className="h-4 w-4" />
+            <span className="text-sm font-bold">Salir</span>
           </button>
         </div>
       </div>
