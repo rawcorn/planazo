@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut, Instagram } from 'lucide-react'
+import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut } from 'lucide-react'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
@@ -279,7 +279,12 @@ export function RightColumn() {
                 <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Redes Sociales</h4>
                 {profileToShow.instagram && (
                   <a href={`https://instagram.com/${profileToShow.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 hover:border-pink-300 hover:text-pink-600 transition-colors font-bold text-sm">
-                    <Instagram className="h-5 w-5 text-pink-500" /> {profileToShow.instagram.replace('@', '')}
+                    <svg className="h-5 w-5 text-pink-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                    </svg>
+                    {profileToShow.instagram.replace('@', '')}
                   </a>
                 )}
                 {profileToShow.facebook && (
