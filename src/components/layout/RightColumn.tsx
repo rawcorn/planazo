@@ -207,9 +207,13 @@ export function RightColumn() {
       {/* HEADER */}
       <div className="h-16 px-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
-          {activeView === 'create_event' && (
+          {activeView === 'create_event' ? (
             <button onClick={resetRightColumn} className="p-1.5 -ml-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors">
               <ArrowLeft className="h-4 w-4" />
+            </button>
+          ) : (
+            <button onClick={() => setMobileView('chat')} className="lg:hidden p-1.5 -ml-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-xl transition-all">
+              <ChevronLeft className="h-5 w-5" />
             </button>
           )}
           <h2 className="font-bold text-lg text-slate-900 flex items-center gap-2">
@@ -220,13 +224,9 @@ export function RightColumn() {
           </h2>
         </div>
         <div className="flex gap-2">
-          {activeView === 'create_event' ? (
+          {activeView === 'create_event' && (
             <button onClick={resetRightColumn} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
               <X className="h-5 w-5" />
-            </button>
-          ) : (
-            <button onClick={() => setMobileView('chat')} className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-xl transition-all">
-              <ChevronLeft className="h-5 w-5 rotate-180" />
             </button>
           )}
         </div>
