@@ -64,11 +64,11 @@ export function LeftColumn() {
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <button onClick={() => setMobileView('chat')} className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-[#EFE9FB] rounded-xl transition-colors">
-            <X className="h-5 w-5" />
-          </button>
           <button onClick={logout} className="p-2 text-slate-400 hover:text-slate-700 hover:bg-[#EFE9FB] rounded-xl transition-colors" title="Cerrar sesión">
             <LogOut className="h-5 w-5" />
+          </button>
+          <button onClick={() => setMobileView('chat')} className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-[#EFE9FB] rounded-xl transition-colors">
+            <X className="h-5 w-5" />
           </button>
         </div>
       </div>
