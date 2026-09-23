@@ -200,7 +200,10 @@ export const useUIStore = create<AppState>((set, get) => ({
     
     let finalImageUrl = undefined;
     if (eventData.imageUrl && eventData.imageUrl.startsWith('data:')) {
-      const publicUrl = await uploadImage(eventData.imageUrl, 'event_images');
+      const formData = new FormData();
+      formData.append('base64Image', eventData.imageUrl);
+      formData.append('bucket', 'event_images');
+      const publicUrl = await uploadImage(formData);
       if (publicUrl) {
         finalImageUrl = publicUrl;
       }

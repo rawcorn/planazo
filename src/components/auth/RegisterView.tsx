@@ -123,7 +123,10 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
       let finalAvatarUrl = formData.avatarUrl;
       if (finalAvatarUrl && finalAvatarUrl.startsWith('data:image')) {
         try {
-          const uploadedUrl = await uploadImage(finalAvatarUrl, 'avatars');
+          const uploadFormData = new FormData();
+          uploadFormData.append('base64Image', finalAvatarUrl);
+          uploadFormData.append('bucket', 'avatars');
+          const uploadedUrl = await uploadImage(uploadFormData);
           if (uploadedUrl) {
              finalAvatarUrl = uploadedUrl;
           }

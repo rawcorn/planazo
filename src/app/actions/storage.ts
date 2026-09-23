@@ -3,7 +3,9 @@
 import { createClient } from '@/lib/supabase/server'
 import crypto from 'crypto'
 
-export async function uploadImage(base64Image: string, bucket: string = 'event_images') {
+export async function uploadImage(formData: FormData) {
+  const base64Image = formData.get('base64Image') as string;
+  const bucket = (formData.get('bucket') as string) || 'event_images';
   if (!base64Image) return null;
   
   // Validation: Only allow specific buckets
