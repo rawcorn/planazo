@@ -254,9 +254,24 @@ export const useUIStore = create<AppState>((set, get) => ({
       }
     }
 
+    const changedFields: string[] = [];
+    if (eventData.title && eventData.title !== ev.title) changedFields.push('el título');
+    let rawDesc = eventData.description !== undefined ? eventData.description : ev.description;
+    if (eventData.description !== undefined && eventData.description.replace('<!--edited-->', '') !== ev.description.replace('<!--edited-->', '')) changedFields.push('la descripción');
+    if (eventData.region && eventData.region !== ev.region) changedFields.push('la zona');
+    if (eventData.interest && eventData.interest !== ev.interest) changedFields.push('la categoría');
+    if (eventData.date && eventData.date !== ev.date) changedFields.push('la fecha/hora');
+    if (eventData.address !== undefined && eventData.address !== ev.address) changedFields.push('la dirección');
+    if (eventData.maxAttendees !== undefined && eventData.maxAttendees !== ev.maxAttendees) changedFields.push('el cupo');
+    if (eventData.ageMin !== undefined && eventData.ageMin !== ev.ageMin) changedFields.push('la edad mínima');
+    if (eventData.ageMax !== undefined && eventData.ageMax !== ev.ageMax) changedFields.push('la edad máxima');
+    if (eventData.imageFile || (finalImageUrl === '' && ev.imageUrl)) changedFields.push('la foto');
+
+    if (!rawDesc.includes('<!--edited-->')) rawDesc += '<!--edited-->';
+
     const res = await updateEvent(eventId, {
       title: eventData.title || ev.title,
-      description: eventData.description !== undefined ? eventData.description : ev.description,
+      description: rawDesc,
       region_id: eventData.region || ev.region, 
       category_id: eventData.interest || ev.interest, 
       event_datetime: eventData.date || ev.date,
@@ -271,8 +286,13 @@ export const useUIStore = create<AppState>((set, get) => ({
 
     if (res.event) {
        const regionObj = get().regions.find(r => r.id === res.event.region_id);
-       if (regionObj) {
-         await get().sendMessage(regionObj.room_id, `✏️ ¡He actualizado los detalles de mi planazo "${res.event.title}"! Revisen los cambios en la cartelera.`);
+       if (regionObj && changedFields.length > 0) {
+         let changesStr = changedFields.join(', ');
+         if (changedFields.length > 1) {
+           const lastComma = changesStr.lastIndexOf(', ');
+           changesStr = changesStr.substring(0, lastComma) + ' y ' + changesStr.substring(lastComma + 2);
+         }
+         await get().sendMessage(regionObj.room_id, `✏️ @${currentUser.username} editó el planazo "${res.event.title}". Modificó: ${changesStr}.`);
        }
        await fetchEventsForRegion(res.event.region_id);
        return { id: res.event.id };

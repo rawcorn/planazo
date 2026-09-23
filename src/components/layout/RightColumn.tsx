@@ -98,7 +98,7 @@ export function RightColumn() {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setNewPlan({
           title: evToEdit.title,
-          description: evToEdit.description,
+          description: evToEdit.description?.replace('<!--edited-->', ''),
           region: evToEdit.region,
           interest: evToEdit.interest,
           date: d.toISOString().split('T')[0],
@@ -543,7 +543,12 @@ export function RightColumn() {
                   </div>
                 )}
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2 tracking-tight leading-snug">{eventToShow.title}</h3>
+              <h3 className="text-lg font-bold text-slate-900 mb-2 tracking-tight leading-snug flex items-center justify-center gap-2">
+                {eventToShow.title}
+                {eventToShow.description?.includes('<!--edited-->') && (
+                  <span className="bg-slate-200 text-slate-500 text-[10px] px-2 py-0.5 rounded-md uppercase font-bold border border-slate-300">Editado</span>
+                )}
+              </h3>
               <span className="inline-block bg-slate-100 border border-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">
                 {interests.find(i => i.id === eventToShow.interest)?.name || 'Interés'}
               </span>
@@ -568,7 +573,7 @@ export function RightColumn() {
             )}
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6">
-              <p className="text-slate-700 text-sm leading-relaxed">&quot;{eventToShow.description}&quot;</p>
+              <p className="text-slate-700 text-sm leading-relaxed">&quot;{eventToShow.description?.replace('<!--edited-->', '')}&quot;</p>
               
               <div className="pt-5 border-t border-slate-200 space-y-4">
                 <div className="flex items-start gap-4 text-sm">
@@ -702,8 +707,13 @@ export function RightColumn() {
                           </div>
                         )}
                         <div className="min-w-0 flex-1">
-                          <h3 className="font-bold text-slate-900 text-base mb-1 pr-16 truncate">{event.title}</h3>
-                          <p className="text-sm text-slate-700 line-clamp-2 mb-4 leading-relaxed">{event.description}</p>
+                          <h3 className="font-bold text-slate-900 text-base mb-1 pr-16 truncate flex items-center gap-2">
+                            <span className="truncate">{event.title}</span>
+                            {event.description?.includes('<!--edited-->') && (
+                              <span className="bg-slate-200/70 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-md uppercase font-bold border border-slate-300 shrink-0">Editado</span>
+                            )}
+                          </h3>
+                          <p className="text-sm text-slate-700 line-clamp-2 mb-4 leading-relaxed">{event.description?.replace('<!--edited-->', '')}</p>
                         </div>
                       </div>
                       
