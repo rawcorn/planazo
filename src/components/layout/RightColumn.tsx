@@ -7,7 +7,7 @@ import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
 
 export function RightColumn() {
-  const warningRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { 
     currentUser, 
@@ -60,12 +60,17 @@ export function RightColumn() {
   })))
 
   useEffect(() => {
-    if (duplicateWarning && warningRef.current) {
+    if (duplicateWarning || formError) {
       setTimeout(() => {
-        warningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTo({
+            top: scrollContainerRef.current.scrollHeight,
+            behavior: 'smooth'
+          });
+        }
       }, 100);
     }
-  }, [duplicateWarning]);
+  }, [duplicateWarning, formError]);
 
   const defaultRegionId = regions.find(r => r.name === currentUser?.region)?.id || regions[0]?.id || '';
   
@@ -331,7 +336,7 @@ export function RightColumn() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-6 bg-slate-100">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-6 bg-slate-100">
         
         {/* PERFIL */}
         {activeView === 'profile' && profileToShow && (
@@ -504,10 +509,7 @@ export function RightColumn() {
             </form>
 
             {duplicateWarning && (
-              <div 
-                className="bg-rose-50 border border-rose-200 p-4 rounded-xl mt-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
-                ref={warningRef}
-              >
+              <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl mt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="flex gap-3">
                   <AlertTriangle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
                   <div>
