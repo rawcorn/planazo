@@ -260,7 +260,15 @@ export const useUIStore = create<AppState>((set, get) => ({
     if (eventData.description !== undefined && eventData.description.replace('<!--edited-->', '') !== ev.description.replace('<!--edited-->', '')) changedFields.push('la descripción');
     if (eventData.region && eventData.region !== ev.region) changedFields.push('la zona');
     if (eventData.interest && eventData.interest !== ev.interest) changedFields.push('la categoría');
-    if (eventData.date && eventData.date !== ev.date) changedFields.push('la fecha/hora');
+    if (eventData.date && eventData.date !== ev.date) {
+      const newD = new Date(eventData.date);
+      const oldD = new Date(ev.date);
+      const sameDay = newD.getFullYear() === oldD.getFullYear() && newD.getMonth() === oldD.getMonth() && newD.getDate() === oldD.getDate();
+      const sameTime = newD.getHours() === oldD.getHours() && newD.getMinutes() === oldD.getMinutes();
+      if (!sameDay && !sameTime) changedFields.push('el día y la hora');
+      else if (!sameDay) changedFields.push('el día');
+      else if (!sameTime) changedFields.push('la hora');
+    }
     if (eventData.address !== undefined && eventData.address !== ev.address) changedFields.push('la dirección');
     if (eventData.maxAttendees !== undefined && eventData.maxAttendees !== ev.maxAttendees) changedFields.push('el cupo');
     if (eventData.ageMin !== undefined && eventData.ageMin !== ev.ageMin) changedFields.push('la edad mínima');
