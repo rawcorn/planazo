@@ -386,7 +386,7 @@ export function RightColumn() {
                   <AlertTriangle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-sm font-bold text-rose-700">¡Plan similar creado!</p>
-                    <p className="text-xs text-rose-600 mt-1 mb-4">Ya existe "{duplicateWarning.title}" cerca de ese horario o lugar. ¿Quieres proponer el tuyo de todos modos?</p>
+                    <p className="text-xs text-rose-600 mt-1 mb-4">Ya existe &quot;{duplicateWarning.title}&quot; cerca de ese horario o lugar. ¿Quieres proponer el tuyo de todos modos?</p>
                     <div className="flex gap-2">
                       <Button type="button" variant="outline" className="flex-1 py-2 text-xs" onClick={() => setDuplicateWarning(null)}>Editar</Button>
                       <Button type="button" variant="danger" className="flex-1 py-2 text-xs" onClick={executeCreation}>Publicar igual</Button>
