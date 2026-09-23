@@ -224,13 +224,18 @@ export function RightColumn() {
     const isDuplicate = events.find(ev => {
       if (activeView === 'edit_event' && selectedEventId === ev.id) return false;
       if (ev.region !== newPlan.region) return false;
-      const timeDiffHours = Math.abs(new Date(ev.date).getTime() - eventDateTime.getTime()) / (1000 * 60 * 60);
+      if (ev.interest !== newPlan.interest) return false;
       
-      const sameAddress = ev.address && newPlan.address && ev.address.toLowerCase().trim() === newPlan.address.toLowerCase().trim();
-      const titleWords = newPlan.title.toLowerCase().split(' ').filter(w => w.length > 3);
-      const similarTitle = titleWords.length > 0 && titleWords.some(w => ev.title.toLowerCase().includes(w));
+      const evDate = new Date(ev.date);
+      const isSameDay = evDate.getFullYear() === eventDateTime.getFullYear() && 
+                        evDate.getMonth() === eventDateTime.getMonth() && 
+                        evDate.getDate() === eventDateTime.getDate();
       
-      return (sameAddress || similarTitle) && timeDiffHours <= 3; 
+      if (!isSameDay) return false;
+
+      const timeDiffHours = Math.abs(evDate.getTime() - eventDateTime.getTime()) / (1000 * 60 * 60);
+      
+      return timeDiffHours <= 3; 
     });
 
     if (isDuplicate) {
