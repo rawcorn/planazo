@@ -59,6 +59,17 @@ export function RightColumn() {
     logout: state.logout
   })))
 
+
+
+  const defaultRegionId = regions.find(r => r.name === currentUser?.region)?.id || regions[0]?.id || '';
+  
+  const [newPlan, setNewPlan] = useState({ 
+    title: '', description: '', region: defaultRegionId, interest: interests[0]?.id || '', 
+    date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos' as 'Todos' | 'Solo mujeres' | 'Solo hombres', imageUrl: '', imageFile: null as File | null
+  });
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formErrorField, setFormErrorField] = useState<string | null>(null);
+
   useEffect(() => {
     if (duplicateWarning || formError) {
       setTimeout(() => {
@@ -71,15 +82,6 @@ export function RightColumn() {
       }, 100);
     }
   }, [duplicateWarning, formError]);
-
-  const defaultRegionId = regions.find(r => r.name === currentUser?.region)?.id || regions[0]?.id || '';
-  
-  const [newPlan, setNewPlan] = useState({ 
-    title: '', description: '', region: defaultRegionId, interest: interests[0]?.id || '', 
-    date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos' as 'Todos' | 'Solo mujeres' | 'Solo hombres', imageUrl: '', imageFile: null as File | null
-  });
-  const [formError, setFormError] = useState<string | null>(null);
-  const [formErrorField, setFormErrorField] = useState<string | null>(null);
 
   // Ensure newPlan has valid defaults if it loaded before catalogs
   useEffect(() => {
