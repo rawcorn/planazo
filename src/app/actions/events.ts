@@ -1,7 +1,6 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
 import { eventSchema } from '@/lib/validations'
 
 export async function createEvent(eventData: any) {
@@ -36,7 +35,7 @@ export async function createEvent(eventData: any) {
       return { error: 'Error al crear el evento' }
     }
 
-    revalidatePath('/', 'layout')
+
     return { success: true, event: data }
   } catch (err) {
     console.error(err)
@@ -77,7 +76,7 @@ export async function updateEvent(eventId: string, eventData: any) {
       return { error: 'Error al actualizar el evento' }
     }
 
-    revalidatePath('/', 'layout')
+
     return { success: true, event: data }
   } catch (err) {
     console.error(err)
@@ -108,7 +107,7 @@ export async function deleteEvent(eventId: string) {
       return { error: 'Error al eliminar el evento' }
     }
 
-    revalidatePath('/', 'layout')
+
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -138,7 +137,7 @@ export async function joinEvent(eventId: string) {
       return { error: 'Error al unirse al evento' }
     }
 
-    revalidatePath('/', 'layout')
+
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -169,7 +168,7 @@ export async function leaveEvent(eventId: string) {
       return { error: 'Error al abandonar el evento' }
     }
 
-    revalidatePath('/', 'layout')
+
     return { success: true }
   } catch (err) {
     console.error(err)

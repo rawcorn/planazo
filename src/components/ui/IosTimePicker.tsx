@@ -20,11 +20,11 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
 
   const hours = Array.from({ length: 24 })
     .map((_, i) => i.toString().padStart(2, '0'))
-    .filter(h => !isToday || parseInt(h, 10) >= currentHour);
+    .filter(h => h === hour || !isToday || parseInt(h, 10) >= currentHour);
 
   const minutes = Array.from({ length: 60 })
     .map((_, i) => i.toString().padStart(2, '0'))
-    .filter(m => !isToday || parseInt(hour || '12', 10) > currentHour || parseInt(m, 10) >= currentMinute);
+    .filter(m => m === minute || !isToday || parseInt(hour || '12', 10) > currentHour || parseInt(m, 10) >= currentMinute);
 
   const ITEM_HEIGHT = 36; // px
 
@@ -85,6 +85,35 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
     }
   }
 
+  const handleDragStart = (e: React.MouseEvent<HTMLDivElement>, targetRef: React.RefObject<HTMLDivElement | null>) => {
+    if (!targetRef.current) return;
+    const el = targetRef.current;
+    const startY = e.pageY;
+    const startScrollTop = el.scrollTop;
+
+    el.style.scrollBehavior = 'auto';
+    el.style.scrollSnapType = 'none';
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const y = moveEvent.pageY;
+      const walk = (y - startY) * 1.5;
+      el.scrollTop = startScrollTop - walk;
+    };
+
+    const onMouseUp = () => {
+      el.style.scrollBehavior = 'smooth';
+      el.style.scrollSnapType = 'y mandatory';
+      const activeIdx = Math.round(el.scrollTop / ITEM_HEIGHT);
+      el.scrollTo({ top: activeIdx * ITEM_HEIGHT, behavior: 'smooth' });
+      
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
+
   const renderWheel = (
     items: string[], 
     selectedValue: string, 
@@ -98,7 +127,8 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
         <div 
           ref={ref}
           onScroll={onScroll}
-          className="h-[108px] w-[55px] overflow-y-scroll overflow-x-hidden touch-pan-y snap-y snap-mandatory scroll-smooth hide-scrollbar relative z-10"
+          onMouseDown={(e) => handleDragStart(e, ref)}
+          className="h-[108px] w-[55px] overflow-y-scroll overflow-x-hidden touch-pan-y snap-y snap-mandatory scroll-smooth hide-scrollbar relative z-10 cursor-grab active:cursor-grabbing"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <div className="h-[36px]"></div>

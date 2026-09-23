@@ -37,7 +37,7 @@ export async function sendMessage(roomId: string, text: string, parentId?: strin
     }
     console.log("SERVER ACTION INSERT SUCCESS:", data)
 
-    revalidatePath('/', 'layout')
+
     return { success: true }
   } catch (err) {
     console.error("SERVER ACTION CATCH ERROR:", err)
@@ -152,7 +152,7 @@ export async function deleteMessageForEveryone(messageId: string) {
       return { error: 'Error al eliminar mensaje' }
     }
 
-    revalidatePath('/', 'layout')
+
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -178,7 +178,7 @@ export async function deleteMessageForMe(messageId: string) {
       return { error: 'Error al eliminar mensaje para ti' }
     }
 
-    revalidatePath('/', 'layout')
+
     return { success: true }
   } catch (err) {
     console.error(err)

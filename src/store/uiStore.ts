@@ -178,7 +178,8 @@ export const useUIStore = create<AppState>((set, get) => ({
       selectedEventId: null, 
       selectedUserId: null, 
       activeRoomId: targetRoom,
-      mobileView: 'chat'
+      mobileView: 'chat',
+      duplicateWarning: null
     });
   },
 
