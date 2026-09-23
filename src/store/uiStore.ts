@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { create } from 'zustand'
-import { createEvent, joinEvent, leaveEvent, getEventsByRegion } from '@/app/actions/events'
+import { createEvent, updateEvent, deleteEvent as deleteEventAction, joinEvent, leaveEvent, getEventsByRegion } from '@/app/actions/events'
 import { sendMessage as sendMessageAPI, getRoomMessages, getOrCreateDMRoom } from '@/app/actions/messages'
 import { getRegions, getInterests } from '@/app/actions/catalog'
 import { uploadImage } from '@/app/actions/storage'
@@ -64,7 +64,7 @@ export interface Message {
 }
 
 export type MobileView = 'menu' | 'chat' | 'details'
-export type RightColumnView = 'cartelera' | 'create_event' | 'event_details' | 'profile'
+export type RightColumnView = 'cartelera' | 'create_event' | 'event_details' | 'profile' | 'edit_event'
 
 interface AppState {
   currentUser: User | null
@@ -106,6 +106,8 @@ interface AppState {
 
   // Domain actions
   createEvent: (eventData: Omit<Event, 'id' | 'creatorId' | 'attendees'>) => Promise<{ id?: string, error?: string }>
+  updateEvent: (eventId: string, eventData: Partial<Event>) => Promise<{ id?: string, error?: string }>
+  deleteEvent: (eventId: string) => Promise<{ success?: boolean, error?: string }>
   joinEvent: (eventId: string) => Promise<void>
   leaveEvent: (eventId: string) => Promise<void>
   sendMessage: (roomId: string, text: string, parentId?: string) => Promise<void>
@@ -232,6 +234,57 @@ export const useUIStore = create<AppState>((set, get) => ({
        return { id: res.event.id };
     }
     return { error: 'Error desconocido' };
+  },
+
+  updateEvent: async (eventId, eventData) => {
+    const { currentUser, fetchEventsForRegion, events } = get();
+    if (!currentUser) return { error: 'Not authenticated' };
+
+    const ev = events.find(e => e.id === eventId);
+    if (!ev) return { error: 'Evento no encontrado' };
+    
+    let finalImageUrl = eventData.imageUrl;
+    if (eventData.imageFile) {
+      const formData = new FormData();
+      formData.append('file', eventData.imageFile);
+      formData.append('bucket', 'event_images');
+      const publicUrl = await uploadImage(formData);
+      if (publicUrl) {
+        finalImageUrl = publicUrl;
+      }
+    }
+
+    const res = await updateEvent(eventId, {
+      title: eventData.title || ev.title,
+      description: eventData.description !== undefined ? eventData.description : ev.description,
+      region_id: eventData.region || ev.region, 
+      category_id: eventData.interest || ev.interest, 
+      event_datetime: eventData.date || ev.date,
+      address: eventData.address !== undefined ? eventData.address : ev.address,
+      max_attendees: eventData.maxAttendees !== undefined ? eventData.maxAttendees : ev.maxAttendees,
+      min_age: eventData.ageMin !== undefined ? eventData.ageMin : ev.ageMin,
+      max_age: eventData.ageMax !== undefined ? eventData.ageMax : ev.ageMax,
+      image_url: finalImageUrl,
+    });
+
+    if (res.error) return { error: res.error };
+
+    if (res.event) {
+       await fetchEventsForRegion(res.event.region_id);
+       return { id: res.event.id };
+    }
+    return { error: 'Error desconocido' };
+  },
+
+  deleteEvent: async (eventId) => {
+    const { fetchEventsForRegion, events } = get();
+    const ev = events.find(e => e.id === eventId);
+    
+    const res = await deleteEventAction(eventId);
+    if (res.error) return { error: res.error };
+    
+    if (ev) await fetchEventsForRegion(ev.region);
+    return { success: true };
   },
 
   joinEvent: async (eventId) => {

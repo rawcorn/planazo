@@ -24,6 +24,8 @@ export function RightColumn() {
     joinEvent,
     leaveEvent,
     createEvent,
+    updateEvent,
+    deleteEvent,
     duplicateWarning,
     setDuplicateWarning,
     setRightColumnView,
@@ -46,6 +48,8 @@ export function RightColumn() {
     joinEvent: state.joinEvent,
     leaveEvent: state.leaveEvent,
     createEvent: state.createEvent,
+    updateEvent: state.updateEvent,
+    deleteEvent: state.deleteEvent,
     duplicateWarning: state.duplicateWarning,
     setDuplicateWarning: state.setDuplicateWarning,
     setRightColumnView: state.setRightColumnView,
@@ -81,8 +85,31 @@ export function RightColumn() {
       });
       setFormError(null);
       setFormErrorField(null);
+    } else if (activeView === 'edit_event' && selectedEventId) {
+      const evToEdit = events.find(e => e.id === selectedEventId);
+      if (evToEdit) {
+        const d = new Date(evToEdit.date);
+        setNewPlan({
+          title: evToEdit.title,
+          description: evToEdit.description,
+          region: evToEdit.region,
+          interest: evToEdit.interest,
+          date: d.toISOString().split('T')[0],
+          hour: d.getHours().toString().padStart(2, '0'),
+          minute: d.getMinutes().toString().padStart(2, '0'),
+          maxAttendees: evToEdit.maxAttendees ? evToEdit.maxAttendees.toString() : '',
+          address: evToEdit.address || '',
+          ageMin: evToEdit.ageMin ? evToEdit.ageMin.toString() : '',
+          ageMax: evToEdit.ageMax ? evToEdit.ageMax.toString() : '',
+          genderPreference: evToEdit.genderPreference,
+          imageUrl: evToEdit.imageUrl || '',
+          imageFile: null
+        });
+        setFormError(null);
+        setFormErrorField(null);
+      }
     }
-  }, [activeView, activeRoomId, regions, events, defaultRegionId, interests]);
+  }, [activeView, activeRoomId, regions, events, defaultRegionId, interests, selectedEventId]);
 
   if (!currentUser) return null;
 
@@ -135,10 +162,17 @@ export function RightColumn() {
       ageMax: newPlan.ageMax ? parseInt(newPlan.ageMax) : null,
     };
 
-    const res = await createEvent(planToCreate);
+    let res;
+    if (activeView === 'edit_event' && selectedEventId) {
+      res = await updateEvent(selectedEventId, planToCreate);
+    } else {
+      res = await createEvent(planToCreate);
+    }
+
     if (res.id) {
       setDuplicateWarning(null);
       setSelectedEvent(res.id);
+      setRightColumnView('event_details');
       setNewPlan({ title: '', description: '', region: defaultRegionId, interest: interests[0]?.id || '', date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos', imageUrl: '', imageFile: null });
     } else if (res.error) {
       setFormError(res.error);
@@ -261,13 +295,8 @@ export function RightColumn() {
           </h2>
         </div>
         <div className="flex gap-2">
-          {activeView === 'create_event' && (
-            <button onClick={resetRightColumn} className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
-              <X className="h-5 w-5" />
-            </button>
-          )}
-          {activeView === 'profile' && (
-            <button onClick={resetRightColumn} className="hidden lg:flex p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors">
+          {(activeView === 'create_event' || activeView === 'event_details' || activeView === 'profile') && (
+            <button onClick={resetRightColumn} className={`p-1.5 rounded-lg transition-colors ${activeView === 'create_event' ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'} ${activeView === 'profile' ? 'hidden lg:flex' : ''}`}>
               <X className="h-5 w-5" />
             </button>
           )}
@@ -347,8 +376,8 @@ export function RightColumn() {
           </div>
         )}
 
-        {/* CREAR EVENTO */}
-        {activeView === 'create_event' && (
+        {/* CREAR / EDITAR EVENTO */}
+        {(activeView === 'create_event' || activeView === 'edit_event') && (
           <div className="relative">
             {duplicateWarning && (
               <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl mb-6">
@@ -367,8 +396,8 @@ export function RightColumn() {
             )}
 
             <form onSubmit={handleCreate} className="space-y-4">
-              <div className="flex justify-center mb-6">
-                <label className="relative cursor-pointer group">
+              <div className="flex justify-center mb-6 relative w-24 mx-auto">
+                <label className="relative cursor-pointer group block">
                   <div className="h-24 w-24 rounded-2xl bg-blue-50 border-2 border-dashed border-blue-200 flex flex-col items-center justify-center text-sky-500 group-hover:bg-blue-100 group-hover:border-blue-300 transition-colors overflow-hidden">
                     {newPlan.imageUrl ? (
                       <img src={newPlan.imageUrl} alt="Plan" className="h-full w-full object-cover" />
@@ -384,6 +413,11 @@ export function RightColumn() {
                   </div>
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                 </label>
+                {newPlan.imageUrl && (
+                  <button type="button" onClick={() => setNewPlan({ ...newPlan, imageUrl: '', imageFile: null })} className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 hover:bg-rose-600 shadow-sm transition-colors z-10">
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
               </div>
               <div>
                 <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Título corto y directo</label>
@@ -445,7 +479,9 @@ export function RightColumn() {
               </div>
 
               <div className="pt-4 space-y-2 flex flex-col items-center">
-                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-slate-900 shadow-sm font-bold transition-all" disabled={duplicateWarning !== null}>Lanzar Planazo</Button>
+                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-slate-900 shadow-sm font-bold transition-all" disabled={duplicateWarning !== null}>
+                  {activeView === 'edit_event' ? 'Guardar Cambios' : 'Lanzar Planazo'}
+                </Button>
                 {formError && (
                   <div className="text-rose-500 text-[11px] font-bold flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 border border-rose-100 rounded-lg animate-in fade-in zoom-in-95 duration-200">
                     <AlertTriangle className="h-3.5 w-3.5" />
@@ -484,9 +520,22 @@ export function RightColumn() {
             </div>
 
             {eventToShow.attendees.includes(currentUser.id) ? (
-              <div className="bg-indigo-50 p-5 rounded-2xl text-center border border-indigo-200 shadow-sm">
-                <p className="text-indigo-700 font-bold mb-4">¡Ya estás adentro!</p>
-                <Button variant="danger" className="w-full py-3" onClick={() => leaveEvent(eventToShow.id)}>Bajarme del plan</Button>
+              <div className="bg-indigo-50 p-5 rounded-2xl text-center border border-indigo-200 shadow-sm space-y-3">
+                <p className="text-indigo-700 font-bold mb-2">¡Ya estás adentro!</p>
+                {eventToShow.creatorId !== currentUser.id && (
+                  <Button variant="danger" className="w-full py-3" onClick={() => leaveEvent(eventToShow.id)}>Bajarme del plan</Button>
+                )}
+                {eventToShow.creatorId === currentUser.id && (
+                  <div className="flex gap-2">
+                    <Button variant="outline" className="flex-1 bg-white" onClick={() => setRightColumnView('edit_event')}>Editar Planazo</Button>
+                    <Button variant="danger" className="flex-1" onClick={async () => {
+                      if (window.confirm('¿Seguro que querés eliminar este planazo?')) {
+                        await deleteEvent(eventToShow.id);
+                        resetRightColumn();
+                      }
+                    }}>Eliminar</Button>
+                  </div>
+                )}
               </div>
             ) : (
               <Button className="w-full py-3.5 shadow-sm" onClick={() => { joinEvent(eventToShow.id); resetRightColumn(); }}>

@@ -44,6 +44,47 @@ export async function createEvent(eventData: any) {
   }
 }
 
+export async function updateEvent(eventId: string, eventData: any) {
+  try {
+    const parsed = eventSchema.safeParse(eventData)
+    if (!parsed.success) {
+      return { error: parsed.error.issues[0].message }
+    }
+
+    const supabase = await createClient()
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      return { error: 'Not authenticated' }
+    }
+
+    const { data, error } = await supabase
+      .from('events')
+      .update({
+        ...parsed.data,
+        description: parsed.data.description || '',
+      })
+      .eq('id', eventId)
+      .eq('creator_id', user.id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error(error)
+      return { error: 'Error al actualizar el evento' }
+    }
+
+    revalidatePath('/', 'layout')
+    return { success: true, event: data }
+  } catch (err) {
+    console.error(err)
+    return { error: 'Error interno del servidor' }
+  }
+}
+
 export async function deleteEvent(eventId: string) {
   try {
     const supabase = await createClient()
