@@ -720,7 +720,7 @@ export function RightColumn() {
                       <div className="flex items-center justify-between text-xs font-bold text-slate-700">
                         <div className="flex gap-2">
                           <span className="flex items-center gap-1.5 bg-white/60 px-3 py-1.5 rounded-full">
-                            <Clock className="h-3.5 w-3.5 text-slate-500" /> {new Date(event.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}
+                            <Clock className="h-3.5 w-3.5 text-slate-500" /> {new Date(event.date).toLocaleDateString('es-AR', { weekday: 'long' })} {new Date(event.date).getDate()}/{new Date(event.date).getMonth() + 1} • {new Date(event.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}
                           </span>
                           <span className="flex items-center gap-1.5 bg-white/60 px-3 py-1.5 rounded-full">
                             {interestName || 'Interés'}
