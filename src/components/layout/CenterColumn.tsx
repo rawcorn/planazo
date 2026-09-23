@@ -200,15 +200,46 @@ export function CenterColumn() {
               <Menu className="h-5 w-5" />
             </button>
             
-            <div className="h-10 w-10 rounded-full bg-[#FFB5B5] text-white flex items-center justify-center font-bold shrink-0 overflow-hidden">
-              {isEventRoom ? (
-                activeEvent?.imageUrl ? <img src={activeEvent.imageUrl} alt={activeEvent.title} className="h-full w-full object-cover" /> : activeEvent?.title.charAt(0)
-              ) : isDMRoom && dmUser ? (
-                dmUser.avatarUrl ? <img src={dmUser.avatarUrl} alt={dmUser.username} className="h-full w-full object-cover" /> : dmUser.username.charAt(0).toUpperCase()
-              ) : (
-                '📍'
-              )}
-            </div>
+            {(() => {
+              let headerIconClass = "h-10 w-10 flex items-center justify-center font-bold shrink-0 overflow-hidden ";
+              let headerIconContent = null;
+              
+              if (isEventRoom && activeEvent) {
+                headerIconClass += "rounded-full bg-[#E5D0BA] text-slate-800";
+                headerIconContent = activeEvent.imageUrl ? (
+                  <img src={activeEvent.imageUrl} alt={activeEvent.title} className="h-full w-full object-cover" />
+                ) : (
+                  activeEvent.title.charAt(0)
+                );
+              } else if (isDMRoom && dmUser) {
+                headerIconClass += "rounded-full bg-slate-800 text-white";
+                headerIconContent = dmUser.avatarUrl ? (
+                  <img src={dmUser.avatarUrl} alt={dmUser.username} className="h-full w-full object-cover" />
+                ) : (
+                  dmUser.username.charAt(0).toUpperCase()
+                );
+              } else if (isRegionRoom && activeRegion) {
+                const pastelIconBgs = ['bg-[#A7F3D0]', 'bg-[#FBCFE8]', 'bg-[#FDE047]', 'bg-[#C7D2FE]', 'bg-[#FECACA]'];
+                const bgClass = pastelIconBgs[activeRegion.name.length % pastelIconBgs.length];
+                headerIconClass += `rounded-xl ${bgClass} text-lg shadow-sm`;
+                
+                if (activeRegion.name.includes('CABA')) headerIconContent = '🗺️';
+                else if (activeRegion.name.includes('GBA')) headerIconContent = '🏘️';
+                else if (activeRegion.name.includes('Córdoba')) headerIconContent = '🏞️';
+                else if (activeRegion.name.includes('Mendoza')) headerIconContent = '🍷';
+                else if (activeRegion.name.includes('Rosario')) headerIconContent = '🚢';
+                else headerIconContent = '📍';
+              } else {
+                headerIconClass += "rounded-full bg-[#FFB5B5] text-white";
+                headerIconContent = '📍';
+              }
+
+              return (
+                <div className={headerIconClass}>
+                  {headerIconContent}
+                </div>
+              );
+            })()}
             <div className="min-w-0">
               <h2 className="font-black text-lg text-slate-900 truncate">
                 {isEventRoom ? activeEvent?.title : isDMRoom ? dmUser?.username : activeRegion?.name}
@@ -608,7 +639,22 @@ export function CenterColumn() {
                     }}
                     className="flex items-center gap-3 p-3 rounded-2xl hover:bg-slate-50 transition-colors text-left border border-transparent hover:border-slate-100"
                   >
-                    <div className="w-12 h-12 rounded-full bg-[#FFB5B5] flex items-center justify-center text-white font-bold text-xl shadow-sm shrink-0">📍</div>
+                    {(() => {
+                      const pastelIconBgs = ['bg-[#A7F3D0]', 'bg-[#FBCFE8]', 'bg-[#FDE047]', 'bg-[#C7D2FE]', 'bg-[#FECACA]'];
+                      const bgClass = pastelIconBgs[r.name.length % pastelIconBgs.length];
+                      let iconContent = '📍';
+                      if (r.name.includes('CABA')) iconContent = '🗺️';
+                      else if (r.name.includes('GBA')) iconContent = '🏘️';
+                      else if (r.name.includes('Córdoba')) iconContent = '🏞️';
+                      else if (r.name.includes('Mendoza')) iconContent = '🍷';
+                      else if (r.name.includes('Rosario')) iconContent = '🚢';
+                      
+                      return (
+                        <div className={`w-12 h-12 rounded-xl ${bgClass} flex items-center justify-center text-xl shadow-sm shrink-0`}>
+                          {iconContent}
+                        </div>
+                      );
+                    })()}
                     <div className="min-w-0">
                       <span className="font-bold text-slate-800 block truncate">{r.name}</span>
                       <span className="text-xs text-slate-500">Sala pública</span>
