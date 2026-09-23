@@ -270,6 +270,10 @@ export const useUIStore = create<AppState>((set, get) => ({
     if (res.error) return { error: res.error };
 
     if (res.event) {
+       const regionObj = get().regions.find(r => r.id === res.event.region_id);
+       if (regionObj) {
+         await get().sendMessage(regionObj.room_id, `✏️ ¡He actualizado los detalles de mi planazo "${res.event.title}"! Revisen los cambios en la cartelera.`);
+       }
        await fetchEventsForRegion(res.event.region_id);
        return { id: res.event.id };
     }

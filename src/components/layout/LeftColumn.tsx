@@ -137,7 +137,9 @@ export function LeftColumn() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="truncate text-[15px]">{event.title}</p>
-                    <p className={`text-[11px] truncate mt-0.5 ${activeRoomId === event.id ? 'text-slate-700' : 'text-slate-500'}`}>{new Date(event.date).toLocaleDateString('es-AR')}</p>
+                    <p className={`text-[11px] truncate mt-0.5 ${activeRoomId === event.id ? 'text-slate-700' : 'text-slate-500'}`}>
+                      {new Date(event.date).toLocaleDateString('es-AR', { weekday: 'long' })} {new Date(event.date).getDate()}/{new Date(event.date).getMonth() + 1}
+                    </p>
                   </div>
                 </button>
               ))}
