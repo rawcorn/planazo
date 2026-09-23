@@ -47,6 +47,7 @@ export interface Event {
   ageMax: number | null
   genderPreference: 'Todos' | 'Solo mujeres' | 'Solo hombres'
   imageUrl?: string
+  imageFile?: File | null
 }
 
 export interface Message {
@@ -199,9 +200,9 @@ export const useUIStore = create<AppState>((set, get) => ({
     if (!currentUser) return { error: 'Not authenticated' };
     
     let finalImageUrl = undefined;
-    if (eventData.imageUrl && eventData.imageUrl.startsWith('data:')) {
+    if (eventData.imageFile) {
       const formData = new FormData();
-      formData.append('base64Image', eventData.imageUrl);
+      formData.append('file', eventData.imageFile);
       formData.append('bucket', 'event_images');
       const publicUrl = await uploadImage(formData);
       if (publicUrl) {

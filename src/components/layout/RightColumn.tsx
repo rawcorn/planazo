@@ -57,7 +57,7 @@ export function RightColumn() {
   
   const [newPlan, setNewPlan] = useState({ 
     title: '', description: '', region: defaultRegionId, interest: interests[0]?.id || '', 
-    date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos' as 'Todos' | 'Solo mujeres' | 'Solo hombres', imageUrl: ''
+    date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos' as 'Todos' | 'Solo mujeres' | 'Solo hombres', imageUrl: '', imageFile: null as File | null
   });
   const [formError, setFormError] = useState<string | null>(null);
   const [formErrorField, setFormErrorField] = useState<string | null>(null);
@@ -77,7 +77,7 @@ export function RightColumn() {
       const rId = contextRegionId || defaultRegionId;
       setNewPlan({ 
         title: '', description: '', region: rId, interest: interests[0]?.id || '', 
-        date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos', imageUrl: '' 
+        date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos', imageUrl: '', imageFile: null
       });
       setFormError(null);
       setFormErrorField(null);
@@ -139,7 +139,7 @@ export function RightColumn() {
     if (res.id) {
       setDuplicateWarning(null);
       setSelectedEvent(res.id);
-      setNewPlan({ title: '', description: '', region: defaultRegionId, interest: interests[0]?.id || '', date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos', imageUrl: '' });
+      setNewPlan({ title: '', description: '', region: defaultRegionId, interest: interests[0]?.id || '', date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos', imageUrl: '', imageFile: null });
     } else if (res.error) {
       setFormError(res.error);
       if (res.error.toLowerCase().includes('título')) setFormErrorField('title');
@@ -198,7 +198,39 @@ export function RightColumn() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setNewPlan({ ...newPlan, imageUrl: reader.result as string });
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          const MAX_SIZE = 1000;
+          if (width > height) {
+            if (width > MAX_SIZE) {
+              height *= MAX_SIZE / width;
+              width = MAX_SIZE;
+            }
+          } else {
+            if (height > MAX_SIZE) {
+              width *= MAX_SIZE / height;
+              height = MAX_SIZE;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+          fetch(compressedBase64)
+            .then(res => res.blob())
+            .then(blob => {
+               const newFile = new File([blob], file.name, { type: 'image/jpeg' });
+               setNewPlan({ ...newPlan, imageFile: newFile, imageUrl: compressedBase64 });
+            });
+        };
+        img.src = reader.result as string;
       };
       reader.readAsDataURL(file);
     }

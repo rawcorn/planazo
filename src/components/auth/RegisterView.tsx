@@ -13,7 +13,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
 
   const [formData, setFormData] = useState({ 
     username: '', email: '', password: '', age: '', gender: 'X', region: regions[0]?.name || '', interests: [] as string[],
-    avatarUrl: '', instagram: '', facebook: ''
+    avatarUrl: '', avatarFile: null as File | null, instagram: '', facebook: ''
   });
   
   useEffect(() => {
@@ -75,7 +75,12 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
           
           // Comprimir a JPEG con calidad 0.7 para que pase a pesar < 200KB
           const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-          setFormData(prev => ({ ...prev, avatarUrl: compressedBase64 }));
+          fetch(compressedBase64)
+            .then(res => res.blob())
+            .then(blob => {
+               const newFile = new File([blob], file.name, { type: 'image/jpeg' });
+               setFormData(prev => ({ ...prev, avatarUrl: compressedBase64, avatarFile: newFile }));
+            });
         };
         img.src = reader.result as string;
       };
@@ -121,10 +126,10 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
 
     try {
       let finalAvatarUrl = formData.avatarUrl;
-      if (finalAvatarUrl && finalAvatarUrl.startsWith('data:image')) {
+      if (formData.avatarFile) {
         try {
           const uploadFormData = new FormData();
-          uploadFormData.append('base64Image', finalAvatarUrl);
+          uploadFormData.append('file', formData.avatarFile);
           uploadFormData.append('bucket', 'avatars');
           const uploadedUrl = await uploadImage(uploadFormData);
           if (uploadedUrl) {
