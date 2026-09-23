@@ -397,22 +397,6 @@ export function RightColumn() {
         {/* CREAR / EDITAR EVENTO */}
         {(activeView === 'create_event' || activeView === 'edit_event') && (
           <div className="relative">
-            {duplicateWarning && (
-              <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl mb-6">
-                <div className="flex gap-3">
-                  <AlertTriangle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-bold text-rose-700">¡Plan similar creado!</p>
-                    <p className="text-xs text-rose-600 mt-1 mb-4">Ya existe &quot;{duplicateWarning.title}&quot; cerca de ese horario o lugar. ¿Quieres proponer el tuyo de todos modos?</p>
-                    <div className="flex gap-2">
-                      <Button type="button" variant="outline" className="flex-1 py-2 text-xs" onClick={() => setDuplicateWarning(null)}>Editar</Button>
-                      <Button type="button" variant="danger" className="flex-1 py-2 text-xs" onClick={executeCreation}>Publicar igual</Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
             <form onSubmit={handleCreate} className="space-y-4">
               <div className="flex justify-center mb-6 relative w-24 mx-auto">
                 <label className="relative cursor-pointer group block">
@@ -508,6 +492,22 @@ export function RightColumn() {
                 )}
               </div>
             </form>
+
+            {duplicateWarning && (
+              <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl mt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="flex gap-3">
+                  <AlertTriangle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-bold text-rose-700">¡Plan similar creado!</p>
+                    <p className="text-xs text-rose-600 mt-1 mb-4">Ya existe &quot;{duplicateWarning.title}&quot; cerca de ese horario o lugar. ¿Quieres proponer el tuyo de todos modos?</p>
+                    <div className="flex gap-2">
+                      <Button type="button" variant="outline" className="flex-1 py-2 text-xs" onClick={() => setDuplicateWarning(null)}>Editar</Button>
+                      <Button type="button" variant="danger" className="flex-1 py-2 text-xs bg-rose-500 hover:bg-rose-600 text-white" onClick={executeCreation}>Publicar igual</Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
