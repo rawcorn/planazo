@@ -223,8 +223,8 @@ export function RightColumn() {
     
     const isDuplicate = events.find(ev => {
       if (activeView === 'edit_event' && selectedEventId === ev.id) return false;
-      if (ev.region !== newPlan.region) return false;
-      if (ev.interest !== newPlan.interest) return false;
+      if (String(ev.region) !== String(newPlan.region)) return false;
+      if (String(ev.interest) !== String(newPlan.interest)) return false;
       
       const evDate = new Date(ev.date);
       const isSameDay = evDate.getFullYear() === eventDateTime.getFullYear() && 
