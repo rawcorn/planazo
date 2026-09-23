@@ -210,6 +210,7 @@ export function RightColumn() {
     }
     
     const isDuplicate = events.find(ev => {
+      if (activeView === 'edit_event' && selectedEventId === ev.id) return false;
       if (ev.region !== newPlan.region) return false;
       const timeDiffHours = Math.abs(new Date(ev.date).getTime() - eventDateTime.getTime()) / (1000 * 60 * 60);
       
@@ -295,8 +296,8 @@ export function RightColumn() {
           </h2>
         </div>
         <div className="flex gap-2">
-          {(activeView === 'create_event' || activeView === 'event_details' || activeView === 'profile') && (
-            <button onClick={resetRightColumn} className={`p-1.5 rounded-lg transition-colors ${activeView === 'create_event' ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'} ${activeView === 'profile' ? 'hidden lg:flex' : ''}`}>
+          {(activeView === 'create_event' || activeView === 'edit_event' || activeView === 'event_details' || activeView === 'profile') && (
+            <button onClick={resetRightColumn} className={`p-1.5 rounded-lg transition-colors ${(activeView === 'create_event' || activeView === 'edit_event') ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'} ${activeView === 'profile' ? 'hidden lg:flex' : ''}`}>
               <X className="h-5 w-5" />
             </button>
           )}
@@ -384,7 +385,7 @@ export function RightColumn() {
                 <div className="flex gap-3">
                   <AlertTriangle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-bold text-rose-700">¡Plan similar detectado!</p>
+                    <p className="text-sm font-bold text-rose-700">¡Plan similar creado!</p>
                     <p className="text-xs text-rose-600 mt-1 mb-4">Ya existe "{duplicateWarning.title}" cerca de ese horario o lugar. ¿Quieres proponer el tuyo de todos modos?</p>
                     <div className="flex gap-2">
                       <Button type="button" variant="outline" className="flex-1 py-2 text-xs" onClick={() => setDuplicateWarning(null)}>Editar</Button>
@@ -414,8 +415,8 @@ export function RightColumn() {
                   <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
                 </label>
                 {newPlan.imageUrl && (
-                  <button type="button" onClick={() => setNewPlan({ ...newPlan, imageUrl: '', imageFile: null })} className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 hover:bg-rose-600 shadow-sm transition-colors z-10">
-                    <X className="h-3 w-3" />
+                  <button type="button" onClick={() => setNewPlan({ ...newPlan, imageUrl: '', imageFile: null })} className="absolute top-1.5 right-1.5 bg-white/80 text-slate-500 rounded-full p-1.5 hover:bg-white hover:text-rose-500 shadow-sm backdrop-blur-sm transition-all z-10">
+                    <X className="h-3.5 w-3.5" />
                   </button>
                 )}
               </div>
@@ -483,9 +484,9 @@ export function RightColumn() {
                   {activeView === 'edit_event' ? 'Guardar Cambios' : 'Lanzar Planazo'}
                 </Button>
                 {formError && (
-                  <div className="text-rose-500 text-[11px] font-bold flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 border border-rose-100 rounded-lg animate-in fade-in zoom-in-95 duration-200">
-                    <AlertTriangle className="h-3.5 w-3.5" />
-                    {formError}
+                  <div className="text-slate-500 text-xs flex items-center gap-1.5 pt-1 animate-in fade-in duration-200">
+                    <AlertTriangle className="h-3.5 w-3.5 text-rose-400" />
+                    <span>{formError}</span>
                   </div>
                 )}
               </div>
@@ -524,17 +525,6 @@ export function RightColumn() {
                 <p className="text-indigo-700 font-bold mb-2">¡Ya estás adentro!</p>
                 {eventToShow.creatorId !== currentUser.id && (
                   <Button variant="danger" className="w-full py-3" onClick={() => leaveEvent(eventToShow.id)}>Bajarme del plan</Button>
-                )}
-                {eventToShow.creatorId === currentUser.id && (
-                  <div className="flex gap-2">
-                    <Button variant="outline" className="flex-1 bg-white" onClick={() => setRightColumnView('edit_event')}>Editar Planazo</Button>
-                    <Button variant="danger" className="flex-1" onClick={async () => {
-                      if (window.confirm('¿Seguro que querés eliminar este planazo?')) {
-                        await deleteEvent(eventToShow.id);
-                        resetRightColumn();
-                      }
-                    }}>Eliminar</Button>
-                  </div>
                 )}
               </div>
             ) : (
@@ -609,7 +599,25 @@ export function RightColumn() {
                   );
                 })}
               </div>
+              </div>
             </div>
+
+            {eventToShow.creatorId === currentUser.id && (
+              <div className="pt-8 pb-4 flex items-center justify-center gap-6">
+                <button onClick={() => setRightColumnView('edit_event')} className="text-sm text-slate-500 hover:text-slate-800 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-800 transition-colors">
+                  Editar planazo
+                </button>
+                <span className="text-slate-300">|</span>
+                <button onClick={async () => {
+                  if (window.confirm('¿Seguro que querés eliminar este planazo?')) {
+                    await deleteEvent(eventToShow.id);
+                    resetRightColumn();
+                  }
+                }} className="text-sm text-slate-500 hover:text-rose-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-rose-600 transition-colors">
+                  Eliminar planazo
+                </button>
+              </div>
+            )}
           </div>
         )}
 
