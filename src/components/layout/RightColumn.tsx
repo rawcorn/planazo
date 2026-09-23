@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut } from 'lucide-react'
@@ -7,6 +7,8 @@ import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
 
 export function RightColumn() {
+  const warningRef = useRef<HTMLDivElement>(null);
+
   const { 
     currentUser, 
     users, 
@@ -56,6 +58,14 @@ export function RightColumn() {
     startDirectMessage: state.startDirectMessage,
     logout: state.logout
   })))
+
+  useEffect(() => {
+    if (duplicateWarning && warningRef.current) {
+      setTimeout(() => {
+        warningRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 100);
+    }
+  }, [duplicateWarning]);
 
   const defaultRegionId = regions.find(r => r.name === currentUser?.region)?.id || regions[0]?.id || '';
   
@@ -494,7 +504,10 @@ export function RightColumn() {
             </form>
 
             {duplicateWarning && (
-              <div className="bg-rose-50 border border-rose-200 p-4 rounded-xl mt-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+              <div 
+                className="bg-rose-50 border border-rose-200 p-4 rounded-xl mt-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
+                ref={warningRef}
+              >
                 <div className="flex gap-3">
                   <AlertTriangle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
                   <div>
