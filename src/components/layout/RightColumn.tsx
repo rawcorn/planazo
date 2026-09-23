@@ -471,7 +471,7 @@ export function RightColumn() {
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Fecha</label>
+                  <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Día</label>
                   <DatePicker 
                     value={newPlan.date} 
                     onChange={(d) => { setNewPlan({...newPlan, date: d}); if (formErrorField === 'date' || formErrorField === 'time') { setFormError(null); setFormErrorField(null); } }} 

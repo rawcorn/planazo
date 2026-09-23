@@ -42,22 +42,30 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
   }, [minutes, minute, onMinuteChange]);
 
   useEffect(() => {
+    let t: any;
     if (hourRef.current && hour && hours.includes(hour)) {
       const idx = hours.indexOf(hour);
-      if (idx !== -1 && Math.round(hourRef.current.scrollTop / ITEM_HEIGHT) !== idx) {
-        hourRef.current.scrollTop = idx * ITEM_HEIGHT;
-      }
+      t = setTimeout(() => {
+        if (hourRef.current && Math.round(hourRef.current.scrollTop / ITEM_HEIGHT) !== idx) {
+          hourRef.current.scrollTop = idx * ITEM_HEIGHT;
+        }
+      }, 50);
     }
-  }, [hour]);
+    return () => clearTimeout(t);
+  }, [hour, hours]);
 
   useEffect(() => {
+    let t: any;
     if (minRef.current && minute && minutes.includes(minute)) {
       const idx = minutes.indexOf(minute);
-      if (idx !== -1 && Math.round(minRef.current.scrollTop / ITEM_HEIGHT) !== idx) {
-        minRef.current.scrollTop = idx * ITEM_HEIGHT;
-      }
+      t = setTimeout(() => {
+        if (minRef.current && Math.round(minRef.current.scrollTop / ITEM_HEIGHT) !== idx) {
+          minRef.current.scrollTop = idx * ITEM_HEIGHT;
+        }
+      }, 50);
     }
-  }, [minute]);
+    return () => clearTimeout(t);
+  }, [minute, minutes]);
 
   const handleScrollHour = () => {
     if (!hourRef.current) return;

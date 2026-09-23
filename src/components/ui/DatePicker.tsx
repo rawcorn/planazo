@@ -30,9 +30,13 @@ export function DatePicker({ value, onChange, hasError }: DatePickerProps) {
   const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
   const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
 
+  const isCurrentMonthActive = isSameMonth(currentMonth, today);
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
-  const startDate = startOfWeek(monthStart, { weekStartsOn: 1 });
+  
+  const startDate = isCurrentMonthActive 
+    ? startOfWeek(today, { weekStartsOn: 1 }) 
+    : startOfWeek(monthStart, { weekStartsOn: 1 });
   const endDate = endOfWeek(monthEnd, { weekStartsOn: 1 });
 
   const dateFormat = "d";
@@ -85,8 +89,8 @@ export function DatePicker({ value, onChange, hasError }: DatePickerProps) {
         className={`w-full bg-slate-100 border ${hasError ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'} rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all flex items-center gap-3 shadow-sm hover:bg-slate-50`}
       >
         <CalendarIcon className="h-5 w-5 text-sky-500" />
-        <span className="font-medium">
-          {value ? format(new Date(value + 'T00:00:00'), "d 'de' MMMM, yyyy", { locale: es }) : "Seleccionar fecha"}
+        <span className="font-medium capitalize">
+          {value ? format(new Date(value + 'T00:00:00'), "EEEE d/M", { locale: es }) : "Seleccionar fecha"}
         </span>
       </button>
 
