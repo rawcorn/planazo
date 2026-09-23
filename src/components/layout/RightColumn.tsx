@@ -550,10 +550,15 @@ export function RightColumn() {
             </div>
 
             {eventToShow.attendees.includes(currentUser.id) ? (
-              <div className="bg-indigo-50 p-5 rounded-2xl text-center border border-indigo-200 shadow-sm space-y-3">
-                <p className="text-indigo-700 font-bold mb-2">¡Ya estás adentro!</p>
+              <div className="flex flex-col items-center gap-1.5 pt-2">
+                <div className="flex items-center gap-2 text-sm text-emerald-600 font-bold bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-100">
+                  <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                  Ya estás adentro
+                </div>
                 {eventToShow.creatorId !== currentUser.id && (
-                  <Button variant="danger" className="w-full py-3" onClick={() => leaveEvent(eventToShow.id)}>Bajarme del plan</Button>
+                  <button onClick={() => leaveEvent(eventToShow.id)} className="text-[11px] text-slate-400 hover:text-rose-500 underline underline-offset-2 transition-colors mt-1 font-medium">
+                    Bajarme del plan
+                  </button>
                 )}
               </div>
             ) : (
@@ -668,23 +673,28 @@ export function RightColumn() {
                       key={event.id} 
                       onClick={() => setSelectedEvent(event.id)}
                       className={`p-5 rounded-[2rem] cursor-pointer transition-shadow border relative overflow-hidden ${cardColor} ${
-                        isAttending 
-                          ? 'shadow-md border-rose-300' 
+                        event.creatorId === currentUser.id
+                          ? 'shadow-md border-blue-300'
+                          : isAttending 
+                          ? 'shadow-md border-emerald-300' 
                           : isRecommended
                           ? 'shadow-md border-sky-400'
                           : 'shadow-sm hover:shadow-md'
                       }`}
                     >
-                      {isAttending && (
-                        <div className="absolute top-0 right-0 bg-rose-400 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-bl-[1.5rem]">
+                      {event.creatorId === currentUser.id ? (
+                        <div className="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-bl-[1.5rem] z-10 shadow-sm">
+                          Creador
+                        </div>
+                      ) : isAttending ? (
+                        <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-bl-[1.5rem] z-10 shadow-sm">
                           Me uní
                         </div>
-                      )}
-                      {isRecommended && (
-                        <div className="absolute top-0 right-0 bg-sky-400 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-bl-[1.5rem]">
+                      ) : isRecommended ? (
+                        <div className="absolute top-0 right-0 bg-sky-400 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-bl-[1.5rem] z-10 shadow-sm">
                           Recomendado
                         </div>
-                      )}
+                      ) : null}
                       <div className="flex items-start gap-3">
                         {event.imageUrl && (
                           <div className="h-12 w-12 rounded-2xl shrink-0 overflow-hidden bg-white/50">

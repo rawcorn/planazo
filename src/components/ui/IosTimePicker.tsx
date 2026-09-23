@@ -90,7 +90,7 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
         <div 
           ref={ref}
           onScroll={onScroll}
-          className="h-[108px] w-[55px] overflow-y-scroll snap-y snap-mandatory scroll-smooth hide-scrollbar relative z-10"
+          className="h-[108px] w-[55px] overflow-y-scroll overflow-x-hidden touch-pan-y snap-y snap-mandatory scroll-smooth hide-scrollbar relative z-10"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <div className="h-[36px]"></div>
