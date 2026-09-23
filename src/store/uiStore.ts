@@ -264,7 +264,7 @@ export const useUIStore = create<AppState>((set, get) => ({
       max_attendees: eventData.maxAttendees !== undefined ? eventData.maxAttendees : ev.maxAttendees,
       min_age: eventData.ageMin !== undefined ? eventData.ageMin : ev.ageMin,
       max_age: eventData.ageMax !== undefined ? eventData.ageMax : ev.ageMax,
-      image_url: finalImageUrl,
+      image_url: finalImageUrl === '' ? null : finalImageUrl,
     });
 
     if (res.error) return { error: res.error };
