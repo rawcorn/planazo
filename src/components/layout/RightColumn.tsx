@@ -497,11 +497,28 @@ export function RightColumn() {
         {/* DETALLES DE EVENTO */}
         {activeView === 'event_details' && eventToShow && (
           <div className="space-y-6">
-            <Button onClick={resetRightColumn} variant="ghost" className="w-full justify-start text-sm -ml-2">
-              <ChevronLeft className="h-4 w-4" /> Volver a los planes
-            </Button>
+            <div className="flex items-center justify-between -mt-2 mb-2">
+              <Button onClick={resetRightColumn} variant="ghost" className="justify-start text-sm -ml-2">
+                <ChevronLeft className="h-4 w-4" /> Volver
+              </Button>
+              {eventToShow.creatorId === currentUser.id && (
+                <div className="flex items-center gap-3">
+                  <button onClick={() => setRightColumnView('edit_event')} className="text-xs text-slate-500 hover:text-slate-800 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-800 transition-colors">
+                    Editar
+                  </button>
+                  <button onClick={async () => {
+                    if (window.confirm('¿Seguro que querés eliminar este planazo?')) {
+                      await deleteEvent(eventToShow.id);
+                      resetRightColumn();
+                    }
+                  }} className="text-xs text-slate-500 hover:text-rose-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-rose-600 transition-colors">
+                    Eliminar
+                  </button>
+                </div>
+              )}
+            </div>
             
-            <div className="text-center pt-2">
+            <div className="text-center">
               <div className="h-20 w-20 bg-blue-100 text-blue-800 rounded-2xl flex items-center justify-center text-4xl font-black mx-auto mb-4 border border-blue-200 shadow-sm overflow-hidden relative">
                 {eventToShow.imageUrl ? (
                   <img src={eventToShow.imageUrl} alt={eventToShow.title} className="h-full w-full object-cover" />
@@ -600,23 +617,6 @@ export function RightColumn() {
                 })}
               </div>
             </div>
-
-            {eventToShow.creatorId === currentUser.id && (
-              <div className="pt-8 pb-4 flex items-center justify-center gap-6">
-                <button onClick={() => setRightColumnView('edit_event')} className="text-sm text-slate-500 hover:text-slate-800 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-800 transition-colors">
-                  Editar planazo
-                </button>
-                <span className="text-slate-300">|</span>
-                <button onClick={async () => {
-                  if (window.confirm('¿Seguro que querés eliminar este planazo?')) {
-                    await deleteEvent(eventToShow.id);
-                    resetRightColumn();
-                  }
-                }} className="text-sm text-slate-500 hover:text-rose-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-rose-600 transition-colors">
-                  Eliminar planazo
-                </button>
-              </div>
-            )}
           </div>
         )}
 

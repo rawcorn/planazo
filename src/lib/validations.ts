@@ -30,10 +30,10 @@ export const eventSchema = z.object({
     return !isNaN(date.getTime()) && date > new Date()
   }, { message: 'La fecha del evento debe ser en el futuro' }),
   address: z.string().optional(),
-  max_attendees: z.number().int().min(2, 'Debe haber al menos 2 asistentes').optional(),
-  min_age: z.number().int().min(18).optional(),
-  max_age: z.number().int().max(100).optional(),
-  image_url: z.string().url().optional()
+  max_attendees: z.number().int().min(2, 'Debe haber al menos 2 asistentes').optional().nullable(),
+  min_age: z.number().int().min(18).optional().nullable(),
+  max_age: z.number().int().max(100).optional().nullable(),
+  image_url: z.string().url().optional().nullable()
 })
 
 export const messageSchema = z.object({
