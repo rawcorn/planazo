@@ -534,7 +534,7 @@ export function RightColumn() {
             )}
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6">
-              <p className="text-slate-700 text-sm leading-relaxed">"{eventToShow.description}"</p>
+              <p className="text-slate-700 text-sm leading-relaxed">&quot;{eventToShow.description}&quot;</p>
               
               <div className="pt-5 border-t border-slate-200 space-y-4">
                 <div className="flex items-start gap-4 text-sm">
@@ -598,7 +598,6 @@ export function RightColumn() {
                     </div>
                   );
                 })}
-              </div>
               </div>
             </div>
 
