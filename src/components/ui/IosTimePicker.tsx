@@ -106,8 +106,14 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
             return (
               <div 
                 key={val} 
-                className={`h-[36px] flex items-center justify-center snap-center text-lg transition-all duration-150 select-none 
-                  ${val === selectedValue ? 'font-black text-slate-800 scale-110' : 'text-slate-400 font-medium scale-90 opacity-70'}
+                onClick={() => {
+                  const idx = items.indexOf(val);
+                  if (ref.current) {
+                    ref.current.scrollTo({ top: idx * ITEM_HEIGHT, behavior: 'smooth' });
+                  }
+                }}
+                className={`h-[36px] flex items-center justify-center snap-center text-lg transition-all duration-150 select-none cursor-pointer
+                  ${val === selectedValue ? 'font-black text-slate-800 scale-110' : 'text-slate-400 font-medium scale-90 opacity-70 hover:text-slate-600 hover:opacity-100'}
                 `}
               >
                 {val}

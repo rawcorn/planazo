@@ -101,7 +101,7 @@ export function RightColumn() {
           description: evToEdit.description?.replace('<!--edited-->', ''),
           region: evToEdit.region,
           interest: evToEdit.interest,
-          date: d.toISOString().split('T')[0],
+          date: `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`,
           hour: d.getHours().toString().padStart(2, '0'),
           minute: d.getMinutes().toString().padStart(2, '0'),
           maxAttendees: evToEdit.maxAttendees ? evToEdit.maxAttendees.toString() : '',
@@ -582,7 +582,7 @@ export function RightColumn() {
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">Cuándo</p>
-                    <p className="text-slate-900 font-medium">{new Date(eventToShow.date).toLocaleString('es-AR', { weekday: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false })}</p>
+                    <p className="text-slate-900 font-medium">{new Date(eventToShow.date).toLocaleDateString('es-AR', { weekday: 'long' })} {new Date(eventToShow.date).getDate()}/{new Date(eventToShow.date).getMonth() + 1} a las {new Date(eventToShow.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}</p>
                   </div>
                 </div>
                 

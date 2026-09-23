@@ -49,7 +49,7 @@ export function DatePicker({ value, onChange, hasError }: DatePickerProps) {
             onChange(format(cloneDay, 'yyyy-MM-dd'));
           }}
           className={`h-9 w-9 rounded-full flex items-center justify-center text-sm font-medium transition-colors
-            ${!isCurrentMonth ? 'text-slate-300' : isDisabled ? 'text-slate-300 cursor-not-allowed opacity-50' : 'text-slate-700 hover:bg-slate-100'}
+            ${!isCurrentMonth ? 'text-slate-300' : isDisabled ? 'text-slate-300 cursor-not-allowed opacity-50' : isSelected ? 'text-slate-900' : 'text-slate-700 hover:bg-slate-200'}
             ${isSelected ? 'bg-[#9fbdd0] text-slate-900 shadow-sm font-bold' : ''}
             ${isSameDay(day, today) && !isSelected ? 'border border-[#9fbdd0] text-[#86aec6]' : ''}
           `}
