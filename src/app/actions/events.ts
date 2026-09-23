@@ -233,3 +233,55 @@ export async function getEventDetails(eventId: string) {
     return { error: 'Error interno del servidor' }
   }
 }
+
+export async function getMyEvents() {
+  try {
+    const supabase = await createClient()
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      return { error: 'Not authenticated' }
+    }
+
+    // Buscamos todos los registros en event_attendees para este usuario
+    const { data: attendanceData, error: attendanceError } = await supabase
+      .from('event_attendees')
+      .select('event_id')
+      .eq('user_id', user.id)
+
+    if (attendanceError) {
+      console.error(attendanceError)
+      return { error: 'Error al obtener tus eventos' }
+    }
+
+    if (!attendanceData || attendanceData.length === 0) {
+      return { events: [] }
+    }
+
+    const eventIds = attendanceData.map((a: any) => a.event_id)
+
+    // Obtenemos los eventos completos usando los IDs
+    const { data, error } = await supabase
+      .from('events')
+      .select(`
+        *,
+        creator:users!events_creator_id_fkey(username, avatar_url, instagram, facebook),
+        event_attendees(user_id, users!event_attendees_user_id_fkey(username, avatar_url, age, gender, instagram, facebook))
+      `)
+      .in('id', eventIds)
+      .order('event_datetime', { ascending: true })
+
+    if (error) {
+      console.error(error)
+      return { error: 'Error al cargar los detalles de tus eventos' }
+    }
+
+    return { events: data }
+  } catch (err) {
+    console.error(err)
+    return { error: 'Error interno del servidor' }
+  }
+}

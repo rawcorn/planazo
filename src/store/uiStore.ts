@@ -70,6 +70,7 @@ interface AppState {
   currentUser: User | null
   users: User[]
   events: Event[]
+  myEvents: Event[]
   messages: Record<string, Message[]>
   dmChannels: any[]
   
@@ -117,6 +118,7 @@ interface AppState {
 
   startDirectMessage: (targetUserId: string) => Promise<void>
   fetchEventsForRegion: (regionId: string) => Promise<void>
+  fetchMyEvents: () => Promise<void>
   fetchMessagesForRoom: (roomId: string) => Promise<void>
   deleteMessageForMe: (messageId: string, roomId: string) => Promise<void>
   deleteMessageForEveryone: (messageId: string, roomId: string) => Promise<void>
@@ -126,6 +128,7 @@ export const useUIStore = create<AppState>((set, get) => ({
   currentUser: null,
   users: [],
   events: [],
+  myEvents: [],
   messages: {},
   dmChannels: [],
   
@@ -231,6 +234,7 @@ export const useUIStore = create<AppState>((set, get) => ({
 
     if (res.event) {
        await fetchEventsForRegion(eventData.region);
+       await get().fetchMyEvents();
        return { id: res.event.id };
     }
     return { error: 'Error desconocido' };
@@ -303,34 +307,40 @@ export const useUIStore = create<AppState>((set, get) => ({
          await get().sendMessage(regionObj.room_id, `✏️ @${currentUser.username} editó el planazo "${res.event.title}". Modificó: ${changesStr}.`);
        }
        await fetchEventsForRegion(res.event.region_id);
+       await get().fetchMyEvents();
        return { id: res.event.id };
     }
     return { error: 'Error desconocido' };
   },
 
   deleteEvent: async (eventId) => {
-    const { fetchEventsForRegion, events } = get();
+    const { fetchEventsForRegion, events, fetchMyEvents } = get();
     const ev = events.find(e => e.id === eventId);
     
     const res = await deleteEventAction(eventId);
     if (res.error) return { error: res.error };
     
-    if (ev) await fetchEventsForRegion(ev.region);
+    if (ev) {
+       await fetchEventsForRegion(ev.region);
+    }
+    await fetchMyEvents();
     return { success: true };
   },
 
   joinEvent: async (eventId) => {
-    const { fetchEventsForRegion, events } = get();
+    const { fetchEventsForRegion, fetchMyEvents, events } = get();
     await joinEvent(eventId);
     const ev = events.find(e => e.id === eventId);
     if(ev) await fetchEventsForRegion(ev.region);
+    await fetchMyEvents();
   },
 
   leaveEvent: async (eventId) => {
-    const { fetchEventsForRegion, events } = get();
+    const { fetchEventsForRegion, fetchMyEvents, events } = get();
     await leaveEvent(eventId);
     const ev = events.find(e => e.id === eventId);
     if(ev) await fetchEventsForRegion(ev.region);
+    await fetchMyEvents();
   },
 
   // ¡ESTA ES LA FUNCIÓN CORREGIDA!
@@ -420,6 +430,30 @@ export const useUIStore = create<AppState>((set, get) => ({
          });
          return { events: mapped, users: mergedUsers };
        });
+    }
+  },
+
+  fetchMyEvents: async () => {
+    const { getMyEvents: getMyEventsAction } = await import('@/app/actions/events');
+    const res = await getMyEventsAction();
+    if (res.events) {
+       const mapped: Event[] = res.events.map((e: any) => ({
+          id: e.id,
+          title: e.title,
+          description: e.description,
+          creatorId: e.creator_id,
+          region: e.region_id,
+          interest: e.category_id,
+          date: e.event_datetime,
+          attendees: e.event_attendees ? e.event_attendees.map((ea: any) => ea.user_id) : [],
+          maxAttendees: e.max_attendees,
+          address: e.address || '',
+          ageMin: e.min_age,
+          ageMax: e.max_age,
+          genderPreference: 'Todos',
+          imageUrl: e.image_url,
+       }));
+       set({ myEvents: mapped });
     }
   },
 

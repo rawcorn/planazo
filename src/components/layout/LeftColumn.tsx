@@ -6,6 +6,7 @@ export function LeftColumn() {
   const { 
     currentUser, 
     events, 
+    myEvents,
     messages,
     users,
     regions,
@@ -18,6 +19,7 @@ export function LeftColumn() {
   } = useUIStore(useShallow(state => ({
     currentUser: state.currentUser,
     events: state.events,
+    myEvents: state.myEvents,
     messages: state.messages,
     users: state.users,
     regions: state.regions,
@@ -30,8 +32,6 @@ export function LeftColumn() {
   })))
 
   if (!currentUser) return null;
-
-  const myEvents = events.filter(e => e.attendees.includes(currentUser.id));
   
   const regionRoomIds = regions.map(r => r.room_id);
   const dmRoomIds = Object.keys(messages).filter(id => !regionRoomIds.includes(id) && !events.some(e => e.id === id));

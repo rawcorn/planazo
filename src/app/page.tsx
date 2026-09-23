@@ -65,6 +65,9 @@ export default function Home() {
               }
             }
           }
+
+          // Fetch My Events
+          await useUIStore.getState().fetchMyEvents();
         }
       } catch (e) {
         console.error("Failed to init", e)

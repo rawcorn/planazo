@@ -8,6 +8,7 @@ export function CenterColumn() {
     currentUser, 
     users, 
     events, 
+    myEvents,
     messages, 
     regions,
     dmChannels,
@@ -24,6 +25,7 @@ export function CenterColumn() {
     currentUser: state.currentUser,
     users: state.users,
     events: state.events,
+    myEvents: state.myEvents,
     messages: state.messages,
     regions: state.regions,
     dmChannels: state.dmChannels,
@@ -61,10 +63,10 @@ export function CenterColumn() {
   if (!activeRoomId) return <div className="flex-1 flex items-center justify-center bg-slate-50"><p className="text-slate-500 font-medium">Selecciona una sala para chatear</p></div>;
   const activeRegion = regions.find(r => r.room_id === activeRoomId);
   const isRegionRoom = !!activeRegion;
-  const isEventRoom = !isRegionRoom && events.some(e => e.id === activeRoomId);
+  const isEventRoom = !isRegionRoom && (events.some(e => e.id === activeRoomId) || myEvents.some(e => e.id === activeRoomId));
   const isDMRoom = !isRegionRoom && !isEventRoom;
 
-  const activeEvent = isEventRoom ? events.find(e => e.id === activeRoomId) : null;
+  const activeEvent = isEventRoom ? (events.find(e => e.id === activeRoomId) || myEvents.find(e => e.id === activeRoomId)) : null;
   
   let dmUser = null;
   if (isDMRoom) {
@@ -318,7 +320,7 @@ export function CenterColumn() {
                 && !isSystem && !nextIsSystem
                 && !isTimeGapTooBig(msg.timestamp, nextMsg.timestamp));
 
-              const linkedEvent = isSystem ? events.find(e => e.id === msg.eventId) : null;
+              const linkedEvent = isSystem ? (events.find(e => e.id === msg.eventId) || myEvents.find(e => e.id === msg.eventId)) : null;
               if (isSystem && !linkedEvent) return null;
 
               const effectiveSenderId = isSystem ? linkedEvent?.creatorId : msg.senderId;
