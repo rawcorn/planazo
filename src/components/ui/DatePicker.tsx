@@ -95,29 +95,32 @@ export function DatePicker({ value, onChange, hasError }: DatePickerProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full mt-2 left-0 z-50 bg-white rounded-2xl shadow-xl border border-slate-100 p-4 w-[300px] animate-in fade-in zoom-in-95 duration-200">
-          <div className="flex justify-between items-center mb-4 px-2">
-            <button type="button" onClick={prevMonth} className="p-1.5 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <span className="font-bold text-slate-800 capitalize text-sm">
-              {format(currentMonth, 'MMMM yyyy', { locale: es })}
-            </span>
-            <button type="button" onClick={nextMonth} className="p-1.5 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
-              <ChevronRight className="h-5 w-5" />
-            </button>
+        <>
+          <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100]" onClick={() => setIsOpen(false)} />
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] bg-white rounded-[2rem] shadow-2xl border border-slate-100 p-6 w-[320px] animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center mb-5 px-1">
+              <button type="button" onClick={prevMonth} className="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <span className="font-bold text-slate-800 capitalize text-base">
+                {format(currentMonth, 'MMMM yyyy', { locale: es })}
+              </span>
+              <button type="button" onClick={nextMonth} className="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
+                <ChevronRight className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-7 gap-1 mb-3 text-center">
+              {['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'].map(d => (
+                <span key={d} className="text-xs font-bold text-slate-400">{d}</span>
+              ))}
+            </div>
+            
+            <div className="flex flex-col">
+              {rows}
+            </div>
           </div>
-          
-          <div className="grid grid-cols-7 gap-1 mb-2 text-center">
-            {['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa', 'Do'].map(d => (
-              <span key={d} className="text-xs font-bold text-slate-400">{d}</span>
-            ))}
-          </div>
-          
-          <div className="flex flex-col">
-            {rows}
-          </div>
-        </div>
+        </>
       )}
     </div>
   )
