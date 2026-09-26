@@ -145,7 +145,13 @@ export function LeftColumn() {
                     <button
                       onClick={() => {
                         setSelectedEvent(event.id);
-                        setActiveRoom(event.id);
+                        // No entramos al chat del plan. Volvemos al chat general para no forzar la vista del chat.
+                        const userRegion = regions.find(r => r.name === currentUser?.region);
+                        const fallbackRoom = userRegion?.room_id || regions[0]?.room_id || '';
+                        if (activeRoomId !== event.id) {
+                           setActiveRoom(fallbackRoom);
+                           setSelectedEvent(event.id); // setActiveRoom clears selectedEventId, so we set it again
+                        }
                         if(window.innerWidth < 1024) setMobileView('details');
                       }}
                       className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all ${selectedEventId === event.id ? 'bg-violet-600 text-white shadow-md' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
