@@ -1,5 +1,5 @@
 import { useUIStore } from '@/store/uiStore'
-import { LogOut, X, MapPin, MessageCircle } from 'lucide-react'
+import { LogOut, X, MapPin, MessageCircle, Info } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
 
 export function LeftColumn() {
@@ -15,7 +15,8 @@ export function LeftColumn() {
     setActiveRoom, 
     setMobileView, 
     logout,
-    setSelectedUser
+    setSelectedUser,
+    setSelectedEvent
   } = useUIStore(useShallow(state => ({
     currentUser: state.currentUser,
     events: state.events,
@@ -28,7 +29,8 @@ export function LeftColumn() {
     setActiveRoom: state.setActiveRoom,
     setMobileView: state.setMobileView,
     logout: state.logout,
-    setSelectedUser: state.setSelectedUser
+    setSelectedUser: state.setSelectedUser,
+    setSelectedEvent: state.setSelectedEvent
   })))
 
   if (!currentUser) return null;
@@ -124,24 +126,36 @@ export function LeftColumn() {
           ) : (
             <div className="space-y-1">
               {myEvents.map(event => (
-                <button
-                  key={event.id}
-                  onClick={() => { 
-                    setActiveRoom(event.id);
-                    if(window.innerWidth < 1024) setMobileView('chat');
-                  }}
-                  className={`w-full text-left px-4 py-3 rounded-[1.5rem] flex items-center gap-4 transition-colors ${activeRoomId === event.id ? 'bg-[#D5CAFA] text-slate-900 font-bold' : 'hover:bg-[#EFE9FB] text-slate-700 font-medium'}`}
-                >
-                  <div className={`h-9 w-9 rounded-full flex items-center justify-center font-bold overflow-hidden ${activeRoomId === event.id ? 'bg-white shadow-sm text-slate-800' : 'bg-[#E5D0BA] text-slate-800'}`}>
-                    {event.imageUrl ? <img src={event.imageUrl} alt={event.title} className="h-full w-full object-cover" /> : event.title.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="truncate text-[15px]">{event.title}</p>
-                    <p className={`text-[11px] truncate mt-0.5 ${activeRoomId === event.id ? 'text-slate-700' : 'text-slate-500'}`}>
-                      {new Date(event.date).toLocaleDateString('es-AR', { weekday: 'long' })} {new Date(event.date).getDate()}/{new Date(event.date).getMonth() + 1}
-                    </p>
-                  </div>
-                </button>
+                <div key={event.id} className={`w-full group flex items-center rounded-[1.5rem] transition-colors ${activeRoomId === event.id ? 'bg-[#D5CAFA] text-slate-900 font-bold' : 'hover:bg-[#EFE9FB] text-slate-700 font-medium'}`}>
+                  <button
+                    onClick={() => { 
+                      setActiveRoom(event.id);
+                      if(window.innerWidth < 1024) setMobileView('chat');
+                    }}
+                    className="flex-1 flex items-center gap-4 text-left pl-4 py-3 min-w-0 rounded-[1.5rem]"
+                  >
+                    <div className={`h-9 w-9 shrink-0 rounded-full flex items-center justify-center font-bold overflow-hidden ${activeRoomId === event.id ? 'bg-white shadow-sm text-slate-800' : 'bg-[#E5D0BA] text-slate-800'}`}>
+                      {event.imageUrl ? <img src={event.imageUrl} alt={event.title} className="h-full w-full object-cover" /> : event.title.charAt(0)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-[15px]">{event.title}</p>
+                      <p className={`text-[11px] truncate mt-0.5 ${activeRoomId === event.id ? 'text-slate-700' : 'text-slate-500'}`}>
+                        {new Date(event.date).toLocaleDateString('es-AR', { weekday: 'long' })} {new Date(event.date).getDate()}/{new Date(event.date).getMonth() + 1}
+                      </p>
+                    </div>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedEvent(event.id);
+                      if(window.innerWidth < 1024) setMobileView('details');
+                    }}
+                    title="Ver detalles del plan"
+                    className="p-2 mr-2 text-slate-400 hover:text-slate-700 hover:bg-black/5 rounded-xl transition-colors shrink-0"
+                  >
+                    <Info className="h-5 w-5" />
+                  </button>
+                </div>
               ))}
             </div>
           )}
