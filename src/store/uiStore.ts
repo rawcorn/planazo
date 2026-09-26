@@ -339,14 +339,39 @@ export const useUIStore = create<AppState>((set, get) => ({
     await fetchMyEvents();
   },
 
-  // ¡ESTA ES LA FUNCIÓN CORREGIDA!
   sendMessage: async (roomId, text, parentId) => {
-    // 1. Llama a la acción real del backend (importada arriba de todo)
-    const result = await sendMessageAPI(roomId, text, parentId);
-    console.log("SEND MESSAGE RESULT:", result);
+    const { currentUser, messages, fetchMessagesForRoom } = get();
+    if (!currentUser) return;
     
-    // 2. Refresca la lista de mensajes de la base de datos
-    const { fetchMessagesForRoom } = get();
+    // 1. Crear el mensaje optimista local
+    const tempId = `temp-${Date.now()}`;
+    const optimisticMsg: Message = {
+      id: tempId,
+      roomId,
+      senderId: currentUser.id,
+      text,
+      timestamp: new Date().toISOString(),
+      type: 'text',
+      parentId
+    };
+    
+    // 2. Inyectarlo inmediatamente en el store para que la UI lo muestre sin demora
+    set(state => ({
+      messages: {
+        ...state.messages,
+        [roomId]: [...(state.messages[roomId] || []), optimisticMsg]
+      }
+    }));
+    
+    // 3. Enviar al backend asincrónicamente
+    try {
+      const result = await sendMessageAPI(roomId, text, parentId);
+      console.log("SEND MESSAGE RESULT:", result);
+    } catch (e) {
+      console.error("Error enviando mensaje optimista:", e);
+    }
+    
+    // 4. Refrescar mensajes de la DB (pisará el optimista con el real)
     await fetchMessagesForRoom(roomId);
   },
 
