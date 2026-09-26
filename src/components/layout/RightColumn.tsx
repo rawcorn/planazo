@@ -396,13 +396,13 @@ export function RightColumn() {
             )}
 
             {currentUser.id !== profileToShow.id ? (
-              <div className="pt-4">
+              <div className="pt-6 flex justify-center">
                 <button 
-                  className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-black rounded-2xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5" 
+                  className="flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-100 hover:bg-violet-100 text-slate-600 hover:text-violet-700 font-semibold rounded-full border border-slate-200 hover:border-violet-300 transition-colors shadow-sm" 
                   onClick={() => startDirectMessage(profileToShow.id)}
                 >
-                  <MessageCircle className="h-5 w-5" />
-                  Enviar Mensaje Privado
+                  <MessageCircle className="h-4 w-4" />
+                  Mensaje
                 </button>
               </div>
             ) : (
