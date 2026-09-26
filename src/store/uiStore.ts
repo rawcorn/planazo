@@ -149,7 +149,27 @@ export const useUIStore = create<AppState>((set, get) => ({
     set({ currentUser: null });
   },
   
-  setActiveRoom: (roomId) => set({ activeRoomId: roomId, activeThreadId: null, activeView: 'cartelera', selectedEventId: null, selectedUserId: null }),
+  setActiveRoom: (roomId) => {
+    const { events, myEvents } = get();
+    const isEvent = events.some(e => e.id === roomId) || myEvents.some(e => e.id === roomId);
+    if (isEvent) {
+      set({ 
+        activeRoomId: roomId, 
+        activeThreadId: null, 
+        activeView: 'event_details', 
+        selectedEventId: roomId, 
+        selectedUserId: null 
+      });
+    } else {
+      set({ 
+        activeRoomId: roomId, 
+        activeThreadId: null, 
+        activeView: 'cartelera', 
+        selectedEventId: null, 
+        selectedUserId: null 
+      });
+    }
+  },
   setActiveThreadId: (threadId) => set({ activeThreadId: threadId, mobileView: 'chat' }),
   setRightColumnView: (view) => set({ activeView: view }),
   setMobileView: (view) => set({ mobileView: view }),

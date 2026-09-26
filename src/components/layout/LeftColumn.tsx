@@ -145,6 +145,7 @@ export function LeftColumn() {
                     <button
                       onClick={() => {
                         setSelectedEvent(event.id);
+                        setActiveRoom(event.id);
                         if(window.innerWidth < 1024) setMobileView('details');
                       }}
                       className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all ${selectedEventId === event.id ? 'bg-violet-600 text-white shadow-md' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
@@ -154,6 +155,7 @@ export function LeftColumn() {
                     <button
                       onClick={() => { 
                         setActiveRoom(event.id);
+                        setSelectedEvent(event.id);
                         if(window.innerWidth < 1024) setMobileView('chat');
                       }}
                       className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all ${activeRoomId === event.id ? 'bg-fuchsia-500 text-white shadow-md' : 'bg-slate-100 hover:bg-fuchsia-100 text-slate-600 hover:text-fuchsia-600'}`}
