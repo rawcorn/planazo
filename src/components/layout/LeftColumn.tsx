@@ -142,15 +142,6 @@ export function LeftColumn() {
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <button
-                      onClick={() => { 
-                        setActiveRoom(event.id);
-                        if(window.innerWidth < 1024) setMobileView('chat');
-                      }}
-                      className={`px-2.5 py-1.5 text-[11px] font-bold rounded-xl transition-colors ${activeRoomId === event.id ? 'bg-white shadow-sm text-slate-900 hover:bg-slate-50' : 'bg-black/5 hover:bg-black/10 text-slate-700'}`}
-                    >
-                      Chat
-                    </button>
-                    <button
                       onClick={() => {
                         setSelectedEvent(event.id);
                         if(window.innerWidth < 1024) setMobileView('details');
@@ -158,6 +149,15 @@ export function LeftColumn() {
                       className={`px-2.5 py-1.5 text-[11px] font-bold rounded-xl transition-colors ${selectedEventId === event.id ? 'bg-white shadow-sm text-slate-900 hover:bg-slate-50' : 'bg-black/5 hover:bg-black/10 text-slate-700'}`}
                     >
                       Detalles
+                    </button>
+                    <button
+                      onClick={() => { 
+                        setActiveRoom(event.id);
+                        if(window.innerWidth < 1024) setMobileView('chat');
+                      }}
+                      className={`px-2.5 py-1.5 text-[11px] font-bold rounded-xl transition-colors ${activeRoomId === event.id ? 'bg-white shadow-sm text-slate-900 hover:bg-slate-50' : 'bg-black/5 hover:bg-black/10 text-slate-700'}`}
+                    >
+                      Chat
                     </button>
                   </div>
                 </div>
