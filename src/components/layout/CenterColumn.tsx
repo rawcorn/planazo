@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { useShallow } from 'zustand/react/shallow'
-import { Menu, ChevronLeft, Send, MessageSquare, X, CornerUpLeft, CornerUpRight, Copy, Trash2 } from 'lucide-react'
+import { Menu, ChevronLeft, Send, MessageSquare, X, CornerUpLeft, CornerUpRight, Copy, Trash2, Calendar } from 'lucide-react'
 
 export function CenterColumn() {
   const { 
@@ -248,9 +248,20 @@ export function CenterColumn() {
               <h2 className="font-black text-lg text-slate-900 truncate">
                 {isEventRoom ? activeEvent?.title : isDMRoom ? dmUser?.username : activeRegion?.name}
               </h2>
-              <p className="text-xs text-slate-500 font-medium truncate flex items-center gap-1">
-                {isEventRoom ? (
-                  <span>{activeEvent?.attendees.length} asistentes</span>
+              <p className="text-[11px] text-slate-500 font-medium truncate flex items-center gap-1.5">
+                {isEventRoom && activeEvent ? (
+                  <>
+                    <span>{activeEvent.attendees.length} asist.</span>
+                    <span className="text-slate-300">•</span>
+                    <Calendar className="h-3 w-3 text-slate-400" />
+                    <span>
+                      {new Date(activeEvent.date).toLocaleDateString('es-AR', { weekday: 'short' }).replace('.', '')} {new Date(activeEvent.date).getDate()}/{new Date(activeEvent.date).getMonth() + 1}
+                    </span>
+                    <span className="text-slate-300">•</span>
+                    <span>
+                      {new Date(activeEvent.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </>
                 ) : isDMRoom ? (
                   <span>Mensaje Privado</span>
                 ) : (

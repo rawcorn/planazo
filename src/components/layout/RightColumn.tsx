@@ -13,6 +13,7 @@ export function RightColumn() {
     currentUser, 
     users, 
     events, 
+    myEvents,
     regions,
     interests,
     activeRoomId, 
@@ -37,6 +38,7 @@ export function RightColumn() {
     currentUser: state.currentUser,
     users: state.users,
     events: state.events,
+    myEvents: state.myEvents,
     regions: state.regions,
     interests: state.interests,
     activeRoomId: state.activeRoomId,
@@ -176,7 +178,7 @@ export function RightColumn() {
       return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
 
-  const eventToShow = selectedEventId ? events.find(e => e.id === selectedEventId) : (isEventRoom ? activeEvent : null);
+  const eventToShow = selectedEventId ? (events.find(e => e.id === selectedEventId) || myEvents.find(e => e.id === selectedEventId)) : (isEventRoom ? activeEvent : null);
   const profileToShow = selectedUserId ? getUser(selectedUserId) : null;
 
   const executeCreation = async () => {
