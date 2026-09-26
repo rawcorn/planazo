@@ -20,7 +20,8 @@ export function CenterColumn() {
     setSelectedEvent,
     setSelectedUser,
     deleteMessageForMe,
-    deleteMessageForEveryone
+    deleteMessageForEveryone,
+    resetRightColumn
   } = useUIStore(useShallow(state => ({
     currentUser: state.currentUser,
     users: state.users,
@@ -37,7 +38,8 @@ export function CenterColumn() {
     setSelectedEvent: state.setSelectedEvent,
     setSelectedUser: state.setSelectedUser,
     deleteMessageForMe: state.deleteMessageForMe,
-    deleteMessageForEveryone: state.deleteMessageForEveryone
+    deleteMessageForEveryone: state.deleteMessageForEveryone,
+    resetRightColumn: state.resetRightColumn
   })))
 
   const [chatText, setChatText] = useState('');
@@ -258,12 +260,21 @@ export function CenterColumn() {
             </div>
           </div>
         )}
-        <button 
-          onClick={() => setMobileView('details')} 
-          className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl flex items-center gap-1 transition-colors"
-        >
-          <ChevronLeft className="h-5 w-5 rotate-180" />
-        </button>
+        {(isEventRoom || isDMRoom) ? (
+          <button 
+            onClick={() => { resetRightColumn(); if(window.innerWidth < 1024) setMobileView('menu'); }} 
+            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl flex items-center gap-1 transition-colors"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        ) : (
+          <button 
+            onClick={() => setMobileView('details')} 
+            className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl flex items-center gap-1 transition-colors"
+          >
+            <ChevronLeft className="h-5 w-5 rotate-180" />
+          </button>
+        )}
       </div>
 
       {/* MESSAGES */}
