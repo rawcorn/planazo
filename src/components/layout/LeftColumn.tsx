@@ -1,5 +1,5 @@
 import { useUIStore } from '@/store/uiStore'
-import { LogOut, X, MapPin, MessageCircle, Info } from 'lucide-react'
+import { LogOut, X, MapPin, MessageCircle, Info, Calendar } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
 
 export function LeftColumn() {
@@ -128,15 +128,16 @@ export function LeftColumn() {
           ) : (
             <div className="space-y-1">
               {myEvents.map(event => (
-                <div key={event.id} className={`w-full flex items-center p-2 rounded-[1.5rem] transition-colors ${activeRoomId === event.id ? 'bg-[#D5CAFA] text-slate-900' : 'hover:bg-[#EFE9FB] text-slate-700'}`}>
+                <div key={event.id} className={`w-full flex items-center p-2 mb-2 rounded-[1.2rem] border transition-all ${activeRoomId === event.id ? 'bg-[#F8F5FF] border-[#D5CAFA] shadow-sm' : 'bg-white border-transparent hover:border-slate-100 hover:bg-slate-50 hover:shadow-sm'}`}>
                   <div className="flex-1 flex items-center gap-3 min-w-0 pr-2">
-                    <div className={`h-9 w-9 shrink-0 rounded-full flex items-center justify-center font-bold overflow-hidden ${activeRoomId === event.id ? 'bg-white shadow-sm text-slate-800' : 'bg-[#E5D0BA] text-slate-800'}`}>
+                    <div className="h-10 w-10 shrink-0 rounded-xl flex items-center justify-center font-bold overflow-hidden bg-slate-100 text-slate-700 shadow-inner">
                       {event.imageUrl ? <img src={event.imageUrl} alt={event.title} className="h-full w-full object-cover" /> : event.title.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`truncate text-[14px] ${activeRoomId === event.id ? 'font-bold' : 'font-medium'}`}>{event.title}</p>
-                      <p className={`text-[11px] truncate mt-0.5 ${activeRoomId === event.id ? 'text-slate-700' : 'text-slate-500'}`}>
-                        {new Date(event.date).toLocaleDateString('es-AR', { weekday: 'short' })} {new Date(event.date).getDate()}/{new Date(event.date).getMonth() + 1}
+                      <p className={`truncate text-[14px] ${activeRoomId === event.id ? 'font-bold text-violet-900' : 'font-semibold text-slate-800'}`}>{event.title}</p>
+                      <p className={`text-[11px] truncate flex items-center gap-1 mt-0.5 ${activeRoomId === event.id ? 'text-violet-600' : 'text-slate-500'}`}>
+                        <Calendar className="h-3 w-3" />
+                        {new Date(event.date).toLocaleDateString('es-AR', { weekday: 'short' }).replace('.', '')} {new Date(event.date).getDate()}/{new Date(event.date).getMonth() + 1}
                       </p>
                     </div>
                   </div>
@@ -146,7 +147,7 @@ export function LeftColumn() {
                         setSelectedEvent(event.id);
                         if(window.innerWidth < 1024) setMobileView('details');
                       }}
-                      className={`px-2.5 py-1.5 text-[11px] font-bold rounded-xl transition-colors ${selectedEventId === event.id ? 'bg-white shadow-sm text-slate-900 hover:bg-slate-50' : 'bg-black/5 hover:bg-black/10 text-slate-700'}`}
+                      className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all ${selectedEventId === event.id ? 'bg-violet-600 text-white shadow-md' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
                     >
                       Detalles
                     </button>
@@ -155,7 +156,7 @@ export function LeftColumn() {
                         setActiveRoom(event.id);
                         if(window.innerWidth < 1024) setMobileView('chat');
                       }}
-                      className={`px-2.5 py-1.5 text-[11px] font-bold rounded-xl transition-colors ${activeRoomId === event.id ? 'bg-white shadow-sm text-slate-900 hover:bg-slate-50' : 'bg-black/5 hover:bg-black/10 text-slate-700'}`}
+                      className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all ${activeRoomId === event.id ? 'bg-fuchsia-500 text-white shadow-md' : 'bg-slate-100 hover:bg-fuchsia-100 text-slate-600 hover:text-fuchsia-600'}`}
                     >
                       Chat
                     </button>
