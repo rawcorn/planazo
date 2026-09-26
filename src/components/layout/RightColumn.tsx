@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut } from 'lucide-react'
+import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut, MessageCircle } from 'lucide-react'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
@@ -397,9 +397,13 @@ export function RightColumn() {
 
             {currentUser.id !== profileToShow.id ? (
               <div className="pt-4">
-                <Button className="w-full py-3.5" onClick={() => startDirectMessage(profileToShow.id)}>
+                <button 
+                  className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-black rounded-2xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5" 
+                  onClick={() => startDirectMessage(profileToShow.id)}
+                >
+                  <MessageCircle className="h-5 w-5" />
                   Enviar Mensaje Privado
-                </Button>
+                </button>
               </div>
             ) : (
               <div className="pt-4">
