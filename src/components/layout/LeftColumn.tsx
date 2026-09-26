@@ -89,11 +89,13 @@ export function LeftColumn() {
               const pastelIconBgs = ['bg-[#A7F3D0]', 'bg-[#FBCFE8]', 'bg-[#FDE047]', 'bg-[#C7D2FE]', 'bg-[#FECACA]'];
               const iconBg = pastelIconBgs[region.name.length % pastelIconBgs.length];
               const getIcon = () => {
-                if (region.name.includes('CABA')) return '🗺️';
-                if (region.name.includes('GBA')) return '🏘️';
-                if (region.name.includes('Córdoba')) return '🏞️';
+                if (region.name.includes('CABA')) return '🏙️';
+                if (region.name.includes('GBA Norte')) return '⛵';
+                if (region.name.includes('GBA Sur')) return '🍻';
+                if (region.name.includes('GBA Oeste')) return '🍔';
+                if (region.name.includes('Córdoba')) return '⛰️';
                 if (region.name.includes('Mendoza')) return '🍷';
-                if (region.name.includes('Rosario')) return '🚢';
+                if (region.name.includes('Rosario')) return '🏖️';
                 return '📍';
               };
               return (
