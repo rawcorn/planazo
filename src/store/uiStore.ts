@@ -165,14 +165,8 @@ export const useUIStore = create<AppState>((set, get) => ({
     const isRegionRoom = regions.some(r => r.room_id === activeRoomId);
     
     if (!isRegionRoom) {
-       const activeEvent = events.find(ev => ev.id === activeRoomId) || myEvents.find(ev => ev.id === activeRoomId);
-       if (activeEvent) {
-         const reg = regions.find(r => r.id === activeEvent.region);
-         if (reg) targetRoom = reg.room_id;
-       } else {
-         const userRegion = regions.find(r => r.id === currentUser?.region);
-         targetRoom = userRegion?.room_id || regions[0]?.room_id || '';
-       }
+       const userRegion = regions.find(r => r.id === currentUser?.region);
+       targetRoom = userRegion?.room_id || regions[0]?.room_id || '';
     }
     set({ 
       activeView: 'cartelera', 
