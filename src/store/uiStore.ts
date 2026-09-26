@@ -165,7 +165,7 @@ export const useUIStore = create<AppState>((set, get) => ({
     const isRegionRoom = regions.some(r => r.room_id === activeRoomId);
     
     if (!isRegionRoom) {
-       const userRegion = regions.find(r => r.id === currentUser?.region);
+       const userRegion = regions.find(r => r.name === currentUser?.region);
        targetRoom = userRegion?.room_id || regions[0]?.room_id || '';
     }
     set({ 
