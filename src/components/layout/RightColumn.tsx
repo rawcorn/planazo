@@ -327,7 +327,7 @@ export function RightColumn() {
           <h2 className="font-bold text-lg text-slate-900 flex items-center gap-2">
             {activeView === 'profile' ? 'Perfil de Usuario' : 
              activeView === 'create_event' ? 'Armar un Plan' : 
-             activeView === 'event_details' ? 'Detalles del Plan' : 
+             activeView === 'event_details' ? 'Detalles del Planazo' : 
              `Planes en ${currentRegionName}`}
           </h2>
         </div>
