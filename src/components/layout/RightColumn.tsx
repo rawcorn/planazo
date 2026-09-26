@@ -152,8 +152,10 @@ export function RightColumn() {
   const isEventRoom = !isRegionRoom && events.some(e => e.id === activeRoomId);
   
   const activeEvent = isEventRoom ? events.find(e => e.id === activeRoomId) : null;
-  const currentRegionIdContext = activeEvent ? activeEvent.region : activeRegionObj?.id;
-  const currentRegionName = activeRegionObj ? activeRegionObj.name : (activeEvent ? regions.find(r => r.id === activeEvent.region)?.name : '');
+  const fallbackRegion = regions.find(r => r.name === currentUser.region);
+  
+  const currentRegionIdContext = activeEvent ? activeEvent.region : (activeRegionObj?.id || fallbackRegion?.id);
+  const currentRegionName = activeRegionObj ? activeRegionObj.name : (activeEvent ? regions.find(r => r.id === activeEvent.region)?.name : (fallbackRegion?.name || ''));
 
 
   const regionEvents = events
