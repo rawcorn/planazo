@@ -158,19 +158,20 @@ export const useUIStore = create<AppState>((set, get) => ({
   setSelectedUser: (userId) => set({ selectedUserId: userId, activeView: userId ? 'profile' : 'cartelera' }),
   setDuplicateWarning: (event) => set({ duplicateWarning: event }),
   resetRightColumn: () => {
-    const { activeRoomId, events, regions } = get();
+    const { activeRoomId, events, myEvents, currentUser, regions } = get();
     let targetRoom = activeRoomId;
     
     // Check if active room is a region room
     const isRegionRoom = regions.some(r => r.room_id === activeRoomId);
     
     if (!isRegionRoom) {
-       const activeEvent = events.find(ev => ev.id === activeRoomId);
+       const activeEvent = events.find(ev => ev.id === activeRoomId) || myEvents.find(ev => ev.id === activeRoomId);
        if (activeEvent) {
          const reg = regions.find(r => r.id === activeEvent.region);
          if (reg) targetRoom = reg.room_id;
        } else {
-         targetRoom = regions[0]?.room_id || '';
+         const userRegion = regions.find(r => r.id === currentUser?.region);
+         targetRoom = userRegion?.room_id || regions[0]?.room_id || '';
        }
     }
     set({ 
