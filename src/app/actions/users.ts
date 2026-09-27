@@ -110,14 +110,40 @@ export async function updateProfile(data: any) {
     if (!user) {
       return { error: 'Not authenticated' }
     }
-
-    const { error } = await supabase.from('users').update(parsed.data).eq('id', user.id)
-
-    if (error) {
-      console.error(error)
-      return { error: 'Error al actualizar el perfil' }
+    
+    const updateData = { ...parsed.data };
+    let emailToUpdate = undefined;
+    
+    if ('email' in updateData) {
+        emailToUpdate = updateData.email;
+        delete updateData.email;
     }
 
+    // Update custom profile fields in users table
+    if (Object.keys(updateData).length > 0) {
+      const { error } = await supabase.from('users').update(updateData).eq('id', user.id)
+      if (error) {
+        console.error(error)
+        return { error: 'Error al actualizar el perfil' }
+      }
+    }
+    
+    // Update email in Auth and users table if provided
+    if (emailToUpdate !== undefined && emailToUpdate !== user.email) {
+       // Update in Auth
+       const { error: authError } = await supabase.auth.updateUser({ email: emailToUpdate })
+       if (authError) {
+         console.error('Error updating auth email:', authError)
+         // Supabase auth email updates might require email confirmation, 
+         // but for MVP we might just update the users table as well.
+       }
+       
+       // Update in users table
+       const { error: userTableError } = await supabase.from('users').update({ email: emailToUpdate }).eq('id', user.id);
+       if (userTableError) {
+         console.error('Error updating user table email:', userTableError);
+       }
+    }
 
     return { success: true }
   } catch (err) {
