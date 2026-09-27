@@ -39,7 +39,7 @@ export async function signUp(data: any) {
 
     if (authError) {
       console.error(authError)
-      return { error: 'DB_ERROR: "$(uthError.message)", step: 'signup' }
+      return { error: 'Error al registrar el usuario. Es posible que el usuario o email ya estén en uso.' }
     }
 
     revalidatePath('/', 'layout')
@@ -85,7 +85,7 @@ export async function registerFullFlow(data: any, interests: string[]) {
 
     if (authError) {
       console.error("Signup error:", authError)
-      return { error: 'DB_ERROR: "$(uthError.message)", step: 'signup' }
+      return { error: 'Error al registrar el usuario. Es posible que el usuario o email ya estén en uso.', step: 'signup' }
     }
 
     // 2. Sign in immediately
