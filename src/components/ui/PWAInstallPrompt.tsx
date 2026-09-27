@@ -8,8 +8,14 @@ export function PWAInstallPrompt() {
   const [isStandalone, setIsStandalone] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showIOSPrompt, setShowIOSPrompt] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
+    // Check if dismissed previously
+    if (localStorage.getItem('pwa-prompt-dismissed') === 'true') {
+      setIsDismissed(true);
+    }
+
     // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true) {
       setIsStandalone(true);
@@ -26,10 +32,17 @@ export function PWAInstallPrompt() {
       setDeferredPrompt(e);
     };
 
+    // Listen for successful install to hide instantly
+    const handleAppInstalled = () => {
+      setIsStandalone(true);
+    };
+
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
@@ -48,31 +61,44 @@ export function PWAInstallPrompt() {
     }
   };
 
-  // Do not render if already installed
-  if (isStandalone) {
+  const handleDismiss = () => {
+    localStorage.setItem('pwa-prompt-dismissed', 'true');
+    setIsDismissed(true);
+  };
+
+  // Do not render if already installed or dismissed
+  if (isStandalone || isDismissed) {
     return null;
   }
 
   // Hide button if not iOS and the install prompt isn't ready
-  // This prevents the button from doing nothing on unsupported browsers
   if (!isIOS && !deferredPrompt) {
     return null;
   }
 
   return (
     <>
-      <button
-        onClick={handleInstallClick}
-        className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-50 flex items-center justify-center gap-2 rounded-full bg-blue-600 px-4 py-3 text-white shadow-xl transition-transform hover:scale-105 active:scale-95"
-      >
-        <Download size={20} />
-        <span className="font-medium">Instalar App</span>
-      </button>
+      <div className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-50 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <button
+          onClick={handleInstallClick}
+          className="flex items-center justify-center gap-2 rounded-full bg-blue-600 px-4 py-3 text-white shadow-xl transition-transform hover:scale-105 active:scale-95"
+        >
+          <Download size={20} />
+          <span className="font-medium">Instalar App</span>
+        </button>
+        <button
+          onClick={handleDismiss}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-500 shadow-xl transition-transform hover:scale-105 hover:bg-gray-50 active:scale-95"
+          aria-label="Cerrar sugerencia de instalación"
+        >
+          <X size={20} />
+        </button>
+      </div>
 
       {/* iOS Instructional Modal */}
       {showIOSPrompt && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl text-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl text-center animate-in zoom-in-95 duration-200">
             <button 
               onClick={() => setShowIOSPrompt(false)}
               className="absolute top-4 right-4 rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
