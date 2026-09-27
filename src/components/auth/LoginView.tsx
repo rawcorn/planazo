@@ -60,7 +60,7 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
   };
 
   return (
-    <div className="min-h-screen bg-[#DFD8F7] flex flex-col items-center justify-center py-10 px-4 font-sans">
+    <div className="min-h-screen bg-[#DFD8F7] flex flex-col items-center justify-start md:justify-center py-12 md:py-10 px-4 font-sans">
       <div className="w-full max-w-[340px] rounded-[2.5rem] shadow-sm overflow-hidden flex flex-col border-0">
         
         <div className="pt-10 pb-6 px-8 text-center bg-[#E4E6F8] flex flex-col items-center">

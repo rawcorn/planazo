@@ -227,7 +227,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
 
 
   return (
-    <div className="min-h-screen bg-[#F4DED4] flex flex-col items-center justify-center py-10 px-4">
+    <div className="min-h-screen bg-[#F4DED4] flex flex-col items-center justify-start md:justify-center py-8 md:py-10 px-4">
       <div className="w-full max-w-lg bg-slate-100 border border-slate-200 rounded-3xl shadow-sm overflow-hidden flex flex-col max-h-[90vh]">
         <div className="p-6 text-center border-b border-slate-100 shrink-0 bg-slate-50/50">
           <h1 className="text-3xl font-bold text-[#3F3F46] tracking-normal">Crear cuenta</h1>
