@@ -122,7 +122,7 @@ export function RightColumn() {
       setFormErrorField(null);
     } else if (activeView === 'edit_profile' && currentUser) {
       setEditProfileData({
-        email: currentUser.email || '',
+        email: '',
         instagram: currentUser.instagram || '',
         interests: currentUser.interests || [],
         avatarUrl: currentUser.avatarUrl || '',
@@ -385,7 +385,7 @@ export function RightColumn() {
     }
 
     const res = await updateUserProfile({
-       email: editProfileData.email,
+       email: editProfileData.email.trim() || currentUser.email,
        instagram: editProfileData.instagram,
        interests: editProfileData.interests,
        avatarUrl: editProfileData.avatarUrl
@@ -470,21 +470,21 @@ export function RightColumn() {
             </div>
 
             {(profileToShow.instagram || profileToShow.facebook) && (
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-3">
                 <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Redes Sociales</h4>
                 {profileToShow.instagram && (
-                  <a href={`https://instagram.com/${profileToShow.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 hover:border-pink-300 hover:text-pink-600 transition-colors font-bold text-sm">
-                    <svg className="h-5 w-5 text-pink-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <a href={`https://instagram.com/${profileToShow.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-600 hover:text-pink-600 transition-colors font-bold text-sm">
+                    <svg className="h-4 w-4 text-pink-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
                       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
                       <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
                     </svg>
-                    {profileToShow.instagram.replace('@', '')}
+                    @{profileToShow.instagram.replace('@', '')}
                   </a>
                 )}
                 {profileToShow.facebook && (
-                  <a href={profileToShow.facebook.includes('http') ? profileToShow.facebook : `https://facebook.com/${profileToShow.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 hover:border-blue-300 hover:text-blue-600 transition-colors font-bold text-sm">
-                    <LinkIcon className="h-5 w-5 text-blue-500" /> Perfil de Facebook
+                  <a href={profileToShow.facebook.includes('http') ? profileToShow.facebook : `https://facebook.com/${profileToShow.facebook}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors font-bold text-sm">
+                    <LinkIcon className="h-4 w-4 text-blue-500" /> Perfil de Facebook
                   </a>
                 )}
               </div>
@@ -501,13 +501,13 @@ export function RightColumn() {
                 </button>
               </div>
             ) : (
-              <div className="pt-4 flex flex-col gap-2">
-                <Button variant="outline" className="w-full py-3.5 text-slate-700 bg-white" onClick={() => setRightColumnView('edit_profile')}>
+              <div className="pt-4 flex flex-col gap-2 items-center">
+                <button onClick={() => setRightColumnView('edit_profile')} className="text-xs text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-400 transition-colors py-2">
                   Editar Perfil
-                </Button>
-                <Button variant="ghost" className="w-full py-3.5 text-slate-500 hover:text-slate-800" onClick={logout}>
-                  <LogOut className="h-5 w-5 mr-2" /> Cerrar Sesión
-                </Button>
+                </button>
+                <button onClick={logout} className="text-xs text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-400 transition-colors py-2">
+                  Cerrar Sesión
+                </button>
               </div>
             )}
           </div>
@@ -543,7 +543,7 @@ export function RightColumn() {
                 <input 
                   type="email"
                   className={`w-full bg-slate-100 border rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'email' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
-                  placeholder="tu@email.com" 
+                  placeholder="tu@email.com"
                   value={editProfileData.email} 
                   onChange={e => { setEditProfileData({...editProfileData, email: e.target.value}); if (formErrorField === 'email') { setFormError(null); setFormErrorField(null); } }} 
                 />
@@ -594,7 +594,7 @@ export function RightColumn() {
               </div>
 
               <div className="pt-4 space-y-2 flex flex-col items-center">
-                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-slate-900 shadow-sm font-bold transition-all">
+                <Button variant="outline" type="submit" className="w-full py-2 text-slate-600 text-sm">
                   Guardar Perfil
                 </Button>
                 {formError && (
