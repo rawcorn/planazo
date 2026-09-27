@@ -245,7 +245,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Correo (Opcional)</label>
+                  <label className="text-xs font-bold text-[#52525B] tracking-wider block mb-1"><span className="uppercase">Correo</span> <span className="normal-case">(Opcional)</span></label>
                   <input type="email" className={`w-full bg-slate-100 border-[1.5px] ${errors.email ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all placeholder:text-slate-400`} placeholder="tu@email.com" value={formData.email} onChange={e => { setFormData({...formData, email: e.target.value}); setErrors({...errors, email: ''}); setGlobalError(''); }} />
                   {errors.email && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.email}</p>}
                 </div>
@@ -316,10 +316,10 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-[#8D96D6] border-b border-slate-100 pb-2 mt-6">3. Redes y Avatar (Opcional)</h3>
+              <h3 className="text-sm font-bold text-[#8D96D6] border-b border-slate-100 pb-2 mt-6">3. Redes y Avatar</h3>
               <div>
-                <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">
-                  Foto de Perfil
+                <label className="text-xs font-bold text-[#52525B] tracking-wider block mb-1">
+                  <span className="uppercase">Foto de Perfil</span> <span className="normal-case">(Opcional)</span>
                 </label>
                 <div className="flex items-center gap-4">
                   <div className="h-16 w-16 bg-slate-100 rounded-full overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center text-slate-400">
@@ -341,7 +341,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
               </div>
               <div className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Instagram</label>
+                  <label className="text-xs font-bold text-[#52525B] tracking-wider block mb-1"><span className="uppercase">Instagram</span> <span className="normal-case">(Opcional)</span></label>
                   <input className="w-full bg-slate-100 border-[1.5px] border-[#8D96D6] rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all placeholder:text-slate-400" placeholder="@usuario" value={formData.instagram} onChange={e => setFormData({...formData, instagram: e.target.value})} />
                 </div>
               </div>
