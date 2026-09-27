@@ -39,7 +39,7 @@ export async function signUp(data: any) {
 
     if (authError) {
       console.error(authError)
-      return { error: DB_ERROR: \, step: 'signup' }
+      return { error: `DB_ERROR: ${authError.message}`, step: 'signup' }
     }
 
     revalidatePath('/', 'layout')
@@ -85,7 +85,7 @@ export async function registerFullFlow(data: any, interests: string[]) {
 
     if (authError) {
       console.error("Signup error:", authError)
-      return { error: DB_ERROR: \, step: 'signup' }
+      return { error: `DB_ERROR: ${authError.message}`, step: 'signup' }
     }
 
     // 2. Sign in immediately
@@ -96,7 +96,7 @@ export async function registerFullFlow(data: any, interests: string[]) {
 
     if (signInError) {
       console.error("Signin error:", signInError)
-      return { error: SIGNIN_ERROR: \, step: 'signin' }
+      return { error: `SIGNIN_ERROR: ${signInError.message}`, step: 'signin' }
     }
 
     // 3. Update interests if provided
@@ -145,7 +145,7 @@ export async function signIn(data: any) {
 
     if (error) {
       console.error(error)
-      return { error: SIGNIN_ERROR: \, step: 'signin' }
+      return { error: `SIGNIN_ERROR: ${error.message}`, step: 'signin' }
     }
 
     revalidatePath('/', 'layout')
