@@ -72,9 +72,12 @@ export function PWAInstallPrompt() {
   }
 
   // Hide button if not iOS and the install prompt isn't ready
+  // TEMPORAL: Comentado para que puedas ver el botón en desarrollo
+  /*
   if (!isIOS && !deferredPrompt) {
     return null;
   }
+  */
 
   return (
     <>
