@@ -33,7 +33,8 @@ export function RightColumn() {
     setDuplicateWarning,
     setRightColumnView,
     startDirectMessage,
-    logout
+    logout,
+    updateUserProfile
   } = useUIStore(useShallow(state => ({
     currentUser: state.currentUser,
     users: state.users,
@@ -58,7 +59,8 @@ export function RightColumn() {
     setDuplicateWarning: state.setDuplicateWarning,
     setRightColumnView: state.setRightColumnView,
     startDirectMessage: state.startDirectMessage,
-    logout: state.logout
+    logout: state.logout,
+    updateUserProfile: state.updateUserProfile
   })))
 
 
@@ -71,6 +73,14 @@ export function RightColumn() {
   });
   const [formError, setFormError] = useState<string | null>(null);
   const [formErrorField, setFormErrorField] = useState<string | null>(null);
+
+  const [editProfileData, setEditProfileData] = useState({
+    email: '',
+    instagram: '',
+    interests: [] as string[],
+    avatarUrl: '',
+    imageFile: null as File | null
+  });
 
   useEffect(() => {
     if (duplicateWarning || formError) {
@@ -109,6 +119,16 @@ export function RightColumn() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormError(null);
       // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFormErrorField(null);
+    } else if (activeView === 'edit_profile' && currentUser) {
+      setEditProfileData({
+        email: currentUser.email || '',
+        instagram: currentUser.instagram || '',
+        interests: currentUser.interests || [],
+        avatarUrl: currentUser.avatarUrl || '',
+        imageFile: null
+      });
+      setFormError(null);
       setFormErrorField(null);
     } else if (activeView === 'edit_event' && selectedEventId) {
       const evToEdit = events.find(e => e.id === selectedEventId);
@@ -309,6 +329,76 @@ export function RightColumn() {
     }
   };
 
+  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          const MAX_SIZE = 1000;
+          if (width > height) {
+            if (width > MAX_SIZE) {
+              height *= MAX_SIZE / width;
+              width = MAX_SIZE;
+            }
+          } else {
+            if (height > MAX_SIZE) {
+              width *= MAX_SIZE / height;
+              height = MAX_SIZE;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+          fetch(compressedBase64)
+            .then(res => res.blob())
+            .then(blob => {
+               const newFile = new File([blob], file.name, { type: 'image/jpeg' });
+               setEditProfileData({ ...editProfileData, imageFile: newFile, avatarUrl: compressedBase64 });
+            });
+        };
+        img.src = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+    setFormErrorField(null);
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (editProfileData.email && !emailRegex.test(editProfileData.email)) {
+       setFormError('Email inválido.');
+       setFormErrorField('email');
+       return;
+    }
+
+    const res = await updateUserProfile({
+       email: editProfileData.email,
+       instagram: editProfileData.instagram,
+       interests: editProfileData.interests,
+       avatarUrl: editProfileData.avatarUrl
+    }, editProfileData.imageFile);
+    
+    if (res.error) {
+       setFormError(res.error);
+       return;
+    }
+    
+    setRightColumnView('profile');
+  };
+
   return (
     <div className="flex flex-col h-full w-full bg-slate-100 text-slate-900">
       {/* HEADER */}
@@ -328,14 +418,15 @@ export function RightColumn() {
           )}
           <h2 className="font-bold text-lg text-slate-900 flex items-center gap-2">
             {activeView === 'profile' ? 'Perfil de Usuario' : 
+             activeView === 'edit_profile' ? 'Editar Perfil' : 
              activeView === 'create_event' ? 'Armar un Plan' : 
              activeView === 'event_details' ? 'Detalles del Planazo' : 
              `Planes en ${currentRegionName}`}
           </h2>
         </div>
         <div className="flex gap-2">
-          {(activeView === 'create_event' || activeView === 'edit_event' || activeView === 'event_details' || activeView === 'profile') && (
-            <button onClick={resetRightColumn} className={`p-1.5 rounded-lg transition-colors ${(activeView === 'create_event' || activeView === 'edit_event') ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'} ${activeView === 'profile' ? 'hidden lg:flex' : ''}`}>
+          {(activeView === 'create_event' || activeView === 'edit_event' || activeView === 'event_details' || activeView === 'profile' || activeView === 'edit_profile') && (
+            <button onClick={resetRightColumn} className={`p-1.5 rounded-lg transition-colors ${(activeView === 'create_event' || activeView === 'edit_event' || activeView === 'edit_profile') ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'} ${activeView === 'profile' ? 'hidden lg:flex' : ''}`}>
               <X className="h-5 w-5" />
             </button>
           )}
@@ -410,12 +501,110 @@ export function RightColumn() {
                 </button>
               </div>
             ) : (
-              <div className="pt-4">
+              <div className="pt-4 flex flex-col gap-2">
+                <Button variant="outline" className="w-full py-3.5 text-slate-700 bg-white" onClick={() => setRightColumnView('edit_profile')}>
+                  Editar Perfil
+                </Button>
                 <Button variant="ghost" className="w-full py-3.5 text-slate-500 hover:text-slate-800" onClick={logout}>
                   <LogOut className="h-5 w-5 mr-2" /> Cerrar Sesión
                 </Button>
               </div>
             )}
+          </div>
+        )}
+
+        {/* EDITAR PERFIL */}
+        {activeView === 'edit_profile' && (
+          <div className="relative">
+            <form onSubmit={handleSaveProfile} className="space-y-4">
+              <div className="flex justify-center mb-6 relative w-24 mx-auto">
+                <label className="relative cursor-pointer group block">
+                  <div className="h-24 w-24 rounded-full bg-blue-50 border-2 border-dashed border-blue-200 flex flex-col items-center justify-center text-sky-500 group-hover:bg-blue-100 group-hover:border-blue-300 transition-colors overflow-hidden">
+                    {editProfileData.avatarUrl ? (
+                      <img src={editProfileData.avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                    ) : (
+                      <>
+                        <Camera className="h-6 w-6 mb-1" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider flex flex-col items-center">Foto</span>
+                      </>
+                    )}
+                  </div>
+                  <input type="file" accept="image/*" className="hidden" onChange={handleProfileImageUpload} />
+                </label>
+                {editProfileData.avatarUrl && (
+                  <button type="button" onClick={() => setEditProfileData({ ...editProfileData, avatarUrl: '', imageFile: null })} className="absolute top-0 right-0 bg-white/80 text-slate-500 rounded-full p-1.5 hover:bg-white hover:text-rose-500 shadow-sm backdrop-blur-sm transition-all z-10">
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Email <span className="text-slate-400 font-normal lowercase">(solo visible para vos, para iniciar sesión)</span></label>
+                <input 
+                  type="email"
+                  className={`w-full bg-slate-100 border rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'email' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
+                  placeholder="tu@email.com" 
+                  value={editProfileData.email} 
+                  onChange={e => { setEditProfileData({...editProfileData, email: e.target.value}); if (formErrorField === 'email') { setFormError(null); setFormErrorField(null); } }} 
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Instagram <span className="text-slate-400 font-normal lowercase">(Opcional)</span></label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <AtSign className="h-4 w-4 text-slate-400" />
+                  </div>
+                  <input 
+                    className="w-full bg-slate-100 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400" 
+                    placeholder="usuario" 
+                    value={editProfileData.instagram} 
+                    onChange={e => setEditProfileData({...editProfileData, instagram: e.target.value})} 
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Tus Intereses</label>
+                <div className="flex flex-wrap gap-2">
+                  {interests.map(i => {
+                    const isSelected = editProfileData.interests.includes(i.name);
+                    return (
+                      <button
+                        key={i.id}
+                        type="button"
+                        onClick={() => {
+                          if (isSelected) {
+                            setEditProfileData({ ...editProfileData, interests: editProfileData.interests.filter(name => name !== i.name) });
+                          } else {
+                            setEditProfileData({ ...editProfileData, interests: [...editProfileData.interests, i.name] });
+                          }
+                        }}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold shadow-sm transition-colors border ${
+                          isSelected 
+                            ? 'bg-blue-100 border-blue-300 text-blue-700' 
+                            : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                        }`}
+                      >
+                        {i.name}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div className="pt-4 space-y-2 flex flex-col items-center">
+                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-slate-900 shadow-sm font-bold transition-all">
+                  Guardar Perfil
+                </Button>
+                {formError && (
+                  <div className="text-slate-500 text-xs flex items-center gap-1.5 pt-1 animate-in fade-in duration-200">
+                    <AlertTriangle className="h-3.5 w-3.5 text-rose-400" />
+                    <span>{formError}</span>
+                  </div>
+                )}
+              </div>
+            </form>
           </div>
         )}
 

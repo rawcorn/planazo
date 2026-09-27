@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import { createEvent, updateEvent, deleteEvent as deleteEventAction, joinEvent, leaveEvent, getEventsByRegion } from '@/app/actions/events'
 import { sendMessage as sendMessageAPI, getRoomMessages, getOrCreateDMRoom } from '@/app/actions/messages'
 import { getRegions, getInterests } from '@/app/actions/catalog'
+import { updateProfile, updateUserInterests } from '@/app/actions/users'
 import { uploadImage } from '@/app/actions/storage'
 import { signOut } from '@/app/actions/auth'
 import { createClient as createBrowserClient } from '@/lib/supabase/client'
@@ -64,7 +65,7 @@ export interface Message {
 }
 
 export type MobileView = 'menu' | 'chat' | 'details'
-export type RightColumnView = 'cartelera' | 'create_event' | 'event_details' | 'profile' | 'edit_event'
+export type RightColumnView = 'cartelera' | 'create_event' | 'event_details' | 'profile' | 'edit_event' | 'edit_profile'
 
 interface AppState {
   currentUser: User | null
@@ -108,6 +109,7 @@ interface AppState {
   // Domain actions
   createEvent: (eventData: Omit<Event, 'id' | 'creatorId' | 'attendees'>) => Promise<{ id?: string, error?: string }>
   updateEvent: (eventId: string, eventData: Partial<Event>) => Promise<{ id?: string, error?: string }>
+  updateUserProfile: (profileData: Partial<User>, imageFile?: File | null) => Promise<{ success?: boolean, error?: string }>
   deleteEvent: (eventId: string) => Promise<{ success?: boolean, error?: string }>
   joinEvent: (eventId: string) => Promise<void>
   leaveEvent: (eventId: string) => Promise<void>
@@ -254,6 +256,43 @@ export const useUIStore = create<AppState>((set, get) => ({
        return { id: res.event.id };
     }
     return { error: 'Error desconocido' };
+  },
+
+  updateUserProfile: async (profileData, imageFile) => {
+    const { currentUser, interests } = get();
+    if (!currentUser) return { error: 'Not authenticated' };
+
+    let finalAvatarUrl = profileData.avatarUrl;
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append('file', imageFile);
+      formData.append('bucket', 'avatars');
+      const publicUrl = await uploadImage(formData);
+      if (publicUrl) {
+        finalAvatarUrl = publicUrl;
+      }
+    }
+
+    const { interests: rawInterests, ...restData } = profileData;
+    const updateData: any = { ...restData };
+    if (finalAvatarUrl) updateData.avatar_url = finalAvatarUrl;
+    delete updateData.avatarUrl;
+    
+    const profileRes = await updateProfile(updateData);
+    if (profileRes.error) return profileRes;
+
+    if (rawInterests) {
+        const interestIds = rawInterests.map((name: string) => {
+            const i = interests.find(int => int.name === name);
+            return i ? i.id : null;
+        }).filter(Boolean) as string[];
+        
+        const intRes = await updateUserInterests(interestIds);
+        if (intRes.error) return intRes;
+    }
+
+    set({ currentUser: { ...currentUser, ...profileData, avatarUrl: finalAvatarUrl || currentUser.avatarUrl } });
+    return { success: true };
   },
 
   updateEvent: async (eventId, eventData) => {

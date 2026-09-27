@@ -46,7 +46,8 @@ export const profileUpdateSchema = z.object({
   age: z.number().int().min(18).optional(),
   gender: z.enum(['F', 'M', 'X']).optional(),
   region: z.string().optional(),
-  avatar_url: z.string().url().optional(),
+  avatar_url: z.string().url().optional().or(z.literal('')),
   instagram: z.string().optional(),
-  facebook: z.string().optional()
+  facebook: z.string().optional(),
+  email: z.string().trim().email('Email inválido').optional().or(z.literal(''))
 })
