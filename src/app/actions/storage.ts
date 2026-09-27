@@ -23,6 +23,15 @@ export async function uploadImage(formData: FormData) {
   try {
     const supabase = await createClient()
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      console.error('Unauthorized: User not authenticated');
+      return null;
+    }
+
     const contentType = file.type;
     
     // Check MIME type is an image
