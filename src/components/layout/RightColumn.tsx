@@ -501,13 +501,13 @@ export function RightColumn() {
                 </button>
               </div>
             ) : (
-              <div className="pt-4 flex flex-col gap-2">
-                <Button variant="outline" className="w-full py-3.5 text-slate-700 bg-white" onClick={() => setRightColumnView('edit_profile')}>
+              <div className="pt-4 flex flex-col gap-2 items-center">
+                <button onClick={() => setRightColumnView('edit_profile')} className="text-xs text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-400 transition-colors py-2">
                   Editar Perfil
-                </Button>
-                <Button variant="ghost" className="w-full py-3.5 text-slate-500 hover:text-slate-800" onClick={logout}>
-                  <LogOut className="h-5 w-5 mr-2" /> Cerrar Sesión
-                </Button>
+                </button>
+                <button onClick={logout} className="text-xs text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-400 transition-colors py-2">
+                  Cerrar Sesión
+                </button>
               </div>
             )}
           </div>
@@ -543,7 +543,6 @@ export function RightColumn() {
                 <input 
                   type="email"
                   className={`w-full bg-slate-100 border rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'email' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
-                  placeholder="tu@email.com" 
                   value={editProfileData.email} 
                   onChange={e => { setEditProfileData({...editProfileData, email: e.target.value}); if (formErrorField === 'email') { setFormError(null); setFormErrorField(null); } }} 
                 />
@@ -594,7 +593,7 @@ export function RightColumn() {
               </div>
 
               <div className="pt-4 space-y-2 flex flex-col items-center">
-                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-slate-900 shadow-sm font-bold transition-all">
+                <Button variant="outline" type="submit" className="w-full py-2 text-slate-600 text-sm">
                   Guardar Perfil
                 </Button>
                 {formError && (
