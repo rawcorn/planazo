@@ -118,7 +118,7 @@ export function PWAInstallPrompt() {
             >
               <X size={20} />
             </button>
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E5F9F0] text-[#4BB584]">
               <Download size={32} />
             </div>
             <h3 className="mb-2 text-xl font-bold text-gray-900">Instalar Planazo</h3>
@@ -127,7 +127,7 @@ export function PWAInstallPrompt() {
             </p>
             <button
               onClick={() => setShowIOSPrompt(false)}
-              className="w-full rounded-xl bg-blue-600 py-3.5 font-semibold text-white shadow-md hover:bg-blue-700 transition-colors"
+              className="w-full rounded-xl bg-[#86E2B5] py-3.5 font-bold text-teal-950 shadow-md hover:bg-[#75D1A4] transition-colors"
             >
               Entendido
             </button>
