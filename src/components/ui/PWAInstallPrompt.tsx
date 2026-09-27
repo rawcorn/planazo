@@ -78,20 +78,23 @@ export function PWAInstallPrompt() {
 
   return (
     <>
-      <div className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-50 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-50 flex items-center rounded-full bg-blue-600 p-1 pl-2 text-white shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500 hover:scale-105 transition-transform">
         <button
           onClick={handleInstallClick}
-          className="flex items-center justify-center gap-2 rounded-full bg-blue-600 px-4 py-3 text-white shadow-xl transition-transform hover:scale-105 active:scale-95"
+          className="flex items-center justify-center gap-2 rounded-full px-3 py-2 transition-colors hover:bg-blue-700 active:scale-95"
         >
           <Download size={20} />
-          <span className="font-medium">Instalar App</span>
+          <span className="font-medium pr-1">Instalar App</span>
         </button>
+        
+        <div className="h-6 w-[1px] bg-blue-400 mx-1"></div>
+        
         <button
           onClick={handleDismiss}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-500 shadow-xl transition-transform hover:scale-105 hover:bg-gray-50 active:scale-95"
+          className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-blue-700 active:scale-95"
           aria-label="Cerrar sugerencia de instalación"
         >
-          <X size={20} />
+          <X size={18} />
         </button>
       </div>
 
