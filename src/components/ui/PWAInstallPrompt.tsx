@@ -63,7 +63,7 @@ export function PWAInstallPrompt() {
     <>
       <button
         onClick={handleInstallClick}
-        className="fixed bottom-6 right-6 z-50 flex items-center justify-center gap-2 rounded-full bg-blue-600 px-4 py-3 text-white shadow-xl transition-transform hover:scale-105 active:scale-95"
+        className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-50 flex items-center justify-center gap-2 rounded-full bg-blue-600 px-4 py-3 text-white shadow-xl transition-transform hover:scale-105 active:scale-95"
       >
         <Download size={20} />
         <span className="font-medium">Instalar App</span>
