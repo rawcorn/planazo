@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useUIStore } from '@/store/uiStore';
 import { uploadImage } from '@/app/actions/storage';
+import { Eye, EyeOff } from 'lucide-react';
 
 import { signUp, signIn, registerFullFlow } from '@/app/actions/auth';
 import { getCurrentUser, updateUserInterests } from '@/app/actions/users';
@@ -16,6 +17,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
     avatarUrl: '', avatarFile: null as File | null, instagram: '', facebook: ''
   });
   
+  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (!formData.region && regions.length > 0) {
       setFormData(prev => ({ ...prev, region: regions[0].name }));
@@ -248,7 +251,17 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Contraseña</label>
-                  <input required type="password" className={`w-full bg-slate-100 border-[1.5px] ${errors.password ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all placeholder:text-slate-400`} placeholder="••••••••" value={formData.password} onChange={e => { setFormData({...formData, password: e.target.value}); setErrors({...errors, password: ''}); setGlobalError(''); }} />
+                  <div className="relative">
+                    <input required type={showPassword ? "text" : "password"} className={`w-full bg-slate-100 border-[1.5px] ${errors.password ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 pr-10 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all placeholder:text-slate-400`} placeholder="••••••••" value={formData.password} onChange={e => { setFormData({...formData, password: e.target.value}); setErrors({...errors, password: ''}); setGlobalError(''); }} />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8D96D6] hover:text-[#727CB5] transition-colors"
+                      aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                   {errors.password && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.password}</p>}
                 </div>
               </div>

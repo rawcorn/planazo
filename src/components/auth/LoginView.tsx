@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useUIStore } from '@/store/uiStore';
+import { Eye, EyeOff } from 'lucide-react';
 
 import { signIn } from '@/app/actions/auth';
 import { getCurrentUser } from '@/app/actions/users';
@@ -8,6 +9,7 @@ import { getCurrentUser } from '@/app/actions/users';
 export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
@@ -86,14 +88,24 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
 
             <div className="space-y-1">
               <label className="text-[11px] font-bold text-[#52525B] uppercase tracking-wide ml-2">Contraseña</label>
-              <input 
-                required 
-                type="password" 
-                className="w-full bg-[#E4E6F8] border-[1.5px] border-[#8D96D6] rounded-full px-5 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all tracking-widest placeholder:tracking-normal" 
-                placeholder="••••••••" 
-                value={password} 
-                onChange={e => setPassword(e.target.value)} 
-              />
+              <div className="relative">
+                <input 
+                  required 
+                  type={showPassword ? "text" : "password"} 
+                  className={`w-full bg-[#E4E6F8] border-[1.5px] border-[#8D96D6] rounded-full pl-5 pr-12 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all ${!showPassword ? 'tracking-widest' : ''} placeholder:tracking-normal`} 
+                  placeholder="••••••••" 
+                  value={password} 
+                  onChange={e => setPassword(e.target.value)} 
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8D96D6] hover:text-[#727CB5] transition-colors"
+                  aria-label={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
             </div>
 
             <Button disabled={loading} type="submit" className="w-full h-12 mt-2 text-[16px] rounded-full bg-[#7ac7ac] hover:bg-[#7ac7ac] hover:opacity-100 text-white font-bold border-0 transition-all shadow-none tracking-wide">
