@@ -66,6 +66,18 @@ export function PWAInstallPrompt() {
     setIsDismissed(true);
   };
 
+  useEffect(() => {
+    const shouldShow = !(isStandalone || isDismissed || (!isIOS && !deferredPrompt));
+    if (shouldShow) {
+      document.body.style.paddingBottom = '70px';
+    } else {
+      document.body.style.paddingBottom = '0px';
+    }
+    return () => {
+      document.body.style.paddingBottom = '0px';
+    };
+  }, [isStandalone, isDismissed, isIOS, deferredPrompt]);
+
   // Do not render if already installed or dismissed
   if (isStandalone || isDismissed) {
     return null;
@@ -78,23 +90,21 @@ export function PWAInstallPrompt() {
 
   return (
     <>
-      <div className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-50 flex items-center rounded-full bg-blue-200 p-1 pl-2 text-blue-900 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500 hover:scale-105 transition-transform">
+      <div className="fixed bottom-0 left-0 right-0 h-[70px] z-[60] flex items-center justify-between bg-[#EFE9FB] border-t border-[#D5CAFA] px-4 shadow-[0_-4px_15px_rgba(0,0,0,0.05)] animate-in slide-in-from-bottom-full duration-300">
         <button
           onClick={handleInstallClick}
-          className="flex items-center justify-center gap-2 rounded-full px-3 py-2 transition-colors hover:bg-blue-300/50 active:scale-95"
+          className="flex-1 flex items-center justify-center gap-2 h-full text-slate-800 font-bold transition-colors"
         >
-          <Download size={20} />
-          <span className="font-medium pr-1">Instalar App</span>
+          <Download size={20} className="text-violet-600" />
+          <span>Instalar Planazo App</span>
         </button>
-        
-        <div className="h-6 w-[1px] bg-blue-300 mx-1"></div>
-        
+        <div className="h-8 w-[1px] bg-[#D5CAFA] mx-2"></div>
         <button
           onClick={handleDismiss}
-          className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-blue-300/50 active:scale-95"
+          className="flex h-10 w-10 items-center justify-center rounded-full text-slate-500 hover:bg-white/50 transition-colors"
           aria-label="Cerrar sugerencia de instalación"
         >
-          <X size={18} />
+          <X size={22} />
         </button>
       </div>
 
