@@ -1,7 +1,6 @@
 import { useUIStore } from '@/store/uiStore'
 import { LogOut, X, MapPin, MessageCircle, Info, Calendar } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
-import { PWAInstallPrompt } from '@/components/ui/PWAInstallPrompt'
 
 export function LeftColumn() {
   const { 
@@ -221,10 +220,6 @@ export function LeftColumn() {
             </div>
           </div>
         )}
-      </div>
-
-      <div className="shrink-0 pt-2 border-t border-slate-200 mt-2">
-        <PWAInstallPrompt />
       </div>
     </div>
   )

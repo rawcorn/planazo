@@ -72,29 +72,29 @@ export function PWAInstallPrompt() {
   }
 
   // Hide button if not iOS and the install prompt isn't ready
-  // TEMPORAL: Comentado para que puedas ver el botón en desarrollo
-  /*
   if (!isIOS && !deferredPrompt) {
     return null;
   }
-  */
 
   return (
     <>
-      <div className="flex items-center justify-between rounded-xl bg-blue-50 p-3 text-blue-900 border border-blue-100 shadow-sm mx-4 mt-2 mb-2 animate-in fade-in duration-500">
+      <div className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-50 flex items-center rounded-full bg-blue-200 p-1 pl-2 text-blue-900 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500 hover:scale-105 transition-transform">
         <button
           onClick={handleInstallClick}
-          className="flex flex-1 items-center justify-center gap-2 font-medium transition-colors hover:text-blue-700"
+          className="flex items-center justify-center gap-2 rounded-full px-3 py-2 transition-colors hover:bg-blue-300/50 active:scale-95"
         >
-          <Download size={18} />
-          <span className="text-sm">Instalar App</span>
+          <Download size={20} />
+          <span className="font-medium pr-1">Instalar App</span>
         </button>
+        
+        <div className="h-6 w-[1px] bg-blue-300 mx-1"></div>
+        
         <button
           onClick={handleDismiss}
-          className="flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-blue-100 hover:text-blue-700 text-blue-400"
+          className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-blue-300/50 active:scale-95"
           aria-label="Cerrar sugerencia de instalación"
         >
-          <X size={16} />
+          <X size={18} />
         </button>
       </div>
 
