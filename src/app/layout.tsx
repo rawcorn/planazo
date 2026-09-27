@@ -46,10 +46,15 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+import { PWAInstallPrompt } from "@/components/ui/PWAInstallPrompt";
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es" className={miFuente.variable}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        {children}
+        <PWAInstallPrompt />
+      </body>
     </html>
   );
 }
