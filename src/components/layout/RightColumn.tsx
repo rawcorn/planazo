@@ -226,7 +226,6 @@ export function RightColumn() {
       setDuplicateWarning(null);
       setSelectedEvent(res.id);
       setRightColumnView('event_details');
-      setNewPlan({ title: '', description: '', region: defaultRegionId, interest: interests[0]?.id || '', date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos', imageUrl: '', imageFile: null });
     } else if (res.error) {
       setFormError(res.error);
       if (res.error.toLowerCase().includes('título')) setFormErrorField('title');
