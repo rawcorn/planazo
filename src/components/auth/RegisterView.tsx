@@ -162,16 +162,25 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
       }
 
       if (res.error) {
-        if (res.step === 'signup' && (res.error.includes('ya estén en uso') || res.error.includes('ya esté en uso'))) {
-          setErrors(prev => ({
-            ...prev,
-            username: 'Usuario no disponible',
-            email: formData.email ? 'Email en uso' : ''
-          }));
+        if (res.step === 'signup' && (res.error.includes('ya estén en uso') || res.error.includes('ya esté en uso') || res.error.includes('already registered') || res.error.includes('Database error'))) {
+          if (formData.email) {
+            setErrors(prev => ({
+              ...prev,
+              email: 'Email en uso'
+            }));
+            setGlobalError('El email ya está registrado.');
+          } else {
+            setErrors(prev => ({
+              ...prev,
+              username: 'Usuario no disponible'
+            }));
+            setGlobalError('El usuario ya está registrado.');
+          }
+          return;
         } else if (res.step === 'signin' && res.error === 'Credenciales inválidas') {
           setErrors(prev => ({
             ...prev,
-            username: 'Usuario no disponible',
+            username: formData.email ? '' : 'Usuario no disponible',
             email: formData.email ? 'Email en uso' : ''
           }));
           setGlobalError('El usuario o email ya están registrados.');
