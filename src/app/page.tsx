@@ -92,10 +92,12 @@ export default function Home() {
        
        if (activeRegionObj) {
           fetchEventsForRegion(activeRegionObj.id);
+          state.subscribeToEvents(activeRegionObj.id);
        }
        
        return () => {
          useUIStore.getState().unsubscribeFromRoom();
+         useUIStore.getState().unsubscribeFromEvents();
        };
     }
   }, [activeRoomId, currentUser])
