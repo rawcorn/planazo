@@ -23,7 +23,11 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
     try {
       const res = await signIn({ email, password });
       if (res.error) {
-        setError(res.error);
+        if (res.error.includes('SIGNIN_ERROR') || res.error.includes('Credenciales') || res.error.includes('Invalid path')) {
+          setError('Usuario o contraseña incorrectos.');
+        } else {
+          setError('No se pudo iniciar sesión. Por favor, verificá tus datos.');
+        }
         return;
       }
       

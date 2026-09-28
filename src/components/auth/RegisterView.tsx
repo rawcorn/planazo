@@ -177,13 +177,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
             setGlobalError('El usuario ya está registrado.');
           }
           return;
-        } else if (res.step === 'signin' && res.error === 'Credenciales inválidas') {
-          setErrors(prev => ({
-            ...prev,
-            username: formData.email ? '' : 'Usuario no disponible',
-            email: formData.email ? 'Email en uso' : ''
-          }));
-          setGlobalError('El usuario o email ya están registrados.');
+        } else if (res.step === 'signin') {
+          setGlobalError('Tu cuenta fue creada, pero hubo un problema al iniciar sesión. Por favor, iniciá sesión manualmente.');
           return;
         }
         setGlobalError(res.error);
