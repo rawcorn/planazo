@@ -12,7 +12,7 @@ export function PWAInstallPrompt() {
 
   useEffect(() => {
     // Check if dismissed previously
-    if (localStorage.getItem('pwa-prompt-dismissed') === 'true') {
+    if (localStorage.getItem('pwa-prompt-dismissed-v2') === 'true') {
       setIsDismissed(true);
     }
 
@@ -62,7 +62,7 @@ export function PWAInstallPrompt() {
   };
 
   const handleDismiss = () => {
-    localStorage.setItem('pwa-prompt-dismissed', 'true');
+    localStorage.setItem('pwa-prompt-dismissed-v2', 'true');
     setIsDismissed(true);
   };
 
