@@ -117,6 +117,9 @@ interface AppState {
   activeSubscription: any
   subscribeToRoom: (roomId: string) => void
   unsubscribeFromRoom: () => void
+  activeEventsSubscription: any
+  subscribeToEvents: (regionId: string) => void
+  unsubscribeFromEvents: () => void
 
   startDirectMessage: (targetUserId: string) => Promise<void>
   fetchEventsForRegion: (regionId: string) => Promise<void>
@@ -600,6 +603,31 @@ export const useUIStore = create<AppState>((set, get) => ({
            users: mergedUsers
          };
        });
+    }
+  },
+
+  activeEventsSubscription: null as any,
+  subscribeToEvents: (regionId: string) => {
+    const supabase = createBrowserClient();
+    const { activeEventsSubscription, fetchEventsForRegion } = get();
+    if (activeEventsSubscription) {
+      supabase.removeChannel(activeEventsSubscription);
+    }
+    const channel = supabase.channel('events_' + regionId)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'events' }, () => {
+         fetchEventsForRegion(regionId);
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'event_attendees' }, () => {
+         fetchEventsForRegion(regionId);
+      })
+      .subscribe();
+    set({ activeEventsSubscription: channel });
+  },
+  unsubscribeFromEvents: () => {
+    const { activeEventsSubscription } = get();
+    if (activeEventsSubscription) {
+      createBrowserClient().removeChannel(activeEventsSubscription);
+      set({ activeEventsSubscription: null });
     }
   },
 

@@ -12,7 +12,7 @@ export function PWAInstallPrompt() {
 
   useEffect(() => {
     // Check if dismissed previously
-    if (localStorage.getItem('pwa-prompt-dismissed') === 'true') {
+    if (localStorage.getItem('pwa-prompt-dismissed-v2') === 'true') {
       setIsDismissed(true);
     }
 
@@ -62,9 +62,21 @@ export function PWAInstallPrompt() {
   };
 
   const handleDismiss = () => {
-    localStorage.setItem('pwa-prompt-dismissed', 'true');
+    localStorage.setItem('pwa-prompt-dismissed-v2', 'true');
     setIsDismissed(true);
   };
+
+  useEffect(() => {
+    const shouldShow = !(isStandalone || isDismissed || (!isIOS && !deferredPrompt));
+    if (shouldShow) {
+      document.body.style.paddingBottom = '90px';
+    } else {
+      document.body.style.paddingBottom = '0px';
+    }
+    return () => {
+      document.body.style.paddingBottom = '0px';
+    };
+  }, [isStandalone, isDismissed, isIOS, deferredPrompt]);
 
   // Do not render if already installed or dismissed
   if (isStandalone || isDismissed) {
@@ -78,7 +90,7 @@ export function PWAInstallPrompt() {
 
   return (
     <>
-      <div className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-50 flex items-center rounded-full bg-blue-200 p-1 pl-2 text-blue-900 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500 hover:scale-105 transition-transform">
+      <div className="fixed bottom-24 right-4 md:bottom-6 md:right-6 z-[60] flex items-center rounded-full bg-blue-200 p-1 pl-2 text-blue-900 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-500 hover:scale-105 transition-transform">
         <button
           onClick={handleInstallClick}
           className="flex items-center justify-center gap-2 rounded-full px-3 py-2 transition-colors hover:bg-blue-300/50 active:scale-95"
@@ -100,7 +112,7 @@ export function PWAInstallPrompt() {
 
       {/* iOS Instructional Modal */}
       {showIOSPrompt && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="relative w-full max-w-sm rounded-3xl bg-white p-6 shadow-2xl text-center animate-in zoom-in-95 duration-200">
             <button 
               onClick={() => setShowIOSPrompt(false)}
@@ -108,7 +120,7 @@ export function PWAInstallPrompt() {
             >
               <X size={20} />
             </button>
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E5F9F0] text-[#4BB584]">
               <Download size={32} />
             </div>
             <h3 className="mb-2 text-xl font-bold text-gray-900">Instalar Planazo</h3>
@@ -117,7 +129,7 @@ export function PWAInstallPrompt() {
             </p>
             <button
               onClick={() => setShowIOSPrompt(false)}
-              className="w-full rounded-xl bg-blue-600 py-3.5 font-semibold text-white shadow-md hover:bg-blue-700 transition-colors"
+              className="w-full rounded-xl bg-[#86E2B5] py-3.5 font-bold text-teal-950 shadow-md hover:bg-[#75D1A4] transition-colors"
             >
               Entendido
             </button>
