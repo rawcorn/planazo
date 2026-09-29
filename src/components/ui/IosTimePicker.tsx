@@ -13,6 +13,7 @@ interface IosTimePickerProps {
 export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, selectedDate, hasError }: IosTimePickerProps) {
   const hourRef = useRef<HTMLDivElement>(null);
   const minRef = useRef<HTMLDivElement>(null);
+  const ignoreScroll = useRef(false);
 
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -55,7 +56,9 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
       const idx = hours.indexOf(hour);
       t = setTimeout(() => {
         if (hourRef.current && Math.round(hourRef.current.scrollTop / ITEM_HEIGHT) !== idx) {
+          ignoreScroll.current = true;
           hourRef.current.scrollTop = idx * ITEM_HEIGHT;
+          setTimeout(() => { ignoreScroll.current = false; }, 50);
         }
       }, 50);
     }
@@ -68,7 +71,9 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
       const idx = minutes.indexOf(minute);
       t = setTimeout(() => {
         if (minRef.current && Math.round(minRef.current.scrollTop / ITEM_HEIGHT) !== idx) {
+          ignoreScroll.current = true;
           minRef.current.scrollTop = idx * ITEM_HEIGHT;
+          setTimeout(() => { ignoreScroll.current = false; }, 50);
         }
       }, 50);
     }
@@ -76,7 +81,7 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
   }, [minute, minutes]);
 
   const handleScrollHour = () => {
-    if (!hourRef.current) return;
+    if (!hourRef.current || ignoreScroll.current) return;
     const scrollY = hourRef.current.scrollTop;
     const activeIdx = Math.round(scrollY / ITEM_HEIGHT);
     if (hours[activeIdx] && hours[activeIdx] !== hour) {
@@ -85,7 +90,7 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
   }
 
   const handleScrollMinute = () => {
-    if (!minRef.current) return;
+    if (!minRef.current || ignoreScroll.current) return;
     const scrollY = minRef.current.scrollTop;
     const activeIdx = Math.round(scrollY / ITEM_HEIGHT);
     if (minutes[activeIdx] && minutes[activeIdx] !== minute) {
