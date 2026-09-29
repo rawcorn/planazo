@@ -14,6 +14,19 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
   const hourRef = useRef<HTMLDivElement>(null);
   const minRef = useRef<HTMLDivElement>(null);
   const ignoreScroll = useRef(false);
+  const prevHour = useRef(hour);
+  const prevMinute = useRef(minute);
+
+  if (hour !== prevHour.current) {
+    ignoreScroll.current = true;
+    prevHour.current = hour;
+    setTimeout(() => { ignoreScroll.current = false; }, 250);
+  }
+  if (minute !== prevMinute.current) {
+    ignoreScroll.current = true;
+    prevMinute.current = minute;
+    setTimeout(() => { ignoreScroll.current = false; }, 250);
+  }
 
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -57,8 +70,14 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
       t = setTimeout(() => {
         if (hourRef.current && Math.round(hourRef.current.scrollTop / ITEM_HEIGHT) !== idx) {
           ignoreScroll.current = true;
-          hourRef.current.scrollTop = idx * ITEM_HEIGHT;
-          setTimeout(() => { ignoreScroll.current = false; }, 50);
+            const el = hourRef.current;
+            const oldBehavior = el.style.scrollBehavior;
+            el.style.scrollBehavior = 'auto'; // Force instant jump
+            el.scrollTop = idx * ITEM_HEIGHT;
+            setTimeout(() => { 
+              if (el) el.style.scrollBehavior = oldBehavior;
+              ignoreScroll.current = false; 
+            }, 50);
         }
       }, 50);
     }
@@ -72,8 +91,14 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
       t = setTimeout(() => {
         if (minRef.current && Math.round(minRef.current.scrollTop / ITEM_HEIGHT) !== idx) {
           ignoreScroll.current = true;
-          minRef.current.scrollTop = idx * ITEM_HEIGHT;
-          setTimeout(() => { ignoreScroll.current = false; }, 50);
+            const el = minRef.current;
+            const oldBehavior = el.style.scrollBehavior;
+            el.style.scrollBehavior = 'auto'; // Force instant jump
+            el.scrollTop = idx * ITEM_HEIGHT;
+            setTimeout(() => { 
+              if (el) el.style.scrollBehavior = oldBehavior;
+              ignoreScroll.current = false; 
+            }, 50);
         }
       }, 50);
     }
