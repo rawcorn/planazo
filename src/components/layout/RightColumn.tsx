@@ -410,9 +410,18 @@ export function RightColumn() {
       <div className="h-16 px-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
           {activeView === 'create_event' ? (
-            <button onClick={resetRightColumn} className="p-1.5 -ml-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors">
-              <ArrowLeft className="h-4 w-4" />
-            </button>
+            <button onClick={() => {
+    const rId = activeRoomId || defaultRegionId;
+    setNewPlan({ 
+      title: '', description: '', region: rId, interest: interests[0]?.id || '', 
+      date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos', imageUrl: '', imageFile: null
+    });
+    setFormError(null);
+    setFormErrorField(null);
+    resetRightColumn();
+  }} className="p-1.5 -ml-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors">
+    <ArrowLeft className="h-4 w-4" />
+  </button>
           ) : (
             <button onClick={() => {
               resetRightColumn();
@@ -431,9 +440,20 @@ export function RightColumn() {
         </div>
         <div className="flex gap-2">
           {(activeView === 'create_event' || activeView === 'edit_event' || activeView === 'event_details' || activeView === 'profile' || activeView === 'edit_profile') && (
-            <button onClick={resetRightColumn} className={`p-1.5 rounded-lg transition-colors ${(activeView === 'create_event' || activeView === 'edit_event' || activeView === 'edit_profile') ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'} ${activeView === 'profile' ? 'hidden lg:flex' : ''}`}>
-              <X className="h-5 w-5" />
-            </button>
+            <button onClick={() => {
+    if (activeView === 'create_event') {
+      const rId = activeRoomId || defaultRegionId;
+      setNewPlan({ 
+        title: '', description: '', region: rId, interest: interests[0]?.id || '', 
+        date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos', imageUrl: '', imageFile: null
+      });
+      setFormError(null);
+      setFormErrorField(null);
+    }
+    resetRightColumn();
+  }} className={`p-1.5 rounded-lg transition-colors ${(activeView === 'create_event' || activeView === 'edit_event' || activeView === 'edit_profile') ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-200'} ${activeView === 'profile' ? 'hidden lg:flex' : ''}`}>
+    <X className="h-5 w-5" />
+  </button>
           )}
         </div>
       </div>
@@ -682,7 +702,21 @@ export function RightColumn() {
                   <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Día</label>
                   <DatePicker 
                     value={newPlan.date} 
-                    onChange={(d) => { setNewPlan({...newPlan, date: d}); if (formErrorField === 'date' || formErrorField === 'time') { setFormError(null); setFormErrorField(null); } }} 
+                    onChange={(d) => {
+    const todayObj = new Date();
+    const todayStr = `${todayObj.getFullYear()}-${String(todayObj.getMonth() + 1).padStart(2, '0')}-${String(todayObj.getDate()).padStart(2, '0')}`;
+    const isToday = d === todayStr;
+    const isFuture = d && d !== todayStr;
+    const currentHStr = String(todayObj.getHours()).padStart(2, '0');
+    const currentMStr = String(todayObj.getMinutes()).padStart(2, '0');
+    
+    // Always reset hour/minute when picking a date
+    const h = isToday ? currentHStr : (isFuture ? '00' : '');
+    const m = isToday ? currentMStr : (isFuture ? '00' : '');
+    
+    setNewPlan({...newPlan, date: d, hour: h, minute: m}); 
+    if (formErrorField === 'date' || formErrorField === 'time') { setFormError(null); setFormErrorField(null); }
+  }} 
                     hasError={formErrorField === 'date'} 
                   />
                 </div>
@@ -871,7 +905,16 @@ export function RightColumn() {
         {/* CARTELERA */}
         {activeView === 'cartelera' && (
           <div className="space-y-6">
-            <Button className="w-full py-3.5 shadow-sm" onClick={() => setRightColumnView('create_event')}>
+            <Button className="w-full py-3.5 shadow-sm" onClick={() => {
+    const rId = activeRoomId || defaultRegionId;
+    setNewPlan({ 
+      title: '', description: '', region: rId, interest: interests[0]?.id || '', 
+      date: '', hour: '', minute: '', maxAttendees: '', address: '', ageMin: '', ageMax: '', genderPreference: 'Todos', imageUrl: '', imageFile: null
+    });
+    setFormError(null);
+    setFormErrorField(null);
+    setRightColumnView('create_event');
+  }}>
               <Plus className="h-5 w-5" /> Armar un Planazo
             </Button>
             
