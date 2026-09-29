@@ -14,7 +14,9 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
   const hourRef = useRef<HTMLDivElement>(null);
   const minRef = useRef<HTMLDivElement>(null);
 
-  const isToday = selectedDate === new Date().toISOString().split('T')[0];
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const isToday = selectedDate === todayStr;
   const currentHour = new Date().getHours();
   const currentMinute = new Date().getMinutes();
 
@@ -128,7 +130,7 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
           ref={ref}
           onScroll={onScroll}
           onMouseDown={(e) => handleDragStart(e, ref)}
-          className="h-[108px] w-[55px] overflow-y-scroll overflow-x-hidden touch-pan-y snap-y snap-mandatory scroll-smooth hide-scrollbar relative z-10 cursor-grab active:cursor-grabbing"
+          className="h-[108px] w-[55px] overflow-y-scroll overflow-x-hidden touch-pan-y snap-y snap-mandatory hide-scrollbar relative z-10 cursor-grab active:cursor-grabbing"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <div className="h-[36px]"></div>

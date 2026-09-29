@@ -31,9 +31,8 @@ export async function createEvent(eventData: any) {
       .single()
 
     if (error) {
-      console.error("DB Error on insert. Payload was:", parsed.data);
       console.error(error)
-      return { error: `Error DB: ` + error.message + ` | Region ID intentado: ` + parsed.data.region_id }
+      return { error: 'Error al crear el evento' }
     }
 
 
