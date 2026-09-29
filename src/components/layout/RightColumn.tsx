@@ -104,9 +104,12 @@ export function RightColumn() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [regions, interests, defaultRegionId])
 
+  const prevActiveViewRef = useRef(activeView);
+  const prevRoomIdRef = useRef(activeRoomId);
+
   // Reset form and set region when opening create event view
   useEffect(() => {
-    if (activeView === 'create_event') {
+    if (activeView === 'create_event' && (prevActiveViewRef.current !== 'create_event' || prevRoomIdRef.current !== activeRoomId)) {
       const activeRegObj = regions.find(r => r.room_id === activeRoomId);
       const activeEv = events.find(e => e.id === activeRoomId);
       const contextRegionId = activeEv ? activeEv.region : activeRegObj?.id;
@@ -120,7 +123,7 @@ export function RightColumn() {
       setFormError(null);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormErrorField(null);
-    } else if (activeView === 'edit_profile' && currentUser) {
+    } else if (activeView === 'edit_profile' && currentUser && prevActiveViewRef.current !== 'edit_profile') {
       setEditProfileData({
         email: '',
         instagram: currentUser.instagram || '',
@@ -130,7 +133,7 @@ export function RightColumn() {
       });
       setFormError(null);
       setFormErrorField(null);
-    } else if (activeView === 'edit_event' && selectedEventId) {
+    } else if (activeView === 'edit_event' && selectedEventId && prevActiveViewRef.current !== 'edit_event') {
       const evToEdit = events.find(e => e.id === selectedEventId);
       if (evToEdit) {
         const d = new Date(evToEdit.date);
@@ -157,7 +160,10 @@ export function RightColumn() {
         setFormErrorField(null);
       }
     }
-  }, [activeView, activeRoomId, regions, events, defaultRegionId, interests, selectedEventId]);
+    
+    prevActiveViewRef.current = activeView;
+    prevRoomIdRef.current = activeRoomId;
+  }, [activeView, activeRoomId, regions, events, defaultRegionId, interests, selectedEventId, currentUser]);
 
   if (!currentUser) return null;
 

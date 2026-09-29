@@ -33,21 +33,21 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
   // Initialize with current time if empty, or snap to valid if invalid
   useEffect(() => {
     if (!hour && hours.length > 0) {
-      const currentHStr = String(new Date().getHours()).padStart(2, '0');
-      onHourChange(hours.includes(currentHStr) ? currentHStr : hours[0]);
+      const defaultH = isToday ? String(new Date().getHours()).padStart(2, '0') : '20';
+      onHourChange(hours.includes(defaultH) ? defaultH : hours[0]);
     } else if (hour && !hours.includes(hour) && hours.length > 0) {
       onHourChange(hours[0]);
     }
-  }, [hours, hour, onHourChange]);
+  }, [hours, hour, onHourChange, isToday]);
 
   useEffect(() => {
     if (!minute && minutes.length > 0) {
-      const currentMStr = String(new Date().getMinutes()).padStart(2, '0');
-      onMinuteChange(minutes.includes(currentMStr) ? currentMStr : minutes[0]);
+      const defaultM = isToday ? String(new Date().getMinutes()).padStart(2, '0') : '00';
+      onMinuteChange(minutes.includes(defaultM) ? defaultM : minutes[0]);
     } else if (minute && !minutes.includes(minute) && minutes.length > 0) {
       onMinuteChange(minutes[0]);
     }
-  }, [minutes, minute, onMinuteChange]);
+  }, [minutes, minute, onMinuteChange, isToday]);
 
   useEffect(() => {
     let t: any;
