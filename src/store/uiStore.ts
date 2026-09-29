@@ -337,7 +337,19 @@ export const useUIStore = create<AppState>((set, get) => ({
     if (eventData.ageMax !== undefined && eventData.ageMax !== ev.ageMax) changedFields.push('la edad máxima');
     if (eventData.imageFile || (finalImageUrl === '' && ev.imageUrl)) changedFields.push('la foto');
 
-    if (!rawDesc.includes('<!--edited-->')) rawDesc += '<!--edited-->';
+    let existingEdits: string[] = [];
+    const editMatch = rawDesc.match(/<!--edited:(.*?)-->/);
+    if (editMatch) {
+      existingEdits = editMatch[1].split(',');
+    } else if (rawDesc.includes('<!--edited-->')) {
+      existingEdits = ['algo'];
+    }
+
+    if (changedFields.length > 0) {
+      const allEdits = Array.from(new Set([...existingEdits, ...changedFields]));
+      rawDesc = rawDesc.replace(/<!--edited.*?-->/g, '');
+      rawDesc += `<!--edited:${allEdits.join(',')}-->`;
+    }
 
     const res = await updateEvent(eventId, {
       title: eventData.title || ev.title,

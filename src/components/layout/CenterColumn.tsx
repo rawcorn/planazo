@@ -464,9 +464,22 @@ export function CenterColumn() {
                                 ✨ Planazo
                               </span>
                             </div>
-                            <p className="font-bold text-[13px] text-slate-700">{linkedEvent!.title}</p>
-                            {linkedEvent!.description && (
-                              <p className="text-[11px] text-slate-400 line-clamp-1 mt-0.5">{linkedEvent!.description}</p>
+                            <p className="font-bold text-[13px] text-slate-700">
+                              {linkedEvent!.title}
+                              {linkedEvent!.description?.match(/<!--edited.*?-->/) && (() => {
+                                const match = linkedEvent!.description.match(/<!--edited:(.*?)-->/);
+                                const edits = match ? match[1] : '';
+                                return (
+                                  <span className="ml-2 bg-slate-200 text-slate-500 text-[8px] px-1.5 py-0.5 rounded uppercase font-bold border border-slate-300">
+                                    {edits && edits !== 'algo' ? `Editado: ${edits}` : 'Editado'}
+                                  </span>
+                                );
+                              })()}
+                            </p>
+                            {linkedEvent!.description && linkedEvent!.description.replace(/<!--edited.*?-->/g, '').trim() !== '' && (
+                              <p className="text-[11px] text-slate-400 line-clamp-1 mt-0.5">
+                                {linkedEvent!.description.replace(/<!--edited.*?-->/g, '')}
+                              </p>
                             )}
                           </div>
                         </div>

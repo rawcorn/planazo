@@ -140,7 +140,7 @@ export function RightColumn() {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setNewPlan({
           title: evToEdit.title,
-          description: evToEdit.description?.replace('<!--edited-->', ''),
+          description: evToEdit.description?.replace(/<!--edited.*?-->/g, ''),
           region: evToEdit.region,
           interest: evToEdit.interest,
           date: `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`,
@@ -769,9 +769,7 @@ export function RightColumn() {
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2 tracking-tight leading-snug flex items-center justify-center gap-2">
                 {eventToShow.title}
-                {eventToShow.description?.includes('<!--edited-->') && (
-                  <span className="bg-slate-200 text-slate-500 text-[10px] px-2 py-0.5 rounded-md uppercase font-bold border border-slate-300">Editado</span>
-                )}
+                {eventToShow.description?.match(/<!--edited.*?-->/) && (() => { const match = eventToShow.description.match(/<!--edited:(.*?)-->/); const edits = match ? match[1] : ''; return <span className="bg-slate-200 text-slate-500 text-[10px] px-2 py-0.5 rounded-md uppercase font-bold border border-slate-300">{edits && edits !== 'algo' ? `Editado: ${edits}` : 'Editado'}</span>; })()}
               </h3>
               <span className="inline-block bg-slate-100 border border-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">
                 {interests.find(i => i.id === eventToShow.interest)?.name || 'Interés'}
@@ -797,13 +795,13 @@ export function RightColumn() {
             )}
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6">
-              {eventToShow.description && eventToShow.description.replace('<!--edited-->', '').trim() !== '' && (
+              {eventToShow.description && eventToShow.description.replace(/<!--edited.*?-->/g, '').trim() !== '' && (
                 <p className="text-slate-700 text-sm leading-relaxed">
-                  &quot;{eventToShow.description.replace('<!--edited-->', '')}&quot;
+                  &quot;{eventToShow.description.replace(/<!--edited.*?-->/g, '')}&quot;
                 </p>
               )}
               
-              <div className={`space-y-4 ${eventToShow.description && eventToShow.description.replace('<!--edited-->', '').trim() !== '' ? 'pt-5 border-t border-slate-200' : ''}`}>
+              <div className={`space-y-4 ${eventToShow.description && eventToShow.description.replace(/<!--edited.*?-->/g, '').trim() !== '' ? 'pt-5 border-t border-slate-200' : ''}`}>
                 <div className="flex items-start gap-4 text-sm">
                   <div className="p-2 bg-slate-100 rounded-lg border border-slate-200 text-sky-500 shrink-0">
                     <Clock className="h-4 w-4" />
@@ -937,11 +935,9 @@ export function RightColumn() {
                         <div className="min-w-0 flex-1">
                           <h3 className="font-bold text-slate-900 text-base mb-1 pr-16 truncate flex items-center gap-2">
                             <span className="truncate">{event.title}</span>
-                            {event.description?.includes('<!--edited-->') && (
-                              <span className="bg-slate-200/70 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-md uppercase font-bold border border-slate-300 shrink-0">Editado</span>
-                            )}
+                            {event.description?.match(/<!--edited.*?-->/) && (() => { const match = event.description.match(/<!--edited:(.*?)-->/); const edits = match ? match[1] : ''; return <span className="bg-slate-200/70 text-slate-500 text-[9px] px-1.5 py-0.5 rounded-md uppercase font-bold border border-slate-300 shrink-0">{edits && edits !== 'algo' ? `Editado: ${edits}` : 'Editado'}</span>; })()}
                           </h3>
-                          <p className="text-sm text-slate-700 line-clamp-2 mb-4 leading-relaxed">{event.description?.replace('<!--edited-->', '')}</p>
+                          <p className="text-sm text-slate-700 line-clamp-2 mb-4 leading-relaxed">{event.description?.replace(/<!--edited.*?-->/g, '')}</p>
                         </div>
                       </div>
                       
