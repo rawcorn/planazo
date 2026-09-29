@@ -30,24 +30,24 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
 
   const ITEM_HEIGHT = 36; // px
 
-  // Initialize with current time if empty, or snap to valid if invalid
+  // Initialize with intelligent default ONLY when date is selected
   useEffect(() => {
-    if (!hour && hours.length > 0) {
+    if (!hour && hours.length > 0 && selectedDate) {
       const defaultH = isToday ? String(new Date().getHours()).padStart(2, '0') : '20';
       onHourChange(hours.includes(defaultH) ? defaultH : hours[0]);
     } else if (hour && !hours.includes(hour) && hours.length > 0) {
       onHourChange(hours[0]);
     }
-  }, [hours, hour, onHourChange, isToday]);
+  }, [hours, hour, onHourChange, isToday, selectedDate]);
 
   useEffect(() => {
-    if (!minute && minutes.length > 0) {
+    if (!minute && minutes.length > 0 && selectedDate) {
       const defaultM = isToday ? String(new Date().getMinutes()).padStart(2, '0') : '00';
       onMinuteChange(minutes.includes(defaultM) ? defaultM : minutes[0]);
     } else if (minute && !minutes.includes(minute) && minutes.length > 0) {
       onMinuteChange(minutes[0]);
     }
-  }, [minutes, minute, onMinuteChange, isToday]);
+  }, [minutes, minute, onMinuteChange, isToday, selectedDate]);
 
   useEffect(() => {
     let t: any;
