@@ -22,23 +22,29 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
 
   const hours = Array.from({ length: 24 })
     .map((_, i) => i.toString().padStart(2, '0'))
-    .filter(h => h === hour || !isToday || parseInt(h, 10) >= currentHour);
+    .filter(h => !isToday || parseInt(h, 10) >= currentHour);
 
   const minutes = Array.from({ length: 60 })
     .map((_, i) => i.toString().padStart(2, '0'))
-    .filter(m => m === minute || !isToday || parseInt(hour || '12', 10) > currentHour || parseInt(m, 10) >= currentMinute);
+    .filter(m => !isToday || parseInt(hour || '12', 10) > currentHour || parseInt(m, 10) >= currentMinute);
 
   const ITEM_HEIGHT = 36; // px
 
-  // Initialize with some default if empty or if invalid due to filtering
+  // Initialize with current time if empty, or snap to valid if invalid
   useEffect(() => {
-    if ((!hour || !hours.includes(hour)) && hours.length > 0) {
+    if (!hour && hours.length > 0) {
+      const currentHStr = String(new Date().getHours()).padStart(2, '0');
+      onHourChange(hours.includes(currentHStr) ? currentHStr : hours[0]);
+    } else if (hour && !hours.includes(hour) && hours.length > 0) {
       onHourChange(hours[0]);
     }
   }, [hours, hour, onHourChange]);
 
   useEffect(() => {
-    if ((!minute || !minutes.includes(minute)) && minutes.length > 0) {
+    if (!minute && minutes.length > 0) {
+      const currentMStr = String(new Date().getMinutes()).padStart(2, '0');
+      onMinuteChange(minutes.includes(currentMStr) ? currentMStr : minutes[0]);
+    } else if (minute && !minutes.includes(minute) && minutes.length > 0) {
       onMinuteChange(minutes[0]);
     }
   }, [minutes, minute, onMinuteChange]);
