@@ -797,9 +797,13 @@ export function RightColumn() {
             )}
 
             <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6">
-              <p className="text-slate-700 text-sm leading-relaxed">&quot;{eventToShow.description?.replace('<!--edited-->', '')}&quot;</p>
+              {eventToShow.description && eventToShow.description.replace('<!--edited-->', '').trim() !== '' && (
+                <p className="text-slate-700 text-sm leading-relaxed">
+                  &quot;{eventToShow.description.replace('<!--edited-->', '')}&quot;
+                </p>
+              )}
               
-              <div className="pt-5 border-t border-slate-200 space-y-4">
+              <div className={`space-y-4 ${eventToShow.description && eventToShow.description.replace('<!--edited-->', '').trim() !== '' ? 'pt-5 border-t border-slate-200' : ''}`}>
                 <div className="flex items-start gap-4 text-sm">
                   <div className="p-2 bg-slate-100 rounded-lg border border-slate-200 text-sky-500 shrink-0">
                     <Clock className="h-4 w-4" />
