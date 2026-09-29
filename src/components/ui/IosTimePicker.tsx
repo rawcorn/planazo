@@ -33,7 +33,7 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
   // Initialize with intelligent default ONLY when date is selected
   useEffect(() => {
     if (!hour && hours.length > 0 && selectedDate) {
-      const defaultH = isToday ? String(new Date().getHours()).padStart(2, '0') : '20';
+      const defaultH = isToday ? String(new Date().getHours()).padStart(2, '0') : '00';
       onHourChange(hours.includes(defaultH) ? defaultH : hours[0]);
     } else if (hour && !hours.includes(hour) && hours.length > 0) {
       onHourChange(hours[0]);
