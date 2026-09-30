@@ -673,7 +673,7 @@ export function RightColumn() {
                 <Button variant="outline" type="button" onClick={logout} className="w-full py-2 text-slate-600 font-bold border-slate-300">
                   Cerrar Sesión
                 </Button>
-                <Button variant="default" type="button" onClick={handleDeleteAccount} className="w-full py-2 bg-rose-500 hover:bg-rose-600 text-white text-sm font-bold border-0">
+                <Button type="button" onClick={handleDeleteAccount} className="w-full py-2 bg-rose-500 hover:bg-rose-600 text-white text-sm font-bold border-0">
                   Eliminar mi cuenta
                 </Button>
               </div>
