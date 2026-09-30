@@ -172,3 +172,57 @@ export async function signOut() {
     return { error: 'Error interno del servidor' }
   }
 }
+
+export async function resetPassword(email: string) {
+  try {
+    const supabase = await createClient()
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'http://localhost:3000', // adjust for prod later
+    })
+    
+    if (error) {
+      console.error(error)
+      return { error: 'No se pudo enviar el correo de recuperación.' }
+    }
+    return { success: true }
+  } catch (err) {
+    console.error(err)
+    return { error: 'Error interno del servidor' }
+  }
+}
+
+export async function updatePassword(password: string) {
+  try {
+    const supabase = await createClient()
+    const { error } = await supabase.auth.updateUser({ password })
+    
+    if (error) {
+      console.error(error)
+      return { error: 'Error al actualizar la contraseña.' }
+    }
+    return { success: true }
+  } catch (err) {
+    console.error(err)
+    return { error: 'Error interno del servidor' }
+  }
+}
+
+export async function deleteAccount() {
+  try {
+    const supabase = await createClient()
+    // Requires an RPC to delete the user from auth.users securely
+    const { error } = await supabase.rpc('delete_account')
+    
+    if (error) {
+      console.error(error)
+      return { error: 'Error al eliminar la cuenta. ' + error.message }
+    }
+    
+    await supabase.auth.signOut()
+    revalidatePath('/', 'layout')
+    return { success: true }
+  } catch (err) {
+    console.error(err)
+    return { error: 'Error interno del servidor' }
+  }
+}

@@ -5,6 +5,7 @@ import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clo
 import { DatePicker } from '@/components/ui/DatePicker'
 import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
+import { updatePassword, deleteAccount } from '@/app/actions/auth'
 
 export function RightColumn() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -76,6 +77,7 @@ export function RightColumn() {
 
   const [editProfileData, setEditProfileData] = useState({
     email: '',
+    newPassword: '',
     instagram: '',
     interests: [] as string[],
     avatarUrl: '',
@@ -126,6 +128,7 @@ export function RightColumn() {
     } else if (activeView === 'edit_profile' && currentUser && prevActiveViewRef.current !== 'edit_profile') {
       setEditProfileData({
         email: '',
+        newPassword: '',
         instagram: currentUser.instagram || '',
         interests: currentUser.interests || [],
         avatarUrl: currentUser.avatarUrl || '',
@@ -389,6 +392,20 @@ export function RightColumn() {
        return;
     }
 
+    if (editProfileData.newPassword && editProfileData.newPassword.length < 6) {
+       setFormError('La contraseña debe tener al menos 6 caracteres.');
+       setFormErrorField('password');
+       return;
+    }
+
+    if (editProfileData.newPassword) {
+       const pwRes = await updatePassword(editProfileData.newPassword);
+       if (pwRes.error) {
+         setFormError(pwRes.error);
+         return;
+       }
+    }
+
     const res = await updateUserProfile({
        email: editProfileData.email.trim() || currentUser.email,
        instagram: editProfileData.instagram,
@@ -402,6 +419,17 @@ export function RightColumn() {
     }
     
     setRightColumnView('profile');
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm('¿Estás seguro de que querés eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+      const res = await deleteAccount();
+      if (res.error) {
+        setFormError(res.error);
+      } else {
+        logout();
+      }
+    }
   };
 
   return (
@@ -575,6 +603,17 @@ export function RightColumn() {
               </div>
 
               <div>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Nueva Contraseña <span className="text-slate-400 font-normal lowercase">(Opcional, dejar en blanco para no cambiar)</span></label>
+                <input 
+                  type="password"
+                  className={`w-full bg-slate-100 border rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'password' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
+                  placeholder="••••••••"
+                  value={editProfileData.newPassword} 
+                  onChange={e => { setEditProfileData({...editProfileData, newPassword: e.target.value}); if (formErrorField === 'password') { setFormError(null); setFormErrorField(null); } }} 
+                />
+              </div>
+
+              <div>
                 <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Instagram <span className="text-slate-400 font-normal lowercase">(Opcional)</span></label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -628,6 +667,12 @@ export function RightColumn() {
                     <span>{formError}</span>
                   </div>
                 )}
+              </div>
+              
+              <div className="pt-4 border-t border-slate-200 mt-6">
+                <Button variant="ghost" type="button" onClick={handleDeleteAccount} className="w-full py-2 text-rose-500 hover:text-rose-600 hover:bg-rose-50 text-sm font-bold">
+                  Eliminar mi cuenta
+                </Button>
               </div>
             </form>
           </div>

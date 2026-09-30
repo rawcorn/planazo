@@ -289,3 +289,13 @@ CREATE POLICY "Anyone can upload an event image." ON storage.objects FOR INSERT 
 
 DROP POLICY IF EXISTS "Anyone can update event images." ON storage.objects;
 CREATE POLICY "Anyone can update event images." ON storage.objects FOR UPDATE WITH CHECK (bucket_id = 'event_images');
+
+ - -   D e l e t e   a c c o u n t   f u n c t i o n 
+ C R E A T E   O R   R E P L A C E   F U N C T I O N   p u b l i c . d e l e t e _ a c c o u n t ( ) 
+ R E T U R N S   v o i d   A S   \ $ \ $ 
+ B E G I N 
+     D E L E T E   F R O M   a u t h . u s e r s   W H E R E   i d   =   a u t h . u i d ( ) ; 
+ E N D ; 
+ \ $ \ $   L A N G U A G E   p l p g s q l   S E C U R I T Y   D E F I N E R ; 
+  
+ 
