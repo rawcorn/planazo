@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut, MessageCircle } from 'lucide-react'
+import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut, MessageCircle, Settings } from 'lucide-react'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
@@ -491,7 +491,16 @@ export function RightColumn() {
         {/* PERFIL */}
         {activeView === 'profile' && profileToShow && (
           <div className="space-y-6">
-            <div className="text-center pt-2">
+            <div className="text-center pt-2 relative">
+              {currentUser.id === profileToShow.id && (
+                <button 
+                  onClick={() => setRightColumnView('edit_profile')} 
+                  className="absolute top-0 right-0 p-2 text-slate-400 hover:text-slate-700 bg-slate-50 hover:bg-slate-200 rounded-full transition-colors shadow-sm border border-slate-100"
+                  title="Configuración de la cuenta"
+                >
+                  <Settings className="h-5 w-5" />
+                </button>
+              )}
               {profileToShow.avatarUrl ? (
                 <img src={profileToShow.avatarUrl} alt={profileToShow.username} className="h-32 w-32 rounded-full mx-auto mb-5 object-cover border-4 border-slate-50 shadow-sm" />
               ) : (
