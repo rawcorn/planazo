@@ -552,7 +552,7 @@ export function RightColumn() {
               </div>
             )}
 
-            {currentUser.id !== profileToShow.id ? (
+            {currentUser.id !== profileToShow.id && (
               <div className="pt-6 flex justify-center">
                 <button 
                   className="flex items-center justify-center gap-2 px-6 py-2.5 bg-slate-100 hover:bg-violet-100 text-slate-600 hover:text-violet-700 font-semibold rounded-full border border-slate-200 hover:border-violet-300 transition-colors shadow-sm" 
@@ -560,15 +560,6 @@ export function RightColumn() {
                 >
                   <MessageCircle className="h-4 w-4" />
                   Mensaje
-                </button>
-              </div>
-            ) : (
-              <div className="pt-4 flex flex-col gap-2 items-center">
-                <button onClick={() => setRightColumnView('edit_profile')} className="text-xs text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-400 transition-colors py-2">
-                  Editar Perfil
-                </button>
-                <button onClick={logout} className="text-xs text-slate-400 hover:text-slate-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-400 transition-colors py-2">
-                  Cerrar Sesión
                 </button>
               </div>
             )}
@@ -678,8 +669,11 @@ export function RightColumn() {
                 )}
               </div>
               
-              <div className="pt-4 border-t border-slate-200 mt-6">
-                <Button variant="ghost" type="button" onClick={handleDeleteAccount} className="w-full py-2 text-rose-500 hover:text-rose-600 hover:bg-rose-50 text-sm font-bold">
+              <div className="pt-4 border-t border-slate-200 mt-6 flex flex-col gap-3">
+                <Button variant="outline" type="button" onClick={logout} className="w-full py-2 text-slate-600 font-bold border-slate-300">
+                  Cerrar Sesión
+                </Button>
+                <Button variant="default" type="button" onClick={handleDeleteAccount} className="w-full py-2 bg-rose-500 hover:bg-rose-600 text-white text-sm font-bold border-0">
                   Eliminar mi cuenta
                 </Button>
               </div>
