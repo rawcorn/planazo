@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut, MessageCircle, Settings } from 'lucide-react'
+import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut, MessageCircle, Settings, Eye, EyeOff, CheckCircle2 } from 'lucide-react'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
@@ -86,6 +86,10 @@ export function RightColumn() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const [formSuccess, setFormSuccess] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   useEffect(() => {
     if (duplicateWarning || formError) {
@@ -421,7 +425,21 @@ export function RightColumn() {
        return;
     }
     
-    setRightColumnView('profile');
+    setFormSuccess('Cambios guardados con éxito');
+    setEditProfileData(prev => ({ ...prev, newPassword: '', imageFile: null }));
+    setTimeout(() => {
+      setFormSuccess(null);
+    }, 3000);
+  };
+
+  const handleCloseEditProfile = () => {
+    if (hasProfileChanges) {
+      setShowExitConfirm(true);
+    } else {
+      setRightColumnView('profile');
+      setFormError(null);
+      setFormSuccess(null);
+    }
   };
 
   const confirmDeleteAccount = () => {
@@ -450,7 +468,38 @@ export function RightColumn() {
   ) : false;
 
   return (
-    <div className="flex flex-col h-full w-full bg-slate-100 text-slate-900">
+    <div className="flex flex-col h-full w-full bg-slate-100 text-slate-900 relative">
+      {/* MODAL SALIR SIN GUARDAR */}
+      {showExitConfirm && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6 text-center">
+              <h3 className="text-lg font-bold text-slate-900 mb-2">¿Salir sin guardar?</h3>
+              <p className="text-sm text-slate-500">
+                Tenés cambios sin guardar. ¿Estás seguro de que querés salir?
+              </p>
+            </div>
+            <div className="flex border-t border-slate-100">
+              <button 
+                onClick={() => setShowExitConfirm(false)}
+                className="flex-1 px-4 py-4 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+              >
+                Quedarme
+              </button>
+              <button 
+                onClick={() => {
+                  setShowExitConfirm(false);
+                  resetRightColumn();
+                }}
+                className="flex-1 px-4 py-4 text-sm font-bold text-rose-500 hover:bg-rose-50 transition-colors border-l border-slate-100"
+              >
+                Salir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* MODAL ELIMINAR CUENTA */}
       {showDeleteModal && (
         <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
@@ -517,17 +566,12 @@ export function RightColumn() {
           </h2>
         </div>
         <div className="flex items-center gap-2">
-          {activeView === 'edit_profile' && (
-            <button 
-              disabled={!hasProfileChanges}
-              onClick={() => handleSaveProfile()} 
-              className={`text-sm font-black transition-colors mr-1 ${hasProfileChanges ? 'text-emerald-500 hover:text-emerald-600' : 'text-slate-300 opacity-50 cursor-not-allowed'}`}
-            >
-              Guardar
-            </button>
-          )}
           {(activeView === 'create_event' || activeView === 'edit_event' || activeView === 'event_details' || activeView === 'profile' || activeView === 'edit_profile') && (
             <button onClick={() => {
+    if (activeView === 'edit_profile') {
+      handleCloseEditProfile();
+      return;
+    }
     if (activeView === 'create_event') {
       const rId = activeRoomId || defaultRegionId;
       setNewPlan({ 
@@ -657,6 +701,13 @@ export function RightColumn() {
                 </div>
               )}
 
+              {formSuccess && (
+                <div className="bg-emerald-50 text-emerald-600 text-xs font-medium rounded-lg p-2.5 flex items-center justify-center gap-2 mb-2 animate-in fade-in duration-200">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span>{formSuccess}</span>
+                </div>
+              )}
+
               <div>
                 <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Email <span className="text-slate-400 font-normal lowercase">(solo para iniciar sesión)</span></label>
                 <input 
@@ -670,13 +721,22 @@ export function RightColumn() {
 
               <div>
                 <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Nueva Contraseña</label>
-                <input 
-                  type="password"
-                  className={`w-full bg-slate-100 border rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'password' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
-                  placeholder="••••••••"
-                  value={editProfileData.newPassword} 
-                  onChange={e => { setEditProfileData({...editProfileData, newPassword: e.target.value}); if (formErrorField === 'password') { setFormError(null); setFormErrorField(null); } }} 
-                />
+                <div className="relative">
+                  <input 
+                    type={showPassword ? "text" : "password"}
+                    className={`w-full bg-slate-100 border rounded-xl pl-4 pr-10 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'password' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
+                    placeholder="••••••••"
+                    value={editProfileData.newPassword} 
+                    onChange={e => { setEditProfileData({...editProfileData, newPassword: e.target.value}); if (formErrorField === 'password') { setFormError(null); setFormErrorField(null); } }} 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
 
               <div>
@@ -1107,6 +1167,27 @@ export function RightColumn() {
           </div>
         )}
       </div>
+      
+      {/* STICKY FOOTER EDIT PROFILE */}
+      {activeView === 'edit_profile' && (
+        <div className="p-4 bg-white border-t border-slate-200 shrink-0 flex items-center justify-between">
+          <button 
+            type="button" 
+            onClick={handleCloseEditProfile} 
+            className="text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors"
+          >
+            Cancelar
+          </button>
+          <button 
+            type="button"
+            disabled={!hasProfileChanges}
+            onClick={() => handleSaveProfile()} 
+            className={`text-sm font-black px-6 py-2.5 rounded-xl transition-colors ${hasProfileChanges ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
+          >
+            Guardar cambios
+          </button>
+        </div>
+      )}
     </div>
   )
 }
