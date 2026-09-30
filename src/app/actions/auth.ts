@@ -211,6 +211,7 @@ export async function deleteAccount() {
   try {
     const supabase = await createClient()
     // Requires an RPC to delete the user from auth.users securely
+    // @ts-ignore - The RPC is not yet in the generated database.types.ts
     const { error } = await supabase.rpc('delete_account')
     
     if (error) {
