@@ -84,6 +84,9 @@ export function RightColumn() {
     imageFile: null as File | null
   });
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   useEffect(() => {
     if (duplicateWarning || formError) {
       setTimeout(() => {
@@ -421,14 +424,19 @@ export function RightColumn() {
     setRightColumnView('profile');
   };
 
-  const handleDeleteAccount = async () => {
-    if (window.confirm('¿Estás seguro de que querés eliminar tu cuenta? Esta acción no se puede deshacer.')) {
-      const res = await deleteAccount();
-      if (res.error) {
-        setFormError(res.error);
-      } else {
-        logout();
-      }
+  const confirmDeleteAccount = () => {
+    setShowDeleteModal(true);
+  };
+
+  const executeDeleteAccount = async () => {
+    setIsDeleting(true);
+    const res = await deleteAccount();
+    if (res.error) {
+      setFormError(res.error);
+      setIsDeleting(false);
+      setShowDeleteModal(false);
+    } else {
+      logout();
     }
   };
 
@@ -443,6 +451,39 @@ export function RightColumn() {
 
   return (
     <div className="flex flex-col h-full w-full bg-slate-100 text-slate-900">
+      {/* MODAL ELIMINAR CUENTA */}
+      {showDeleteModal && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-4">
+                <AlertTriangle className="h-6 w-6 text-rose-500" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">¿Eliminar tu cuenta?</h3>
+              <p className="text-sm text-slate-500">
+                Esta acción no se puede deshacer. Todos tus datos, planes y mensajes se borrarán permanentemente.
+              </p>
+            </div>
+            <div className="flex border-t border-slate-100">
+              <button 
+                onClick={() => setShowDeleteModal(false)}
+                disabled={isDeleting}
+                className="flex-1 px-4 py-4 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={executeDeleteAccount}
+                disabled={isDeleting}
+                className="flex-1 px-4 py-4 text-sm font-bold text-rose-500 hover:bg-rose-50 transition-colors border-l border-slate-100"
+              >
+                {isDeleting ? 'Eliminando...' : 'Sí, eliminar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* HEADER */}
       <div className="h-16 px-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
@@ -480,7 +521,7 @@ export function RightColumn() {
             <button 
               disabled={!hasProfileChanges}
               onClick={() => handleSaveProfile()} 
-              className={`text-sm font-black transition-colors mr-1 ${hasProfileChanges ? 'text-sky-500 hover:text-sky-600' : 'text-slate-300 cursor-not-allowed'}`}
+              className={`text-sm font-black transition-colors mr-1 ${hasProfileChanges ? 'text-emerald-500 hover:text-emerald-600' : 'text-slate-300 opacity-50 cursor-not-allowed'}`}
             >
               Guardar
             </button>
@@ -686,7 +727,7 @@ export function RightColumn() {
                 <button type="button" onClick={logout} className="text-sm font-bold text-slate-500 hover:text-slate-700 underline-offset-4 hover:underline transition-all">
                   Cerrar Sesión
                 </button>
-                <button type="button" onClick={handleDeleteAccount} className="text-xs font-bold text-rose-500 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-4 py-2 rounded-full transition-all">
+                <button type="button" onClick={confirmDeleteAccount} className="text-xs font-bold text-rose-500 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-4 py-2 rounded-full transition-all">
                   Eliminar cuenta
                 </button>
               </div>
