@@ -134,14 +134,14 @@ export async function updateProfile(data: any) {
        const { error: authError } = await supabase.auth.updateUser({ email: emailToUpdate })
        if (authError) {
          console.error('Error updating auth email:', authError)
-         // Supabase auth email updates might require email confirmation, 
-         // but for MVP we might just update the users table as well.
+         return { error: 'Error de seguridad al cambiar email (reintentá en 60 seg)' }
        }
        
        // Update in users table
        const { error: userTableError } = await supabase.from('users').update({ email: emailToUpdate }).eq('id', user.id);
        if (userTableError) {
          console.error('Error updating user table email:', userTableError);
+         return { error: 'El email ya está en uso o es inválido' }
        }
     }
 

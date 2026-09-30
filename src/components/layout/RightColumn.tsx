@@ -603,7 +603,7 @@ export function RightColumn() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Nueva Contraseña <span className="text-slate-400 font-normal lowercase">(Opcional, dejar en blanco para no cambiar)</span></label>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Nueva Contraseña</label>
                 <input 
                   type="password"
                   className={`w-full bg-slate-100 border rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'password' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
@@ -657,25 +657,25 @@ export function RightColumn() {
                 </div>
               </div>
 
-              <div className="pt-4 space-y-2 flex flex-col items-center">
-                <Button variant="outline" type="submit" className="w-full py-2 text-slate-600 text-sm">
+              <div className="pt-6 space-y-4 flex flex-col items-center">
+                <button type="submit" className="text-sm font-bold text-blue-600 hover:text-blue-700 underline-offset-4 hover:underline transition-all">
                   Guardar Perfil
-                </Button>
+                </button>
                 {formError && (
-                  <div className="text-slate-500 text-xs flex items-center gap-1.5 pt-1 animate-in fade-in duration-200">
+                  <div className="text-slate-500 text-xs flex items-center justify-center gap-1.5 pt-1 animate-in fade-in duration-200">
                     <AlertTriangle className="h-3.5 w-3.5 text-rose-400" />
                     <span>{formError}</span>
                   </div>
                 )}
               </div>
               
-              <div className="pt-4 border-t border-slate-200 mt-6 flex flex-col gap-3">
-                <Button variant="outline" type="button" onClick={logout} className="w-full py-2 text-slate-600 font-bold border-slate-300">
+              <div className="pt-2 flex flex-col items-center gap-4">
+                <button type="button" onClick={logout} className="text-sm font-bold text-slate-500 hover:text-slate-700 underline-offset-4 hover:underline transition-all">
                   Cerrar Sesión
-                </Button>
-                <Button type="button" onClick={handleDeleteAccount} className="w-full py-2 bg-rose-500 hover:bg-rose-600 text-white text-sm font-bold border-0">
+                </button>
+                <button type="button" onClick={handleDeleteAccount} className="text-sm font-bold text-rose-400 hover:text-rose-500 underline-offset-4 hover:underline transition-all">
                   Eliminar mi cuenta
-                </Button>
+                </button>
               </div>
             </form>
           </div>
