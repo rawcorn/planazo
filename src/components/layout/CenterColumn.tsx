@@ -280,7 +280,10 @@ export function CenterColumn() {
                 ) : isDMRoom ? (
                   <span>Mensaje Privado</span>
                 ) : (
-                  <span className="flex items-center gap-1.5 font-medium text-slate-500">👥 {memberCount !== null ? `${memberCount >= 1000 ? (memberCount/1000).toFixed(1) + 'k' : memberCount} miembros` : '...'}</span>
+                  <span className="flex items-center gap-1.5 font-medium text-slate-500">
+                    <span className="w-2 h-2 rounded-full bg-[#86E2B5]"></span>
+                    {memberCount !== null ? `${memberCount >= 1000 ? (memberCount/1000).toFixed(1) + 'k' : memberCount} miembros` : '...'}
+                  </span>
                 )}
               </p>
             </div>
