@@ -374,7 +374,12 @@ export const useUIStore = create<AppState>((set, get) => ({
            const lastComma = changesStr.lastIndexOf(', ');
            changesStr = changesStr.substring(0, lastComma) + ' y ' + changesStr.substring(lastComma + 2);
          }
-         await get().sendMessage(regionObj.room_id, `✏️ @${currentUser.username} editó el planazo "${res.event.title}". Modificó: ${changesStr}.`);
+         try {
+           await sendMessageAPI(regionObj.room_id, `✏️ @${currentUser.username} editó el planazo "${res.event.title}". Modificó: ${changesStr}.`);
+           await get().fetchMessagesForRoom(regionObj.room_id);
+         } catch (err) {
+           console.error("Error enviando mensaje de edición:", err);
+         }
        }
        await fetchEventsForRegion(res.event.region_id);
        await get().fetchMyEvents();

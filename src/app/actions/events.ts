@@ -32,7 +32,7 @@ export async function createEvent(eventData: any) {
 
     if (error) {
       console.error(error)
-      return { error: 'Error al crear el evento' }
+      return { error: 'Error al crear el evento: ' + error.message }
     }
 
 

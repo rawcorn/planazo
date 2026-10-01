@@ -91,6 +91,7 @@ export function RightColumn() {
   const [showPassword, setShowPassword] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [isSavingEvent, setIsSavingEvent] = useState(false);
 
   useEffect(() => {
     if (duplicateWarning || formError) {
@@ -223,6 +224,7 @@ export function RightColumn() {
   const executeCreation = async () => {
     setFormError(null);
     setFormErrorField(null);
+    setIsSavingEvent(true);
     const eventDateTime = new Date(`${newPlan.date}T${newPlan.hour}:${newPlan.minute}`);
     const planToCreate = {
       ...newPlan,
@@ -239,6 +241,7 @@ export function RightColumn() {
       res = await createEvent(planToCreate);
     }
 
+    setIsSavingEvent(false);
     if (res.id) {
       setDuplicateWarning(null);
       setSelectedEvent(res.id);
@@ -561,7 +564,7 @@ export function RightColumn() {
           <h2 className="font-bold text-lg text-[#3f3f46] flex items-center gap-2">
             {activeView === 'profile' ? 'Perfil de Usuario' : 
              activeView === 'edit_profile' ? 'Editar Perfil' : 
-             activeView === 'create_event' ? 'Armar un Plan' : 
+             activeView === 'create_event' ? 'Armar un Planazo' : 
              activeView === 'event_details' ? 'Detalles del Planazo' : 
              `Planes en ${currentRegionName}`}
           </h2>
@@ -897,8 +900,9 @@ export function RightColumn() {
               </div>
 
               <div className="pt-4 space-y-2 flex flex-col items-center">
-                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-white shadow-sm font-bold transition-all" disabled={duplicateWarning !== null}>
-                  {activeView === 'edit_event' ? 'Guardar Cambios' : 'Lanzar Planazo'}
+                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-white shadow-sm font-bold transition-all flex items-center justify-center gap-2" disabled={duplicateWarning !== null || isSavingEvent}>
+                  {isSavingEvent && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {isSavingEvent ? 'Guardando...' : (activeView === 'edit_event' ? 'Guardar Cambios' : 'Crear Planazo')}
                 </Button>
                 {formError && (
                   <div className="text-slate-500 text-xs flex items-center gap-1.5 pt-1 animate-in fade-in duration-200">
