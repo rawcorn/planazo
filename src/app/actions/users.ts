@@ -185,7 +185,7 @@ export async function updateUserInterests(interestIds: string[]) {
 
       if (error) {
         console.error(error)
-        return { error: 'Error al guardar los nuevos intereses' }
+        return { error: `Error al guardar los nuevos intereses: ${error.message}` }
       }
     }
 

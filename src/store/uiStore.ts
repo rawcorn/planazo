@@ -285,10 +285,10 @@ export const useUIStore = create<AppState>((set, get) => ({
     if (profileRes.error) return profileRes;
 
     if (rawInterests) {
-        const interestIds = rawInterests.map((name: string) => {
+        const interestIds = Array.from(new Set(rawInterests.map((name: string) => {
             const i = interests.find(int => int.name === name);
             return i ? i.id : null;
-        }).filter(Boolean) as string[];
+        }).filter(Boolean) as string[]));
         
         const intRes = await updateUserInterests(interestIds);
         if (intRes.error) return intRes;
