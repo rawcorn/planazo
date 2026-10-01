@@ -123,33 +123,41 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
     }
   }
 
-  const handleDragStart = (e: React.MouseEvent<HTMLDivElement>, targetRef: React.RefObject<HTMLDivElement | null>) => {
+  const handleDragStart = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>, targetRef: React.RefObject<HTMLDivElement | null>) => {
     if (!targetRef.current) return;
     const el = targetRef.current;
-    const startY = e.pageY;
+    
+    // @ts-ignore
+    const startY = e.type.includes('touch') ? (e as React.TouchEvent).touches[0].pageY : (e as React.MouseEvent).pageY;
     const startScrollTop = el.scrollTop;
 
     el.style.scrollBehavior = 'auto';
     el.style.scrollSnapType = 'none';
 
-    const onMouseMove = (moveEvent: MouseEvent) => {
-      const y = moveEvent.pageY;
+    const onMove = (moveEvent: MouseEvent | TouchEvent) => {
+      moveEvent.preventDefault();
+      // @ts-ignore
+      const y = moveEvent.type.includes('touch') ? (moveEvent as TouchEvent).touches[0].pageY : (moveEvent as MouseEvent).pageY;
       const walk = (y - startY) * 1.5;
       el.scrollTop = startScrollTop - walk;
     };
 
-    const onMouseUp = () => {
+    const onEnd = () => {
       el.style.scrollBehavior = 'smooth';
       el.style.scrollSnapType = 'y mandatory';
       const activeIdx = Math.round(el.scrollTop / ITEM_HEIGHT);
       el.scrollTo({ top: activeIdx * ITEM_HEIGHT, behavior: 'smooth' });
       
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onEnd);
+      window.removeEventListener('touchmove', onMove);
+      window.removeEventListener('touchend', onEnd);
     };
 
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('mousemove', onMove, { passive: false });
+    window.addEventListener('mouseup', onEnd);
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onEnd);
   };
 
   const renderWheel = (
@@ -166,7 +174,8 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
           ref={ref}
           onScroll={onScroll}
           onMouseDown={(e) => handleDragStart(e, ref)}
-          className="h-[108px] w-[55px] overflow-y-scroll overflow-x-hidden touch-pan-y overscroll-y-contain snap-y snap-mandatory hide-scrollbar relative z-10 cursor-grab active:cursor-grabbing"
+          onTouchStart={(e) => handleDragStart(e, ref)}
+          className="h-[108px] w-[55px] overflow-y-scroll overflow-x-hidden touch-none overscroll-y-contain snap-y snap-mandatory hide-scrollbar relative z-10 cursor-grab active:cursor-grabbing"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <div className="h-[36px]"></div>
@@ -195,7 +204,7 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
   }
 
   return (
-    <div className={`flex justify-center items-center gap-4 bg-slate-100 border ${hasError ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'} rounded-2xl p-3 relative shadow-inner overflow-hidden max-w-[200px] mx-auto transition-all`}>
+    <div className={`flex justify-center items-center gap-4 bg-slate-100 border ${hasError ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'} rounded-2xl p-3 relative shadow-inner overflow-hidden max-w-[200px] mx-auto transition-all touch-none`}>
       {/* Central Highlight Bar */}
       <div className={`absolute top-1/2 left-0 w-full h-[36px] -translate-y-1/2 rounded-xl pointer-events-none border-y shadow-sm z-0 ${hasError ? 'bg-rose-100/50 border-rose-200/50' : 'bg-white/60 border-slate-200'}`}></div>
       
