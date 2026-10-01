@@ -554,7 +554,7 @@ export function RightColumn() {
               <ChevronLeft className="h-5 w-5" />
             </button>
           )}
-          <h2 className="font-bold text-lg text-slate-900 flex items-center gap-2">
+          <h2 className="font-bold text-lg text-[#3f3f46] flex items-center gap-2">
             {activeView === 'profile' ? 'Perfil de Usuario' : 
              activeView === 'edit_profile' ? 'Editar Perfil' : 
              activeView === 'create_event' ? 'Armar un Plan' : 
@@ -1064,7 +1064,7 @@ export function RightColumn() {
         {/* CARTELERA */}
         {activeView === 'cartelera' && (
           <div className="space-y-6">
-            <Button className="w-full py-3.5 shadow-sm" onClick={() => {
+            <Button className="w-full py-3.5 shadow-sm text-[#3f3f46]" onClick={() => {
     const rId = activeRoomId || defaultRegionId;
     setNewPlan({ 
       title: '', description: '', region: rId, interest: interests[0]?.id || '', 
@@ -1082,7 +1082,7 @@ export function RightColumn() {
                 <div className="bg-sky-100 border border-sky-200 h-20 w-20 rounded-[2rem] flex items-center justify-center mx-auto mb-4 shadow-sm text-4xl">
                   🏖️
                 </div>
-                <p className="font-bold text-slate-900 text-lg">No hay planes próximos en esta zona.</p>
+                <p className="font-bold text-[#3f3f46] text-lg">No hay planes próximos en esta zona.</p>
                 <p className="text-sm mt-1">¡Sé el primero en armar uno!</p>
               </div>
             ) : (
@@ -1179,7 +1179,7 @@ export function RightColumn() {
             type="button"
             disabled={!hasProfileChanges}
             onClick={() => handleSaveProfile()} 
-            className={`text-sm font-black px-6 py-2.5 rounded-xl transition-colors ${hasProfileChanges ? 'bg-teal-400 hover:bg-teal-500 text-white shadow-sm' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
+            className={`text-sm font-black px-6 py-2.5 rounded-xl transition-colors ${hasProfileChanges ? 'bg-[#86e2b5] hover:bg-[#75d1a4] text-white shadow-sm' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
           >
             Guardar cambios
           </button>

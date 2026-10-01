@@ -63,7 +63,7 @@ export function LeftColumn() {
             </div>
           )}
           <div className="min-w-0">
-            <h1 className="font-black text-xl leading-tight text-slate-900 truncate">Planazo</h1>
+            <h1 className="font-black text-xl leading-tight text-[#3f3f46] truncate">Planazo</h1>
             <p className="text-xs text-slate-600 font-medium truncate">{currentUser.username}</p>
           </div>
         </div>

@@ -245,7 +245,7 @@ export function CenterColumn() {
               );
             })()}
             <div className="min-w-0">
-              <h2 className="font-black text-lg text-slate-900 truncate">
+              <h2 className="font-black text-lg text-[#3f3f46] truncate">
                 {isEventRoom ? activeEvent?.title : isDMRoom ? dmUser?.username : activeRegion?.name}
               </h2>
               <p className="text-[11px] text-slate-500 font-medium truncate flex items-center gap-1.5">
