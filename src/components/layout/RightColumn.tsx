@@ -1064,7 +1064,7 @@ export function RightColumn() {
         {/* CARTELERA */}
         {activeView === 'cartelera' && (
           <div className="space-y-6">
-            <Button className="w-full py-3.5 shadow-sm text-[#3f3f46]" onClick={() => {
+            <Button className="w-full py-3.5 shadow-sm text-white" onClick={() => {
     const rId = activeRoomId || defaultRegionId;
     setNewPlan({ 
       title: '', description: '', region: rId, interest: interests[0]?.id || '', 
