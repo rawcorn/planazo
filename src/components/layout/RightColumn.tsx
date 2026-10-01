@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { Button } from '@/components/ui/button'
-import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut, MessageCircle, Settings, Eye, EyeOff, CheckCircle2 } from 'lucide-react'
+import { ChevronLeft, MapPin, User, AtSign, Link as LinkIcon, AlertTriangle, Clock, Users, ExternalLink, Plus, X, ArrowLeft, Moon, Camera, LogOut, MessageCircle, Settings, Eye, EyeOff, CheckCircle2, Loader2 } from 'lucide-react'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { IosTimePicker } from '@/components/ui/IosTimePicker'
 import { useShallow } from 'zustand/react/shallow'
@@ -897,7 +897,7 @@ export function RightColumn() {
               </div>
 
               <div className="pt-4 space-y-2 flex flex-col items-center">
-                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-[#3f3f46] shadow-sm font-bold transition-all" disabled={duplicateWarning !== null}>
+                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-white shadow-sm font-bold transition-all" disabled={duplicateWarning !== null}>
                   {activeView === 'edit_event' ? 'Guardar Cambios' : 'Lanzar Planazo'}
                 </Button>
                 {formError && (
@@ -1183,12 +1183,13 @@ export function RightColumn() {
             type="button"
             disabled={!hasProfileChanges || isSavingProfile}
             onClick={() => handleSaveProfile()} 
-            className={`text-sm font-bold px-6 py-2.5 rounded-full text-white transition-all ${
+            className={`text-sm font-bold px-6 py-2.5 rounded-full text-white transition-all flex items-center gap-2 ${
               (hasProfileChanges && !isSavingProfile) 
-                ? 'bg-[#86e2b5] hover:bg-[#75d1a4] shadow-sm' 
-                : 'bg-[#7ac7ac] opacity-50 cursor-not-allowed'
+                ? 'bg-[#10b981] hover:bg-[#059669] shadow-sm' 
+                : 'bg-slate-400 cursor-not-allowed'
             }`}
           >
+            {isSavingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             {isSavingProfile ? 'Guardando...' : 'Guardar cambios'}
           </button>
         </div>

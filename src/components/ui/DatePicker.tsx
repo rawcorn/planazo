@@ -73,7 +73,7 @@ export function DatePicker({ value, onChange, hasError }: DatePickerProps) {
         <button type="button" onClick={prevMonth} className="p-1 hover:bg-white rounded-full text-slate-600 transition-colors shadow-sm">
           <ChevronLeft className="h-5 w-5" />
         </button>
-        <span className="font-bold text-slate-800 capitalize text-sm flex items-center gap-2">
+        <span className="font-bold text-[#3f3f46] capitalize text-sm flex items-center gap-2">
           <CalendarIcon className="h-4 w-4 text-sky-500" />
           {format(currentMonth, 'MMMM yyyy', { locale: es })}
         </span>
