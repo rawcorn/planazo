@@ -166,7 +166,7 @@ export function IosTimePicker({ hour, minute, onHourChange, onMinuteChange, sele
           ref={ref}
           onScroll={onScroll}
           onMouseDown={(e) => handleDragStart(e, ref)}
-          className="h-[108px] w-[55px] overflow-y-scroll overflow-x-hidden touch-pan-y snap-y snap-mandatory hide-scrollbar relative z-10 cursor-grab active:cursor-grabbing"
+          className="h-[108px] w-[55px] overflow-y-scroll overflow-x-hidden touch-pan-y overscroll-y-contain snap-y snap-mandatory hide-scrollbar relative z-10 cursor-grab active:cursor-grabbing"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           <div className="h-[36px]"></div>
