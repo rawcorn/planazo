@@ -374,20 +374,6 @@ export const useUIStore = create<AppState>((set, get) => ({
            const lastComma = changesStr.lastIndexOf(', ');
            changesStr = changesStr.substring(0, lastComma) + ' y ' + changesStr.substring(lastComma + 2);
          }
-         try {
-           const sendRes = await sendMessageAPI(regionObj.room_id, `✏️ @${currentUser.username} editó el planazo "${res.event.title}". Modificó: ${changesStr}.`);
-           if (sendRes?.error) {
-             console.error("Error from API:", sendRes.error);
-             alert("Error al enviar msj de edición: " + sendRes.error);
-           } else {
-             alert("Debug: Mensaje enviado con éxito. ID de sala: " + regionObj.room_id);
-           }
-           await get().fetchMessagesForRoom(regionObj.room_id);
-         } catch (err) {
-           console.error("Error enviando mensaje de edición:", err);
-         }
-       } else {
-         alert("Debug: No se mandó mensaje. changes: " + changedFields.length + ", regionObj: " + (!!regionObj));
        }
        await fetchEventsForRegion(res.event.region_id);
        await get().fetchMyEvents();

@@ -243,11 +243,6 @@ export function RightColumn() {
 
     setIsSavingEvent(false);
     
-    // DEBUG ALERTS
-    if (activeView === 'edit_event') {
-      alert("Debug RightColumn: res = " + JSON.stringify(res));
-    }
-
     if (res.id) {
       setDuplicateWarning(null);
       setSelectedEvent(res.id);
