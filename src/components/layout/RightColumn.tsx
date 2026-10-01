@@ -460,7 +460,7 @@ export function RightColumn() {
   };
 
   const hasProfileChanges = currentUser ? (
-    editProfileData.email !== (currentUser.email || '') ||
+    (editProfileData.email !== '' && editProfileData.email !== (currentUser.email || '')) ||
     editProfileData.instagram !== (currentUser.instagram || '') ||
     editProfileData.avatarUrl !== (currentUser.avatarUrl || '') ||
     editProfileData.imageFile !== null ||
@@ -897,7 +897,7 @@ export function RightColumn() {
               </div>
 
               <div className="pt-4 space-y-2 flex flex-col items-center">
-                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-slate-900 shadow-sm font-bold transition-all" disabled={duplicateWarning !== null}>
+                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-[#3f3f46] shadow-sm font-bold transition-all" disabled={duplicateWarning !== null}>
                   {activeView === 'edit_event' ? 'Guardar Cambios' : 'Lanzar Planazo'}
                 </Button>
                 {formError && (
