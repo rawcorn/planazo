@@ -608,7 +608,7 @@ export function RightColumn() {
                   {profileToShow.username.charAt(0).toUpperCase()}
                 </div>
               )}
-              <h3 className="text-2xl font-black text-slate-900 mb-1 tracking-tight">{profileToShow.username}</h3>
+              <h3 className="text-2xl font-black text-[#3f3f46] mb-1 tracking-tight">{profileToShow.username}</h3>
               <p className="text-sm font-medium text-slate-600 flex items-center justify-center gap-2">
                  <span>{profileToShow.age} años</span> • 
                  <span>{profileToShow.gender === 'F' ? 'Mujer' : profileToShow.gender === 'M' ? 'Hombre' : 'No Binario'}</span> • 
@@ -1179,7 +1179,7 @@ export function RightColumn() {
             type="button"
             disabled={!hasProfileChanges}
             onClick={() => handleSaveProfile()} 
-            className={`text-sm font-black px-6 py-2.5 rounded-xl transition-colors ${hasProfileChanges ? 'bg-[#86e2b5] hover:bg-[#75d1a4] text-white shadow-sm' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
+            className="text-sm font-bold px-6 py-2.5 rounded-full bg-[#7ac7ac] text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Guardar cambios
           </button>
