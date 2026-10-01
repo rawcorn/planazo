@@ -90,6 +90,7 @@ export function RightColumn() {
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   useEffect(() => {
     if (duplicateWarning || formError) {
@@ -405,10 +406,12 @@ export function RightColumn() {
        return;
     }
 
+    setIsSavingProfile(true);
     if (editProfileData.newPassword) {
        const pwRes = await updatePassword(editProfileData.newPassword);
        if (pwRes.error) {
          setFormError(pwRes.error);
+         setIsSavingProfile(false);
          return;
        }
     }
@@ -420,6 +423,7 @@ export function RightColumn() {
        avatarUrl: editProfileData.avatarUrl
     }, editProfileData.imageFile);
     
+    setIsSavingProfile(false);
     if (res.error) {
        setFormError(res.error);
        return;
@@ -1177,11 +1181,15 @@ export function RightColumn() {
           </button>
           <button 
             type="button"
-            disabled={!hasProfileChanges}
+            disabled={!hasProfileChanges || isSavingProfile}
             onClick={() => handleSaveProfile()} 
-            className="text-sm font-bold px-6 py-2.5 rounded-full bg-[#7ac7ac] text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`text-sm font-bold px-6 py-2.5 rounded-full text-white transition-all ${
+              (hasProfileChanges && !isSavingProfile) 
+                ? 'bg-[#86e2b5] hover:bg-[#75d1a4] shadow-sm' 
+                : 'bg-[#7ac7ac] opacity-50 cursor-not-allowed'
+            }`}
           >
-            Guardar cambios
+            {isSavingProfile ? 'Guardando...' : 'Guardar cambios'}
           </button>
         </div>
       )}
