@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { useShallow } from 'zustand/react/shallow'
 import { Menu, ChevronLeft, Send, MessageSquare, X, CornerUpLeft, CornerUpRight, Copy, Trash2, Calendar } from 'lucide-react'
+import { getRegionMemberCount } from '@/app/actions/catalog'
 
 export function CenterColumn() {
   const { 
@@ -47,6 +48,7 @@ export function CenterColumn() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [replyingTo, setReplyingTo] = useState<any>(null); 
   const [forwardingMsg, setForwardingMsg] = useState<any>(null);
+  const [memberCount, setMemberCount] = useState<number | null>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
@@ -60,6 +62,19 @@ export function CenterColumn() {
     setActiveMessageMenu(null);
     setForwardingMsg(null);
   }, [activeRoomId]);
+
+  useEffect(() => {
+    const fetchMemberCount = async () => {
+      const activeRegion = regions.find(r => r.room_id === activeRoomId);
+      if (activeRegion) {
+        const res = await getRegionMemberCount(activeRegion.name);
+        setMemberCount(res.count);
+      } else {
+        setMemberCount(null);
+      }
+    };
+    fetchMemberCount();
+  }, [activeRoomId, regions]);
 
   if (!currentUser) return null;
   if (!activeRoomId) return <div className="flex-1 flex items-center justify-center bg-slate-50"><p className="text-slate-500 font-medium">Selecciona una sala para chatear</p></div>;
@@ -265,7 +280,7 @@ export function CenterColumn() {
                 ) : isDMRoom ? (
                   <span>Mensaje Privado</span>
                 ) : (
-                  <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#86E2B5]"></span> Comunidad</span>
+                  <span className="flex items-center gap-1.5 font-medium text-slate-500">👥 {memberCount !== null ? `${memberCount >= 1000 ? (memberCount/1000).toFixed(1) + 'k' : memberCount} miembros` : '...'}</span>
                 )}
               </p>
             </div>

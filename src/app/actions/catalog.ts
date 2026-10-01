@@ -77,3 +77,19 @@ export async function getInterests() {
     return { interests: FALLBACK_INTERESTS }
   }
 }
+
+export async function getRegionMemberCount(regionName: string) {
+  try {
+    const supabase = await createClient()
+    const { count, error } = await supabase
+      .from('users')
+      .select('*', { count: 'exact', head: true })
+      .eq('region', regionName)
+    
+    if (error) throw error
+    return { count: count || 0 }
+  } catch (err) {
+    console.error('Error fetching member count:', err)
+    return { count: 0 }
+  }
+}
