@@ -1200,8 +1200,8 @@ export function RightColumn() {
             onClick={() => handleSaveProfile()} 
             className={`text-sm font-bold px-6 py-2.5 rounded-full text-white transition-all flex items-center gap-2 ${
               (hasProfileChanges && !isSavingProfile) 
-                ? 'bg-[#75D1A4] hover:opacity-90 shadow-sm transform hover:-translate-y-0.5' 
-                : 'bg-[#86E2B5] opacity-80 cursor-not-allowed shadow-none'
+                ? 'bg-[#75D1A4] shadow-sm transform hover:-translate-y-0.5' 
+                : 'bg-[#86E2B5] cursor-not-allowed shadow-none'
             }`}
           >
             {isSavingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
