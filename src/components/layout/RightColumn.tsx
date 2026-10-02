@@ -1188,10 +1188,10 @@ export function RightColumn() {
             type="button"
             disabled={!hasProfileChanges || isSavingProfile}
             onClick={() => handleSaveProfile()} 
-            className={`text-sm font-bold px-6 py-2.5 rounded-full transition-all flex items-center gap-2 ${
+            className={`text-sm font-bold px-6 py-2.5 rounded-full text-white transition-all flex items-center gap-2 ${
               (hasProfileChanges && !isSavingProfile) 
-                ? 'bg-[#75D1A4] text-teal-950 hover:opacity-90 shadow-sm transform hover:-translate-y-0.5' 
-                : 'bg-[#86E2B5] text-teal-950 opacity-80 cursor-not-allowed shadow-none'
+                ? 'bg-[#75D1A4] hover:opacity-90 shadow-sm transform hover:-translate-y-0.5' 
+                : 'bg-[#86E2B5] opacity-80 cursor-not-allowed shadow-none'
             }`}
           >
             {isSavingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
