@@ -434,7 +434,17 @@ export function RightColumn() {
     }
     
     setFormSuccess('Cambios guardados con éxito');
-    setEditProfileData(prev => ({ ...prev, newPassword: '', imageFile: null }));
+    const freshUser = useUIStore.getState().currentUser;
+    if (freshUser) {
+      setEditProfileData({
+        email: '',
+        instagram: freshUser.instagram || '',
+        avatarUrl: freshUser.avatarUrl || '',
+        interests: freshUser.interests ? freshUser.interests.map((i:any) => i.name || i) : [],
+        newPassword: '',
+        imageFile: null
+      });
+    }
   };
 
   const handleCloseEditProfile = () => {
