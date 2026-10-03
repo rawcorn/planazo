@@ -13,8 +13,18 @@ function CustomTooltip({
   tooltipProps,
   isLastStep,
 }: TooltipRenderProps) {
+  const isCenterDesktop = step.target === '#tour-step-2';
+  const isCenterMobile = step.target === 'body' && index === 2 && window.innerWidth < 1024;
+  
+  let customPositionClass = '';
+  if (isCenterDesktop) {
+    customPositionClass = 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0';
+  } else if (isCenterMobile) {
+    customPositionClass = 'fixed top-[110px] left-1/2 -translate-x-1/2 m-0';
+  }
+
   return (
-    <div {...tooltipProps} className="bg-[#A698E3] p-6 rounded-[24px] shadow-2xl max-w-sm w-full mx-4 font-sans text-white border border-white/10">
+    <div {...tooltipProps} className={`bg-[#A698E3] p-6 rounded-[24px] shadow-2xl max-w-sm w-full mx-4 font-sans text-white border border-white/10 ${customPositionClass}`}>
       {step.content}
       <div className="flex items-center justify-between mt-6">
         <div className="flex gap-2">
@@ -81,15 +91,22 @@ export function TourGuide() {
     {
       target: 'body',
       content: (
-        <div className="text-left">
+        <div className="text-center">
+          <div className="text-white text-xl font-bold mb-3 animate-bounce">↑</div>
           <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Acá vas a estar viendo el chat de la zona o del Planazo que selecciones.
           </p>
+          <div className="text-white text-xl font-bold mt-3 animate-bounce">↓</div>
         </div>
       ),
       placement: 'center',
       disableBeacon: true,
+      styles: {
+        options: {
+          overlayColor: 'rgba(0, 0, 0, 0)', // Hace que la pantalla esté totalmente iluminada (sin overlay oscuro)
+        }
+      }
     },
     {
       target: '#tour-right-panel-btn',
@@ -97,7 +114,7 @@ export function TourGuide() {
         <div className="text-left">
           <h3 className="font-black text-[16px] mb-1.5 text-white">La Cartelera</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
-            Tocando esta flechita abrís la cartelera con los Planazos que se armaron en cada zona, los detalles de cada uno y tu perfil de usuario cuando lo selecciones.
+            Tocando esta flechita abrís la cartelera con los Planazos de cada zona, sus detalles y tu perfil de usuario cuando lo selecciones.
           </p>
         </div>
       ),
@@ -133,14 +150,14 @@ export function TourGuide() {
     {
       target: '#tour-step-2', // Ilumina toda la columna
       content: (
-        <div className="text-left">
+        <div className="text-center">
           <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Acá va a estar el chat de la zona o del Planazo que selecciones.
           </p>
         </div>
       ),
-      placement: 'auto', // Auto allows spotlight to work correctly!
+      placement: 'auto', // Auto allows spotlight to work correctly! CSS hack centers it.
       disableBeacon: true,
     },
     {
@@ -149,7 +166,7 @@ export function TourGuide() {
         <div className="text-left">
           <h3 className="font-black text-[16px] mb-1.5 text-white">La Cartelera</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
-            Acá ves los Planazos disponibles, los detalles de cada uno y tu perfil de usuario cuando lo selecciones.
+            Acá ves los Planazos por zona, sus detalles y tu perfil de usuario cuando lo selecciones.
           </p>
         </div>
       ),
@@ -186,8 +203,18 @@ export function TourGuide() {
       styles={{
         options: {
           zIndex: 10000,
-          primaryColor: '#A698E3', // Color lila para el beacon
+          primaryColor: '#A698E3',
           overlayColor: 'rgba(0, 0, 0, 0.6)',
+        },
+        beacon: {
+          backgroundColor: '#A698E3',
+        },
+        beaconInner: {
+          backgroundColor: '#A698E3',
+        },
+        beaconOuter: {
+          backgroundColor: 'rgba(166, 152, 227, 0.4)',
+          borderColor: '#A698E3',
         }
       }}
     />
