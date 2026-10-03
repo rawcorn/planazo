@@ -139,6 +139,8 @@ export function TourGuide() {
           opacity: 0.6
         },
         tooltip: {
+          backgroundColor: '#A698E3',
+          color: '#ffffff',
           borderRadius: '20px',
           padding: '16px',
           boxShadow: '0 10px 30px -10px rgba(0,0,0,0.3)',
