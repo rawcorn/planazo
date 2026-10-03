@@ -1,14 +1,48 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Joyride, CallBackProps, STATUS, Step, EVENTS } from 'react-joyride'
+import { Joyride, CallBackProps, STATUS, Step, EVENTS, TooltipRenderProps } from 'react-joyride'
 import { useUIStore } from '@/store/uiStore'
+
+function CustomTooltip({
+  index,
+  step,
+  backProps,
+  primaryProps,
+  skipProps,
+  tooltipProps,
+  isLastStep,
+}: TooltipRenderProps) {
+  return (
+    <div {...tooltipProps} className="bg-[#A698E3] p-6 rounded-[24px] shadow-2xl max-w-sm w-full mx-4 font-sans text-white border border-white/10">
+      {step.content}
+      <div className="flex items-center justify-between mt-6">
+        <div className="flex gap-2">
+          {index > 0 && (
+            <button {...backProps} className="text-white/80 hover:text-white text-[13px] font-medium px-2 py-1 transition-colors">
+              Atrás
+            </button>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <button {...skipProps} className="text-white/70 hover:text-white text-[13px] font-medium px-3 py-1 transition-colors">
+            Omitir
+          </button>
+          <button {...primaryProps} className="bg-[#86E2B5] text-[#1c3327] font-black px-5 py-2 rounded-full text-[13px] hover:bg-[#75D1A4] transition-all shadow-lg shadow-[#86E2B5]/30 hover:scale-105 active:scale-95">
+            {isLastStep ? '¡Empezar!' : 'Siguiente'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function TourGuide() {
   const [run, setRun] = useState(false)
-  const [stepIndex, setStepIndex] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
   
   useEffect(() => {
+    setIsMobile(window.innerWidth < 1024)
     const hasSeenTour = localStorage.getItem('hasSeenTour')
     if (!hasSeenTour) {
       const timer = setTimeout(() => {
@@ -22,9 +56,9 @@ export function TourGuide() {
     {
       target: 'body',
       content: (
-        <div style={{ textAlign: 'center', fontWeight: 500, color: '#ffffff' }}>
-          <h2 style={{ fontSize: '17px', fontWeight: 900, marginBottom: '4px', lineHeight: 1.2 }}>¡Bienvenido a Planazo! 🎉</h2>
-          <p style={{ fontSize: '13px', lineHeight: 1.4, opacity: 0.9 }}>
+        <div className="text-center">
+          <h2 className="text-[18px] font-black mb-2 text-white leading-tight">¡Bienvenido a Planazo! 🎉</h2>
+          <p className="text-white/90 text-[14px] leading-snug font-medium">
             Hagamos un recorrido súper rápido para que sepas cómo usar la app.
           </p>
         </div>
@@ -33,24 +67,24 @@ export function TourGuide() {
       disableBeacon: true,
     },
     {
-      target: '#tour-step-1',
+      target: isMobile ? 'body' : '#tour-step-1',
       content: (
-        <div style={{ fontWeight: 500, textAlign: 'left', color: '#ffffff' }}>
-          <h3 style={{ fontSize: '15px', fontWeight: 900, marginBottom: '4px', lineHeight: 1.2 }}>Tus Comunidades</h3>
-          <p style={{ fontSize: '13px', lineHeight: 1.4, opacity: 0.9 }}>
+        <div className="text-left">
+          <h3 className="font-black text-[16px] mb-1.5 text-white">Tus Comunidades</h3>
+          <p className="text-white/90 text-[14px] leading-snug font-medium">
             Acá podés ver todas las zonas, los planazos a los que te sumaste y tus chats privados.
           </p>
         </div>
       ),
-      placement: window.innerWidth < 1024 ? 'center' : 'right',
+      placement: isMobile ? 'center' : 'right',
       disableBeacon: true,
     },
     {
-      target: '#tour-step-2',
+      target: isMobile ? 'body' : '#tour-step-2',
       content: (
-        <div style={{ fontWeight: 500, textAlign: 'left', color: '#ffffff' }}>
-          <h3 style={{ fontSize: '15px', fontWeight: 900, marginBottom: '4px', lineHeight: 1.2 }}>El Chat Principal</h3>
-          <p style={{ fontSize: '13px', lineHeight: 1.4, opacity: 0.9 }}>
+        <div className="text-left">
+          <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
+          <p className="text-white/90 text-[14px] leading-snug font-medium">
             En este espacio vas a poder hablar con la gente de cada zona o planazo.
           </p>
         </div>
@@ -59,41 +93,29 @@ export function TourGuide() {
       disableBeacon: true,
     },
     {
-      target: '#tour-step-3',
+      target: isMobile ? 'body' : '#tour-step-3',
       content: (
-        <div style={{ fontWeight: 500, textAlign: 'left', color: '#ffffff' }}>
-          <h3 style={{ fontSize: '15px', fontWeight: 900, marginBottom: '4px', lineHeight: 1.2 }}>La Cartelera</h3>
-          <p style={{ fontSize: '13px', lineHeight: 1.4, opacity: 0.9 }}>
+        <div className="text-left">
+          <h3 className="font-black text-[16px] mb-1.5 text-white">La Cartelera</h3>
+          <p className="text-white/90 text-[14px] leading-snug font-medium">
             Acá ves los planes disponibles, los detalles de cada uno y podés editar tu perfil.
           </p>
         </div>
       ),
-      placement: window.innerWidth < 1024 ? 'center' : 'left',
+      placement: isMobile ? 'center' : 'left',
       disableBeacon: true,
     }
   ]
 
   const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status, action, index, type } = data;
+    const { status } = data;
     const { setMobileView } = useUIStore.getState();
-
-    if (type === EVENTS.STEP_BEFORE) {
-      if (window.innerWidth < 1024) {
-        if (index === 1) setMobileView('menu');
-        if (index === 2) setMobileView('chat');
-        if (index === 3) setMobileView('details');
-      }
-    }
-
-    if (type === EVENTS.STEP_AFTER || type === EVENTS.TARGET_NOT_FOUND) {
-      setStepIndex(index + (action === 'prev' ? -1 : 1));
-    }
 
     const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
     if (finishedStatuses.includes(status)) {
       setRun(false);
       localStorage.setItem('hasSeenTour', 'true');
-      if (window.innerWidth < 1024) {
+      if (isMobile) {
         setMobileView('chat');
       }
     }
@@ -105,57 +127,16 @@ export function TourGuide() {
       continuous
       hideCloseButton
       run={run}
-      stepIndex={stepIndex}
       scrollToFirstStep={false}
       showProgress={false}
       showSkipButton
       steps={steps}
+      tooltipComponent={CustomTooltip}
       styles={{
         options: {
           zIndex: 10000,
-          primaryColor: '#86E2B5', // Verde de los botones
-          textColor: '#ffffff', // Letra blanca
-          backgroundColor: '#A698E3', // Lila pastel un poco más oscuro para buen contraste con blanco
-          overlayColor: 'rgba(0, 0, 0, 0.5)',
-        },
-        buttonNext: {
-          backgroundColor: '#86E2B5',
-          color: '#224031',
-          fontWeight: '900',
-          borderRadius: '99px',
-          padding: '6px 14px',
-          fontSize: '12px',
-          boxShadow: '0 4px 10px rgba(134, 226, 181, 0.4)'
-        },
-        buttonBack: {
-          color: '#ffffff',
-          marginRight: '12px',
-          fontSize: '12px',
-          opacity: 0.8
-        },
-        buttonSkip: {
-          color: '#ffffff',
-          fontSize: '12px',
-          opacity: 0.6
-        },
-        tooltip: {
-          backgroundColor: '#A698E3',
-          color: '#ffffff',
-          borderRadius: '20px',
-          padding: '16px',
-          boxShadow: '0 10px 30px -10px rgba(0,0,0,0.3)',
-          maxWidth: '300px'
-        },
-        tooltipContainer: {
-          textAlign: 'left',
-        },
-      }}
-      locale={{
-        back: 'Atrás',
-        close: 'Cerrar',
-        last: 'Terminar',
-        next: 'Siguiente',
-        skip: 'Omitir',
+          overlayColor: 'rgba(0, 0, 0, 0.6)',
+        }
       }}
     />
   )
