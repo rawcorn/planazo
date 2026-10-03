@@ -59,20 +59,19 @@ export function TourGuide() {
         <div className="text-center">
           <h2 className="text-[18px] font-black mb-2 text-white leading-tight">¡Bienvenido a Planazo!</h2>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
-            Hagamos un recorrido rápido en tu celular.
+            Hagamos un recorrido súper rápido para que sepas cómo usar la app en el celu.
           </p>
         </div>
       ),
       placement: 'center',
-      disableBeacon: true,
     },
     {
       target: '#tour-hamburger',
       content: (
         <div className="text-left">
-          <h3 className="font-black text-[16px] mb-1.5 text-white">Tus Comunidades</h3>
+          <h3 className="font-black text-[16px] mb-1.5 text-white">Tus Zonas y Chats</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
-            Tocando este menú vas a poder acceder a todas tus zonas y chats privados.
+            Tocando este menú vas a poder ver todas las zonas, los Planazos a los que te sumaste y tus chats privados.
           </p>
         </div>
       ),
@@ -98,7 +97,7 @@ export function TourGuide() {
         <div className="text-left">
           <h3 className="font-black text-[16px] mb-1.5 text-white">La Cartelera</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
-            Tocando esta flechita abrís los planes disponibles, los detalles y tu perfil.
+            Tocando esta flechita abrís la cartelera con los Planazos que se armaron en cada zona, los detalles de cada uno y tu perfil de usuario cuando lo selecciones.
           </p>
         </div>
       ),
@@ -117,15 +116,14 @@ export function TourGuide() {
         </div>
       ),
       placement: 'center',
-      disableBeacon: true,
     },
     {
       target: '#tour-step-1',
       content: (
         <div className="text-left">
-          <h3 className="font-black text-[16px] mb-1.5 text-white">Tus Comunidades</h3>
+          <h3 className="font-black text-[16px] mb-1.5 text-white">Tus Zonas y Chats</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
-            Acá podés ver todas las zonas, los planazos a los que te sumaste y tus chats privados.
+            Acá podés ver todas las zonas, los Planazos a los que te sumaste y tus chats privados.
           </p>
         </div>
       ),
@@ -142,7 +140,7 @@ export function TourGuide() {
           </p>
         </div>
       ),
-      placement: 'center', // Ilumina la columna, tooltip al medio
+      placement: 'auto', // Auto allows spotlight to work correctly!
       disableBeacon: true,
     },
     {
@@ -151,7 +149,7 @@ export function TourGuide() {
         <div className="text-left">
           <h3 className="font-black text-[16px] mb-1.5 text-white">La Cartelera</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
-            Acá ves los planes disponibles, los detalles de cada uno y podés editar tu perfil.
+            Acá ves los Planazos disponibles, los detalles de cada uno y tu perfil de usuario cuando lo selecciones.
           </p>
         </div>
       ),
@@ -188,6 +186,7 @@ export function TourGuide() {
       styles={{
         options: {
           zIndex: 10000,
+          primaryColor: '#A698E3', // Color lila para el beacon
           overlayColor: 'rgba(0, 0, 0, 0.6)',
         }
       }}

@@ -577,7 +577,7 @@ export function RightColumn() {
              activeView === 'edit_profile' ? 'Editar Perfil' : 
              activeView === 'create_event' ? 'Armar un Planazo' : 
              activeView === 'event_details' ? 'Detalles del Planazo' : 
-             `Planes en ${currentRegionName}`}
+             `Planazos en ${currentRegionName}`}
           </h2>
         </div>
         <div className="flex items-center gap-2">
@@ -1101,7 +1101,7 @@ export function RightColumn() {
                 <div className="bg-sky-100 border border-sky-200 h-20 w-20 rounded-[2rem] flex items-center justify-center mx-auto mb-4 shadow-sm text-4xl">
                   🏖️
                 </div>
-                <p className="font-bold text-[#3f3f46] text-lg">No hay planes próximos en esta zona.</p>
+                <p className="font-bold text-[#3f3f46] text-lg">No hay Planazos próximos en esta zona.</p>
                 <p className="text-sm mt-1">¡Sé el primero en armar uno!</p>
               </div>
             ) : (
