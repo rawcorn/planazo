@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Joyride, CallBackProps, STATUS, Step, EVENTS, TooltipRenderProps } from 'react-joyride'
 import { useUIStore } from '@/store/uiStore'
 
@@ -13,18 +14,12 @@ function CustomTooltip({
   tooltipProps,
   isLastStep,
 }: TooltipRenderProps) {
+  const isMobileNow = typeof window !== 'undefined' && window.innerWidth < 1024;
   const isCenterDesktop = step.target === '#tour-step-2';
-  const isCenterMobile = step.target === 'body' && index === 2 && window.innerWidth < 1024;
-  
-  let customPositionClass = '';
-  if (isCenterDesktop) {
-    customPositionClass = 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0';
-  } else if (isCenterMobile) {
-    customPositionClass = 'fixed top-[110px] left-1/2 -translate-x-1/2 m-0';
-  }
+  const isCenterMobile = step.target === 'body' && index === 2 && isMobileNow;
 
-  return (
-    <div {...tooltipProps} className={`bg-[#A698E3] p-6 rounded-[24px] shadow-2xl max-w-sm w-full mx-4 font-sans text-white border border-white/10 ${customPositionClass}`}>
+  const card = (
+    <>
       {step.content}
       <div className="flex items-center justify-between mt-6">
         <div className="flex gap-2">
@@ -43,6 +38,45 @@ function CustomTooltip({
           </button>
         </div>
       </div>
+    </>
+  );
+
+  const baseClass = 'bg-[#A698E3] p-6 rounded-[24px] shadow-2xl font-sans text-white border border-white/10';
+
+  if (isCenterDesktop || isCenterMobile) {
+    // Se renderiza en un portal para escapar del contenedor transformado de Joyride
+    // (que es lo que lo achicaba a un "chorizo" vertical).
+    let left = window.innerWidth / 2;
+    let top = 110;
+    if (isCenterDesktop) {
+      const rect = document.querySelector('#tour-step-2')?.getBoundingClientRect();
+      if (rect) {
+        left = rect.left + rect.width / 2;
+        top = rect.top + 88 + 24; // debajo del encabezado del chat
+      }
+    }
+    return createPortal(
+      <div
+        {...tooltipProps}
+        className={baseClass}
+        style={{
+          position: 'fixed',
+          top,
+          left,
+          transform: 'translateX(-50%)',
+          width: 'min(360px, calc(100vw - 32px))',
+          zIndex: 10001,
+        }}
+      >
+        {card}
+      </div>,
+      document.body
+    );
+  }
+
+  return (
+    <div {...tooltipProps} className={`${baseClass} max-w-sm w-full mx-4`}>
+      {card}
     </div>
   );
 }
