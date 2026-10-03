@@ -1,9 +1,22 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { createPortal } from 'react-dom'
-import { Joyride, CallBackProps, STATUS, Step, EVENTS, TooltipRenderProps } from 'react-joyride'
+import { Joyride, EventData, STATUS, EVENTS, Step, TooltipRenderProps } from 'react-joyride'
 import { useUIStore } from '@/store/uiStore'
+
+// ---------------------------------------------------------------------------
+// AJUSTES FÁCILES
+// "offset" = distancia (en px) entre la tarjeta y la sección iluminada.
+// La flechita gorda blanca vive en ese espacio:
+//   - número MÁS GRANDE  => la tarjeta (y su flecha) quedan más LEJOS de lo iluminado
+//   - número MÁS CHICO   => la tarjeta (y su flecha) quedan más CERCA
+// "arrowSpacing" = qué tan corrida hacia la derecha queda la flecha respecto del
+// borde izquierdo de la tarjeta (solo en las tarjetas "bottom-start" del chat).
+// ---------------------------------------------------------------------------
+const OFFSET_DESKTOP = 18
+const OFFSET_MOBILE = 18
+const CHAT_ARROW_SPACING_DESKTOP = 60 // flecha apuntando al título del chat (PC)
+const CHAT_ARROW_SPACING_MOBILE = 90 // flecha apuntando al título del chat (celu)
 
 function CustomTooltip({
   index,
@@ -14,12 +27,12 @@ function CustomTooltip({
   tooltipProps,
   isLastStep,
 }: TooltipRenderProps) {
-  const isMobileNow = typeof window !== 'undefined' && window.innerWidth < 1024;
-  const isCenterDesktop = step.target === '#tour-step-2';
-  const isCenterMobile = step.target === 'body' && index === 2 && isMobileNow;
-
-  const card = (
-    <>
+  return (
+    <div
+      {...tooltipProps}
+      className="bg-[#A698E3] p-6 rounded-[24px] shadow-2xl font-sans text-white border border-white/10"
+      style={{ width: 'min(340px, calc(100vw - 32px))' }}
+    >
       {step.content}
       <div className="flex items-center justify-between mt-6">
         <div className="flex gap-2">
@@ -38,45 +51,6 @@ function CustomTooltip({
           </button>
         </div>
       </div>
-    </>
-  );
-
-  const baseClass = 'bg-[#A698E3] p-6 rounded-[24px] shadow-2xl font-sans text-white border border-white/10';
-
-  if (isCenterDesktop || isCenterMobile) {
-    // Se renderiza en un portal para escapar del contenedor transformado de Joyride
-    // (que es lo que lo achicaba a un "chorizo" vertical).
-    let left = window.innerWidth / 2;
-    let top = 110;
-    if (isCenterDesktop) {
-      const rect = document.querySelector('#tour-step-2')?.getBoundingClientRect();
-      if (rect) {
-        left = rect.left + rect.width / 2;
-        top = rect.top + 88 + 24; // debajo del encabezado del chat
-      }
-    }
-    return createPortal(
-      <div
-        {...tooltipProps}
-        className={baseClass}
-        style={{
-          position: 'fixed',
-          top,
-          left,
-          transform: 'translateX(-50%)',
-          width: 'min(360px, calc(100vw - 32px))',
-          zIndex: 10001,
-        }}
-      >
-        {card}
-      </div>,
-      document.body
-    );
-  }
-
-  return (
-    <div {...tooltipProps} className={`${baseClass} max-w-sm w-full mx-4`}>
-      {card}
     </div>
   );
 }
@@ -119,28 +93,26 @@ export function TourGuide() {
           </p>
         </div>
       ),
-      placement: 'bottom',
-      disableBeacon: true,
+      placement: 'bottom-start',
+      arrowSpacing: 16,
+      offset: OFFSET_MOBILE,
     },
     {
-      target: 'body',
+      // La tarjeta cuelga del encabezado del chat (la flecha señala el título)
+      // y no se oscurece la pantalla para que se vea todo el chat iluminado.
+      target: '#tour-center-header',
       content: (
         <div className="text-center">
-          <div className="text-white text-xl font-bold mb-3 animate-bounce">↑</div>
           <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Acá vas a estar viendo el chat de la zona o del Planazo que selecciones.
           </p>
-          <div className="text-white text-xl font-bold mt-3 animate-bounce">↓</div>
         </div>
       ),
-      placement: 'center',
-      disableBeacon: true,
-      styles: {
-        options: {
-          overlayColor: 'rgba(0, 0, 0, 0)', // Hace que la pantalla esté totalmente iluminada (sin overlay oscuro)
-        }
-      }
+      placement: 'bottom-start',
+      arrowSpacing: CHAT_ARROW_SPACING_MOBILE,
+      offset: OFFSET_MOBILE,
+      hideOverlay: true,
     },
     {
       target: '#tour-right-panel-btn',
@@ -152,8 +124,9 @@ export function TourGuide() {
           </p>
         </div>
       ),
-      placement: 'bottom',
-      disableBeacon: true,
+      placement: 'bottom-end',
+      arrowSpacing: 16,
+      offset: OFFSET_MOBILE,
     }
   ] : [
     {
@@ -179,10 +152,13 @@ export function TourGuide() {
         </div>
       ),
       placement: 'right',
-      disableBeacon: true,
+      offset: OFFSET_DESKTOP,
     },
     {
-      target: '#tour-step-2', // Ilumina toda la columna
+      // Se ilumina toda la columna central (spotlightTarget) pero la tarjeta
+      // se ancla al encabezado: queda dentro de la columna y la flecha señala el título.
+      target: '#tour-center-header',
+      spotlightTarget: '#tour-step-2',
       content: (
         <div className="text-center">
           <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
@@ -191,8 +167,9 @@ export function TourGuide() {
           </p>
         </div>
       ),
-      placement: 'auto', // Auto allows spotlight to work correctly! CSS hack centers it.
-      disableBeacon: true,
+      placement: 'bottom-start',
+      arrowSpacing: CHAT_ARROW_SPACING_DESKTOP,
+      offset: OFFSET_DESKTOP,
     },
     {
       target: '#tour-step-3',
@@ -205,16 +182,16 @@ export function TourGuide() {
         </div>
       ),
       placement: 'left',
-      disableBeacon: true,
+      offset: OFFSET_DESKTOP,
     }
   ];
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
-    const { status } = data;
+  const handleJoyrideEvent = (data: EventData) => {
+    const { status, type } = data;
     const { setMobileView } = useUIStore.getState();
 
-    const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
-    if (finishedStatuses.includes(status)) {
+    const finished = status === STATUS.FINISHED || status === STATUS.SKIPPED || type === EVENTS.TOUR_END;
+    if (finished) {
       setRun(false);
       localStorage.setItem('hasSeenTour', 'true');
       if (isMobile) {
@@ -225,31 +202,20 @@ export function TourGuide() {
 
   return (
     <Joyride
-      callback={handleJoyrideCallback}
+      onEvent={handleJoyrideEvent}
       continuous
-      hideCloseButton
       run={run}
       scrollToFirstStep={false}
-      showProgress={false}
-      showSkipButton
       steps={steps}
       tooltipComponent={CustomTooltip}
-      styles={{
-        options: {
-          zIndex: 10000,
-          primaryColor: '#A698E3',
-          overlayColor: 'rgba(0, 0, 0, 0.6)',
-        },
-        beacon: {
-          backgroundColor: '#A698E3',
-        },
-        beaconInner: {
-          backgroundColor: '#A698E3',
-        },
-        beaconOuter: {
-          backgroundColor: 'rgba(166, 152, 227, 0.4)',
-          borderColor: '#A698E3',
-        }
+      options={{
+        zIndex: 10000,
+        primaryColor: '#A698E3',
+        arrowColor: '#ffffff',
+        overlayColor: 'rgba(0, 0, 0, 0.6)',
+        skipBeacon: true,
+        showProgress: false,
+        buttons: ['back', 'skip', 'primary'],
       }}
     />
   )
