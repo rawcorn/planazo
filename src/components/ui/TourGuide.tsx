@@ -52,7 +52,60 @@ export function TourGuide() {
     }
   }, [])
 
-  const steps: Step[] = [
+  const steps: Step[] = isMobile ? [
+    {
+      target: 'body',
+      content: (
+        <div className="text-center">
+          <h2 className="text-[18px] font-black mb-2 text-white leading-tight">¡Bienvenido a Planazo!</h2>
+          <p className="text-white/90 text-[14px] leading-snug font-medium">
+            Hagamos un recorrido rápido en tu celular.
+          </p>
+        </div>
+      ),
+      placement: 'center',
+      disableBeacon: true,
+    },
+    {
+      target: '#tour-hamburger',
+      content: (
+        <div className="text-left">
+          <h3 className="font-black text-[16px] mb-1.5 text-white">Tus Comunidades</h3>
+          <p className="text-white/90 text-[14px] leading-snug font-medium">
+            Tocando este menú vas a poder acceder a todas tus zonas y chats privados.
+          </p>
+        </div>
+      ),
+      placement: 'bottom',
+      disableBeacon: true,
+    },
+    {
+      target: 'body',
+      content: (
+        <div className="text-left">
+          <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
+          <p className="text-white/90 text-[14px] leading-snug font-medium">
+            Acá vas a estar viendo el chat de la zona o del Planazo que selecciones.
+          </p>
+        </div>
+      ),
+      placement: 'center',
+      disableBeacon: true,
+    },
+    {
+      target: '#tour-right-panel-btn',
+      content: (
+        <div className="text-left">
+          <h3 className="font-black text-[16px] mb-1.5 text-white">La Cartelera</h3>
+          <p className="text-white/90 text-[14px] leading-snug font-medium">
+            Tocando esta flechita abrís los planes disponibles, los detalles y tu perfil.
+          </p>
+        </div>
+      ),
+      placement: 'bottom',
+      disableBeacon: true,
+    }
+  ] : [
     {
       target: 'body',
       content: (
@@ -67,7 +120,7 @@ export function TourGuide() {
       disableBeacon: true,
     },
     {
-      target: isMobile ? 'body' : '#tour-step-1',
+      target: '#tour-step-1',
       content: (
         <div className="text-left">
           <h3 className="font-black text-[16px] mb-1.5 text-white">Tus Comunidades</h3>
@@ -76,11 +129,11 @@ export function TourGuide() {
           </p>
         </div>
       ),
-      placement: isMobile ? 'center' : 'right',
+      placement: 'right',
       disableBeacon: true,
     },
     {
-      target: isMobile ? 'body' : '#tour-center-header',
+      target: '#tour-step-2', // Ilumina toda la columna
       content: (
         <div className="text-left">
           <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
@@ -89,11 +142,11 @@ export function TourGuide() {
           </p>
         </div>
       ),
-      placement: isMobile ? 'center' : 'bottom',
+      placement: 'center', // Ilumina la columna, tooltip al medio
       disableBeacon: true,
     },
     {
-      target: isMobile ? 'body' : '#tour-step-3',
+      target: '#tour-step-3',
       content: (
         <div className="text-left">
           <h3 className="font-black text-[16px] mb-1.5 text-white">La Cartelera</h3>
@@ -102,10 +155,10 @@ export function TourGuide() {
           </p>
         </div>
       ),
-      placement: isMobile ? 'center' : 'left',
+      placement: 'left',
       disableBeacon: true,
     }
-  ]
+  ];
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     const { status } = data;

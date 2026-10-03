@@ -215,7 +215,7 @@ export function CenterColumn() {
           </div>
         ) : (
           <div className="flex items-center gap-3 overflow-hidden">
-            <button onClick={() => setMobileView('menu')} className="lg:hidden p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors">
+            <button id="tour-hamburger" onClick={() => setMobileView('menu')} className="lg:hidden p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors">
               <Menu className="h-5 w-5" />
             </button>
             
@@ -298,6 +298,7 @@ export function CenterColumn() {
           </button>
         ) : (
           <button 
+            id="tour-right-panel-btn"
             onClick={() => setMobileView('details')} 
             className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-xl flex items-center gap-1 transition-colors"
           >
