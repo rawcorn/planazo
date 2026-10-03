@@ -205,7 +205,7 @@ export function CenterColumn() {
     <div className="flex flex-col h-full w-full bg-white relative overflow-hidden">
 
       {/* HEADER */}
-      <div className="h-[88px] px-6 border-b border-[#D5CAFA]/30 bg-white flex items-center justify-between z-10 shrink-0">
+      <div id="tour-center-header" className="h-[88px] px-6 border-b border-[#D5CAFA]/30 bg-white flex items-center justify-between z-10 shrink-0">
         {activeThreadId ? (
           <div className="flex items-center gap-3">
             <button onClick={() => setActiveThreadId(null)} className="p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors">

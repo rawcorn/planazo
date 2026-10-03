@@ -28,7 +28,7 @@ function CustomTooltip({
           <button {...skipProps} className="text-white/70 hover:text-white text-[13px] font-medium px-3 py-1 transition-colors">
             Omitir
           </button>
-          <button {...primaryProps} className="bg-[#86E2B5] text-[#1c3327] font-black px-5 py-2 rounded-full text-[13px] hover:bg-[#75D1A4] transition-all shadow-lg shadow-[#86E2B5]/30 hover:scale-105 active:scale-95">
+          <button {...primaryProps} className="bg-[#86E2B5] text-white font-black px-5 py-2 rounded-full text-[13px] hover:bg-[#75D1A4] transition-all shadow-lg shadow-[#86E2B5]/30 hover:scale-105 active:scale-95">
             {isLastStep ? '¡Empezar!' : 'Siguiente'}
           </button>
         </div>
@@ -57,7 +57,7 @@ export function TourGuide() {
       target: 'body',
       content: (
         <div className="text-center">
-          <h2 className="text-[18px] font-black mb-2 text-white leading-tight">¡Bienvenido a Planazo! 🎉</h2>
+          <h2 className="text-[18px] font-black mb-2 text-white leading-tight">¡Bienvenido a Planazo!</h2>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Hagamos un recorrido súper rápido para que sepas cómo usar la app.
           </p>
@@ -80,16 +80,16 @@ export function TourGuide() {
       disableBeacon: true,
     },
     {
-      target: isMobile ? 'body' : '#tour-step-2',
+      target: isMobile ? 'body' : '#tour-center-header',
       content: (
         <div className="text-left">
           <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
-            En este espacio vas a poder hablar con la gente de cada zona o planazo.
+            Acá va a estar el chat de la zona o del Planazo que selecciones.
           </p>
         </div>
       ),
-      placement: 'center',
+      placement: isMobile ? 'center' : 'bottom',
       disableBeacon: true,
     },
     {
