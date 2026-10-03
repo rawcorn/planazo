@@ -6,8 +6,10 @@ import { CenterColumn } from '@/components/layout/CenterColumn'
 import { RightColumn } from '@/components/layout/RightColumn'
 import { LoginView } from '@/components/auth/LoginView'
 import { RegisterView } from '@/components/auth/RegisterView'
-import { TourGuide } from '@/components/ui/TourGuide'
+import dynamic from 'next/dynamic'
 import { useUIStore } from '@/store/uiStore'
+
+const TourGuide = dynamic(() => import('@/components/ui/TourGuide').then(mod => mod.TourGuide), { ssr: false })
 
 import { getCurrentUser } from '@/app/actions/users'
 import { getDMChannels } from '@/app/actions/messages'

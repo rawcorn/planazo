@@ -6,11 +6,9 @@ import { useUIStore } from '@/store/uiStore'
 
 export function TourGuide() {
   const [run, setRun] = useState(false)
-  const [isClient, setIsClient] = useState(false)
   const [stepIndex, setStepIndex] = useState(0)
   
   useEffect(() => {
-    setIsClient(true)
     const hasSeenTour = localStorage.getItem('hasSeenTour')
     if (!hasSeenTour) {
       const timer = setTimeout(() => {
@@ -19,8 +17,6 @@ export function TourGuide() {
       return () => clearTimeout(timer)
     }
   }, [])
-
-  if (!isClient) return null;
 
   const steps: Step[] = [
     {
