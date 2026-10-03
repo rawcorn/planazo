@@ -6,6 +6,7 @@ import { CenterColumn } from '@/components/layout/CenterColumn'
 import { RightColumn } from '@/components/layout/RightColumn'
 import { LoginView } from '@/components/auth/LoginView'
 import { RegisterView } from '@/components/auth/RegisterView'
+import { TourGuide } from '@/components/ui/TourGuide'
 import { useUIStore } from '@/store/uiStore'
 
 import { getCurrentUser } from '@/app/actions/users'
@@ -114,14 +115,14 @@ export default function Home() {
     }
   }
 
-  return (
+    return (
     <main className="flex h-[100dvh] w-full overflow-hidden bg-app-bg text-text-main font-sans selection:bg-purple-300/50">
-      
+      <TourGuide />
       {/* Contenedor principal con sombra y bordes redondeados si querés que quede flotando, o que ocupe todo el alto */}
       <div className="relative flex w-full h-full max-w-[1600px] mx-auto bg-card-cream shadow-2xl overflow-hidden">
         
         {/* LEFT COLUMN */}
-        <div className={`
+        <div id="tour-step-1" className={`
           w-full lg:w-80 flex-shrink-0 flex-col h-full bg-card-cream border-r border-purple-100
           lg:relative z-30
           ${mobileView === 'menu' ? 'flex absolute inset-0' : 'hidden lg:flex'}
@@ -130,7 +131,7 @@ export default function Home() {
         </div>
 
         {/* CENTER COLUMN */}
-        <div className={`
+        <div id="tour-step-2" className={`
           flex-1 flex flex-col min-w-0 h-full bg-white relative z-20
           ${mobileView !== 'chat' ? 'hidden lg:flex' : 'flex'}
         `}>
@@ -138,7 +139,7 @@ export default function Home() {
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className={`
+        <div id="tour-step-3" className={`
           w-full lg:w-96 flex-shrink-0 flex-col h-full bg-card-cream border-l border-purple-100
           lg:relative z-30
           ${mobileView === 'details' ? 'flex absolute inset-0' : 'hidden lg:flex'}
