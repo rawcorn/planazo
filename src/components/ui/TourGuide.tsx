@@ -22,9 +22,9 @@ export function TourGuide() {
     {
       target: 'body',
       content: (
-        <div className="text-center font-medium">
-          <h2 className="text-[17px] font-black mb-1 text-white leading-tight">¡Bienvenido a Planazo! 🎉</h2>
-          <p className="text-white/90 text-[13px] leading-snug">
+        <div style={{ textAlign: 'center', fontWeight: 500, color: '#ffffff' }}>
+          <h2 style={{ fontSize: '17px', fontWeight: 900, marginBottom: '4px', lineHeight: 1.2 }}>¡Bienvenido a Planazo! 🎉</h2>
+          <p style={{ fontSize: '13px', lineHeight: 1.4, opacity: 0.9 }}>
             Hagamos un recorrido súper rápido para que sepas cómo usar la app.
           </p>
         </div>
@@ -35,38 +35,41 @@ export function TourGuide() {
     {
       target: '#tour-step-1',
       content: (
-        <div className="font-medium text-left">
-          <h3 className="font-black text-[15px] mb-1 text-white">Tus Comunidades</h3>
-          <p className="text-white/90 text-[13px] leading-snug">
+        <div style={{ fontWeight: 500, textAlign: 'left', color: '#ffffff' }}>
+          <h3 style={{ fontSize: '15px', fontWeight: 900, marginBottom: '4px', lineHeight: 1.2 }}>Tus Comunidades</h3>
+          <p style={{ fontSize: '13px', lineHeight: 1.4, opacity: 0.9 }}>
             Acá podés ver todas las zonas, los planazos a los que te sumaste y tus chats privados.
           </p>
         </div>
       ),
       placement: window.innerWidth < 1024 ? 'center' : 'right',
+      disableBeacon: true,
     },
     {
       target: '#tour-step-2',
       content: (
-        <div className="font-medium text-left">
-          <h3 className="font-black text-[15px] mb-1 text-white">El Chat Principal</h3>
-          <p className="text-white/90 text-[13px] leading-snug">
+        <div style={{ fontWeight: 500, textAlign: 'left', color: '#ffffff' }}>
+          <h3 style={{ fontSize: '15px', fontWeight: 900, marginBottom: '4px', lineHeight: 1.2 }}>El Chat Principal</h3>
+          <p style={{ fontSize: '13px', lineHeight: 1.4, opacity: 0.9 }}>
             En este espacio vas a poder hablar con la gente de cada zona o planazo.
           </p>
         </div>
       ),
-      placement: 'center', // Fix: Centrado para que no aparezca abajo del viewport
+      placement: 'center',
+      disableBeacon: true,
     },
     {
       target: '#tour-step-3',
       content: (
-        <div className="font-medium text-left">
-          <h3 className="font-black text-[15px] mb-1 text-white">La Cartelera</h3>
-          <p className="text-white/90 text-[13px] leading-snug">
+        <div style={{ fontWeight: 500, textAlign: 'left', color: '#ffffff' }}>
+          <h3 style={{ fontSize: '15px', fontWeight: 900, marginBottom: '4px', lineHeight: 1.2 }}>La Cartelera</h3>
+          <p style={{ fontSize: '13px', lineHeight: 1.4, opacity: 0.9 }}>
             Acá ves los planes disponibles, los detalles de cada uno y podés editar tu perfil.
           </p>
         </div>
       ),
       placement: window.innerWidth < 1024 ? 'center' : 'left',
+      disableBeacon: true,
     }
   ]
 
