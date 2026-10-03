@@ -87,7 +87,7 @@ export function TourGuide() {
     }
   }, [])
 
-  const steps: Step[] = isMobile ? [
+  const steps: Step[] = (isMobile ? [
     {
       target: 'body',
       content: (
@@ -201,7 +201,7 @@ export function TourGuide() {
       placement: 'left',
       offset: OFFSET_DESKTOP,
     }
-  ].map(withArrowGap);
+  ]).map(withArrowGap);
 
   const handleJoyrideEvent = (data: EventData) => {
     const { status, type } = data;
