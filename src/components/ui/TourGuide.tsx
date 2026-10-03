@@ -12,14 +12,14 @@ import { useUIStore } from '@/store/uiStore'
 //   - número MÁS CHICO   => la tarjeta (y su flecha) quedan más CERCA
 // "arrowSpacing" = qué tan corrida hacia la derecha queda la flecha respecto del
 const OFFSET_DESKTOP = 18
-const OFFSET_MOBILE = 28 // Acercamos la tarjeta a la flecha
+const OFFSET_MOBILE = 18
 const CHAT_ARROW_SPACING_DESKTOP = 60 // flecha apuntando al título del chat (PC)
 const CHAT_ARROW_SPACING_MOBILE = 90 // flecha apuntando al título del chat (celu)
 
 // Espacio (en px) entre el borde de la tarjeta y la flechita gorda blanca.
 // 0 = pegada a la tarjeta · número más grande = más separada.
 const ARROW_GAP_DESKTOP = 5
-const ARROW_GAP_MOBILE = 10 // Reducido a la mitad para acercar la tarjeta
+const ARROW_GAP_MOBILE = 5
 
 // Corre la flecha hacia afuera de la tarjeta según de qué lado está.
 const withArrowGap = (isMobile: boolean) => (s: Step): Step => {
