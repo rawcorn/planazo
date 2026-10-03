@@ -18,6 +18,23 @@ const OFFSET_MOBILE = 18
 const CHAT_ARROW_SPACING_DESKTOP = 60 // flecha apuntando al título del chat (PC)
 const CHAT_ARROW_SPACING_MOBILE = 90 // flecha apuntando al título del chat (celu)
 
+// Espacio (en px) entre el borde de la tarjeta y la flechita gorda blanca.
+// 0 = pegada a la tarjeta · número más grande = más separada.
+const ARROW_GAP = 5
+
+// Corre la flecha hacia afuera de la tarjeta según de qué lado está.
+const withArrowGap = (s: Step): Step => {
+  const side = String(s.placement || '').split('-')[0]
+  const transforms: Record<string, string> = {
+    bottom: `translateY(-${ARROW_GAP}px)`, // tarjeta abajo, flecha arriba
+    top: `translateY(${ARROW_GAP}px)`,
+    right: `translateX(-${ARROW_GAP}px)`, // tarjeta a la derecha, flecha a la izquierda
+    left: `translateX(${ARROW_GAP}px)`,
+  }
+  const transform = transforms[side]
+  return transform ? { ...s, styles: { ...s.styles, arrow: { transform } } } : s
+}
+
 function CustomTooltip({
   index,
   step,
@@ -184,7 +201,7 @@ export function TourGuide() {
       placement: 'left',
       offset: OFFSET_DESKTOP,
     }
-  ];
+  ].map(withArrowGap);
 
   const handleJoyrideEvent = (data: EventData) => {
     const { status, type } = data;
