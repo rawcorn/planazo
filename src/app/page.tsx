@@ -58,19 +58,21 @@ export default function Home() {
             useUIStore.getState().setActiveRoom(userRegionObj.room_id)
           }
 
-          // Fetch DM channels
-          const res = await getDMChannels()
+          // Fetch My Events and DM channels concurrently
+          const [res] = await Promise.all([
+            getDMChannels(),
+            useUIStore.getState().fetchMyEvents()
+          ]);
+
           if (res.channels) {
             useUIStore.getState().setDmChannels(res.channels)
-            for (const ch of res.channels) {
+            // Fetch messages in background without blocking the init
+            Promise.all(res.channels.map(ch => {
               if (ch.rooms && ch.rooms.id) {
-                await fetchMessagesForRoom(ch.rooms.id)
+                return fetchMessagesForRoom(ch.rooms.id);
               }
-            }
+            })).catch(console.error);
           }
-
-          // Fetch My Events
-          await useUIStore.getState().fetchMyEvents();
         }
       } catch (e) {
         console.error("Failed to init", e)

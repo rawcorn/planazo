@@ -405,7 +405,7 @@ export const useUIStore = create<AppState>((set, get) => ({
     // Optimistic update
     set({ 
       myEvents: [...myEvents, ev],
-      events: events.map(e => e.id === eventId ? { ...e, attendeesIds: [...(e.attendeesIds || []), currentUser.id] } : e)
+      events: events.map(e => e.id === eventId ? { ...e, attendees: [...(e.attendees || []), currentUser.id] } : e)
     });
 
     joinEvent(eventId).then(() => {
@@ -422,7 +422,7 @@ export const useUIStore = create<AppState>((set, get) => ({
     // Optimistic update
     set({
       myEvents: myEvents.filter(e => e.id !== eventId),
-      events: events.map(e => e.id === eventId ? { ...e, attendeesIds: (e.attendeesIds || []).filter(id => id !== currentUser.id) } : e)
+      events: events.map(e => e.id === eventId ? { ...e, attendees: (e.attendees || []).filter(id => id !== currentUser.id) } : e)
     });
 
     leaveEvent(eventId).then(() => {
@@ -693,7 +693,7 @@ export const useUIStore = create<AppState>((set, get) => ({
     
     const res = await getOrCreateDMRoom(targetUserId);
     if (res.roomId) {
-      await fetchMessagesForRoom(res.roomId);
+      fetchMessagesForRoom(res.roomId).catch(console.error);
       
       const currentDmChannels = get().dmChannels;
       if (!currentDmChannels.some((ch: any) => ch.rooms?.id === res.roomId)) {
