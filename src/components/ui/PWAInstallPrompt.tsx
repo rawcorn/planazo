@@ -66,18 +66,6 @@ export function PWAInstallPrompt() {
     setIsDismissed(true);
   };
 
-  useEffect(() => {
-    const shouldShow = !(isStandalone || isDismissed || (!isIOS && !deferredPrompt));
-    if (shouldShow) {
-      document.body.style.paddingBottom = '90px';
-    } else {
-      document.body.style.paddingBottom = '0px';
-    }
-    return () => {
-      document.body.style.paddingBottom = '0px';
-    };
-  }, [isStandalone, isDismissed, isIOS, deferredPrompt]);
-
   // Do not render if already installed or dismissed
   if (isStandalone || isDismissed) {
     return null;

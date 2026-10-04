@@ -1,4 +1,4 @@
-import { useUIStore } from '@/store/uiStore'
+﻿import { useUIStore } from '@/store/uiStore'
 import { LogOut, X, MapPin, MessageCircle, Info, Calendar } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
 import { useState, useEffect } from 'react'
@@ -171,7 +171,7 @@ export function LeftColumn() {
                         }
                         if(window.innerWidth < 1024) setMobileView('details');
                       }}
-                      className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all ${selectedEventId === event.id ? 'bg-violet-600 text-white shadow-md' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
+                      className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all ${selectedEventId === event.id ? 'bg-[#A698E3] text-white shadow-md' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}
                     >
                       Detalles
                     </button>

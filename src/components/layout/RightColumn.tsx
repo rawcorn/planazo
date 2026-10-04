@@ -952,7 +952,7 @@ export function RightColumn() {
               </div>
 
               <div className="pt-4 space-y-2 flex flex-col items-center">
-                <Button type="submit" className="w-full py-3.5 bg-[#b4a9e8] hover:bg-[#a698e3] text-white shadow-sm font-bold transition-all flex items-center justify-center gap-2" disabled={duplicateWarning !== null || isSavingEvent}>
+                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-white shadow-sm font-bold transition-all flex items-center justify-center gap-2" disabled={duplicateWarning !== null || isSavingEvent}>
                   {isSavingEvent && <Loader2 className="h-4 w-4 animate-spin" />}
                   {isSavingEvent ? 'Guardando...' : (activeView === 'edit_event' ? 'Guardar Cambios' : 'Crear Planazo')}
                 </Button>
@@ -1247,5 +1247,7 @@ export function RightColumn() {
     </div>
   )
 }
+
+
 
 
