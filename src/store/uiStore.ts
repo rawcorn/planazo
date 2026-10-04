@@ -1,4 +1,4 @@
-/* eslint-disable */
+ï»¿/* eslint-disable */
 import { create } from 'zustand'
 import { createEvent, updateEvent, deleteEvent as deleteEventAction, joinEvent, leaveEvent, getEventsByRegion } from '@/app/actions/events'
 import { sendMessage as sendMessageAPI, getRoomMessages, getOrCreateDMRoom } from '@/app/actions/messages'
@@ -470,7 +470,7 @@ export const useUIStore = create<AppState>((set, get) => ({
       }
     }));
     
-    // 3. Enviar al backend asincrónicamente (sin await para no bloquear la UI)
+    // 3. Enviar al backend asincrï¿½nicamente (sin await para no bloquear la UI)
       sendMessageAPI(roomId, text, parentId)
         .then(result => {
           if (result.error) alert('Error: ' + result.error);
@@ -765,3 +765,4 @@ export const useUIStore = create<AppState>((set, get) => ({
     await fetchMessagesForRoom(roomId);
   }
 }))
+
