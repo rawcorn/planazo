@@ -470,18 +470,16 @@ export const useUIStore = create<AppState>((set, get) => ({
       }
     }));
     
-    // 3. Enviar al backend asincrónicamente
-    try {
-      const result = await sendMessageAPI(roomId, text, parentId);
-      if (result.error) alert('Error: ' + result.error);
-      console.log("SEND MESSAGE RESULT:", result);
-    } catch (e: any) {
-      alert('Error: ' + e.message);
-      console.error("Error enviando mensaje optimista:", e);
-    }
-    
-    // 4. Refrescar mensajes de la DB (pisará el optimista con el real)
-    await fetchMessagesForRoom(roomId);
+    // 3. Enviar al backend asincr�nicamente (sin await para no bloquear la UI)
+      sendMessageAPI(roomId, text, parentId)
+        .then(result => {
+          if (result.error) alert('Error: ' + result.error);
+          else fetchMessagesForRoom(roomId);
+        })
+        .catch((e: any) => {
+          alert('Error: ' + e.message);
+          console.error('Error enviando mensaje optimista:', e);
+        });
   },
 
   fetchEventsForRegion: async (regionId: string) => {

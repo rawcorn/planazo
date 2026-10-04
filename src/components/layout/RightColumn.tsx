@@ -85,6 +85,7 @@ export function RightColumn() {
   });
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteEventModal, setShowDeleteEventModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
@@ -509,6 +510,46 @@ export function RightColumn() {
                 className="flex-1 px-4 py-4 text-sm font-bold text-rose-500 hover:bg-rose-50 transition-colors border-l border-slate-100"
               >
                 Salir
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL ELIMINAR EVENTO */}
+      {showDeleteEventModal && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="p-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-4">
+                <Trash2 className="h-6 w-6 text-rose-500" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">¿Eliminar planazo?</h3>
+              <p className="text-sm text-slate-500">
+                Esta acción no se puede deshacer. Se borrará el planazo y todos sus mensajes.
+              </p>
+            </div>
+            <div className="flex border-t border-slate-100">
+              <button 
+                onClick={() => setShowDeleteEventModal(false)}
+                disabled={isDeleting}
+                className="flex-1 px-4 py-4 text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button 
+                onClick={async () => {
+                  if (!eventToShow) return;
+                  setIsDeleting(true);
+                  await deleteEvent(eventToShow.id);
+                  setShowDeleteEventModal(false);
+                  setIsDeleting(false);
+                  resetRightColumn();
+                }}
+                disabled={isDeleting}
+                className="flex-1 px-4 py-4 text-sm font-bold text-rose-500 hover:bg-rose-50 transition-colors border-l border-slate-100"
+              >
+                {isDeleting ? 'Eliminando...' : 'Sí, eliminar'}
               </button>
             </div>
           </div>
@@ -945,21 +986,13 @@ export function RightColumn() {
         {/* DETALLES DE EVENTO */}
         {activeView === 'event_details' && eventToShow && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between -mt-2 mb-2">
-              <Button onClick={resetRightColumn} variant="ghost" className="justify-start text-sm -ml-2">
-                <ChevronLeft className="h-4 w-4" /> Volver
-              </Button>
+            <div className="flex items-center justify-end -mt-2 mb-2">
               {eventToShow.creatorId === currentUser.id && (
-                <div className="flex items-center gap-3">
-                  <button onClick={() => setRightColumnView('edit_event')} className="text-xs text-slate-500 hover:text-slate-800 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-800 transition-colors">
+                <div className="flex items-center gap-4">
+                  <button onClick={() => setRightColumnView('edit_event')} className="text-xs text-slate-500 hover:text-slate-800 font-bold uppercase tracking-wider transition-colors">
                     Editar
                   </button>
-                  <button onClick={async () => {
-                    if (window.confirm('¿Seguro que querés eliminar este planazo?')) {
-                      await deleteEvent(eventToShow.id);
-                      resetRightColumn();
-                    }
-                  }} className="text-xs text-slate-500 hover:text-rose-600 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-rose-600 transition-colors">
+                  <button onClick={() => setShowDeleteEventModal(true)} className="text-xs text-white bg-rose-500 hover:bg-rose-600 font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg transition-colors shadow-sm">
                     Eliminar
                   </button>
                 </div>

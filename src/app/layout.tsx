@@ -53,6 +53,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="es" className={miFuente.variable}>
       <body className="font-sans antialiased">
         {children}
+        <PWAInstallPrompt />
       </body>
     </html>
   );

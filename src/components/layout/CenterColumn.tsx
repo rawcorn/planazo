@@ -57,6 +57,24 @@ export function CenterColumn() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, activeRoomId]);
 
+  const [hasUnread, setHasUnread] = useState(false);
+  useEffect(() => {
+    if (typeof window !== 'undefined' && currentUser) {
+      const stored = localStorage.getItem('planazo_last_read')
+      const lastReadMap = stored ? JSON.parse(stored) : {}
+      let unread = false;
+      dmChannels.forEach((ch: any) => {
+        const dmId = ch.rooms?.id;
+        if (!dmId) return;
+        const chMsgs = messages[dmId] || [];
+        const lastReadTime = lastReadMap[dmId] || 0;
+        const count = chMsgs.filter(m => new Date(m.timestamp).getTime() > lastReadTime && m.senderId !== currentUser.id).length;
+        if (count > 0 && activeRoomId !== dmId) unread = true;
+      });
+      setHasUnread(unread);
+    }
+  }, [messages, dmChannels, activeRoomId, currentUser]);
+
   useEffect(() => {
     setReplyingTo(null);
     setActiveMessageMenu(null);
@@ -215,8 +233,9 @@ export function CenterColumn() {
           </div>
         ) : (
           <div className="flex items-center gap-3 overflow-hidden">
-            <button id="tour-hamburger" onClick={() => setMobileView('menu')} className="lg:hidden p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors">
+            <button id="tour-hamburger" onClick={() => setMobileView('menu')} className="lg:hidden p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors relative">
               <Menu className="h-5 w-5" />
+              {hasUnread && <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-emerald-500 rounded-full border border-white"></span>}
             </button>
             
             {(() => {
