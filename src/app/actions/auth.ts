@@ -32,6 +32,7 @@ export async function signUp(data: any) {
           gender,
           region,
           instagram,
+          tiktok,
           facebook,
           avatar_url: avatarUrl
         }
@@ -79,6 +80,7 @@ export async function registerFullFlow(data: any, interests: string[]) {
           gender,
           region,
           instagram,
+          tiktok,
           facebook,
           avatar_url: avatarUrl
         }

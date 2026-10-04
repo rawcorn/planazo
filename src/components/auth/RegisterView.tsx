@@ -152,7 +152,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
           ...parsed.data,
           avatarUrl: finalAvatarUrl,
           instagram: formData.instagram,
-          facebook: formData.facebook
+            tiktok: formData.tiktok,
+            facebook: formData.facebook
         }, formData.interests);
       } catch (e: any) {
         console.error("Register Error:", e);
@@ -206,7 +207,8 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
           interests: userRes.interests?.map((i: any) => i.name) || [],
           avatarUrl: userRes.avatar_url || '',
           instagram: userRes.instagram || '',
-          facebook: userRes.facebook || ''
+            tiktok: userRes.tiktok || '',
+            facebook: userRes.facebook || ''
         });
 
         const state = useUIStore.getState();

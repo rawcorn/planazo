@@ -54,9 +54,13 @@ export async function getCurrentUser() {
     let needsUpdate = false;
     const updates: any = {};
     if (user.user_metadata?.instagram && profile.instagram !== user.user_metadata.instagram) {
-      updates.instagram = user.user_metadata.instagram;
-      needsUpdate = true;
-    }
+        updates.instagram = user.user_metadata.instagram;
+        needsUpdate = true;
+      }
+      if (user.user_metadata?.tiktok && profile.tiktok !== user.user_metadata.tiktok) {
+        updates.tiktok = user.user_metadata.tiktok;
+        needsUpdate = true;
+      }
     if (user.user_metadata?.avatar_url && profile.avatar_url !== user.user_metadata.avatar_url) {
       updates.avatar_url = user.user_metadata.avatar_url;
       needsUpdate = true;
