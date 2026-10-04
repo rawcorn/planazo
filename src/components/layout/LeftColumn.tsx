@@ -181,7 +181,7 @@ export function LeftColumn() {
                         setSelectedEvent(event.id);
                         if(window.innerWidth < 1024) setMobileView('chat');
                       }}
-                      className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all ${activeRoomId === event.id ? 'bg-fuchsia-500 text-white shadow-md' : 'bg-slate-100 hover:bg-fuchsia-100 text-slate-600 hover:text-fuchsia-600'}`}
+                      className={`px-3 py-1.5 text-[11px] font-bold rounded-xl transition-all ${activeRoomId === event.id ? 'bg-[#A1D9EC] text-white shadow-md' : 'bg-slate-100 hover:bg-[#EAF6FA] text-slate-600 hover:text-[#5DB8D8]'}`}
                     >
                       Chat
                     </button>
@@ -251,3 +251,4 @@ export function LeftColumn() {
     </div>
   )
 }
+

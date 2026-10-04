@@ -1029,9 +1029,9 @@ export function RightColumn() {
                   <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                   Ya estás adentro
                 </div>
-                {eventToShow.creatorId !== currentUser.id && (
+                {true && (
                   <button onClick={() => leaveEvent(eventToShow.id)} className="text-[11px] text-slate-400 hover:text-rose-500 underline underline-offset-2 transition-colors mt-1 font-medium">
-                    Bajarme del planazo
+                    Bajarme del Planazo
                   </button>
                 )}
               </div>
@@ -1247,6 +1247,8 @@ export function RightColumn() {
     </div>
   )
 }
+
+
 
 
 
