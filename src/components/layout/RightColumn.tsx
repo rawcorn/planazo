@@ -996,7 +996,7 @@ export function RightColumn() {
                 </div>
                 {eventToShow.creatorId !== currentUser.id && (
                   <button onClick={() => leaveEvent(eventToShow.id)} className="text-[11px] text-slate-400 hover:text-rose-500 underline underline-offset-2 transition-colors mt-1 font-medium">
-                    Bajarme del plan
+                    Bajarme del planazo
                   </button>
                 )}
               </div>

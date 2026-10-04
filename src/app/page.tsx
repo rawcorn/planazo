@@ -13,6 +13,7 @@ const TourGuide = dynamic(() => import('@/components/ui/TourGuide').then(mod => 
 
 import { getCurrentUser } from '@/app/actions/users'
 import { getDMChannels } from '@/app/actions/messages'
+import { createClient as createBrowserClient } from '@/lib/supabase/client'
 
 export default function Home() {
   const currentUser = useUIStore(state => state.currentUser)
@@ -45,45 +46,6 @@ export default function Home() {
             instagram: userRes.instagram || '',
             facebook: userRes.facebook || ''
           })
-          
-          useUIStore.getState().resetRightColumn();
-          
-          // Initial fetch for the user's region
-          const storeRegions = useUIStore.getState().regions;
-          const userRegionObj = storeRegions.find(r => r.name === userRes.region);
-          
-          if (userRegionObj) {
-            await fetchEventsForRegion(userRegionObj.id)
-            await fetchMessagesForRoom(userRegionObj.room_id)
-            useUIStore.getState().setActiveRoom(userRegionObj.room_id)
-          }
-
-          // Fetch My Events and DM channels concurrently
-          const [res] = await Promise.all([
-            getDMChannels(),
-            useUIStore.getState().fetchMyEvents()
-          ]);
-
-          if (res.channels) {
-            useUIStore.getState().setDmChannels(res.channels)
-            // Fetch messages in background without blocking the init
-            Promise.all(res.channels.map(ch => {
-              if (ch.rooms && ch.rooms.id) {
-                return fetchMessagesForRoom(ch.rooms.id);
-              }
-            })).catch(console.error);
-          }
-
-          // Subscribe to new DM channels
-          const supabase = createBrowserClient();
-          supabase.channel('dm_channels_updates')
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'dm_channels' }, async (payload) => {
-               if (payload.new.user1_id === userRes.id || payload.new.user2_id === userRes.id) {
-                 const newRes = await getDMChannels();
-                 if (newRes.channels) useUIStore.getState().setDmChannels(newRes.channels);
-               }
-            })
-            .subscribe();
         }
       } catch (e) {
         console.error("Failed to init", e)
@@ -93,6 +55,78 @@ export default function Home() {
     }
     initApp()
   }, [])
+
+  // Load all per-user data every time a user logs in (page load OR login screen)
+  const currentUserId = currentUser?.id
+  useEffect(() => {
+    if (!currentUserId) return;
+    let cancelled = false;
+    const supabase = createBrowserClient();
+    let dmSub: any = null;
+
+    async function loadUserData() {
+      try {
+        const state = useUIStore.getState();
+        if (state.regions.length === 0) await loadCatalogs();
+        const user = useUIStore.getState().currentUser;
+        if (!user) return;
+
+        state.resetRightColumn();
+
+        // My Events + DM channels (not blocked by anything else)
+        const myEventsPromise = useUIStore.getState().fetchMyEvents();
+        const dmPromise = getDMChannels().then(res => {
+          if (cancelled || !res.channels) return;
+          useUIStore.getState().setDmChannels(res.channels);
+          res.channels.forEach((ch: any) => {
+            if (ch.rooms?.id) fetchMessagesForRoom(ch.rooms.id).catch(console.error);
+          });
+        });
+
+        const userRegionObj = useUIStore.getState().regions.find(r => r.name === user.region);
+        if (userRegionObj) {
+          useUIStore.getState().setActiveRoom(userRegionObj.room_id);
+          fetchEventsForRegion(userRegionObj.id).catch(console.error);
+        }
+
+        await Promise.all([myEventsPromise, dmPromise]);
+      } catch (e) {
+        console.error("Failed to load user data", e);
+      }
+    }
+    loadUserData();
+
+    // Realtime: new DM channels + new messages in my DMs
+    dmSub = supabase.channel(`dm_updates_${currentUserId}`)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'dm_channels' }, async (payload: any) => {
+        if (payload.new.user1_id === currentUserId || payload.new.user2_id === currentUserId) {
+          const newRes = await getDMChannels();
+          if (newRes.channels) useUIStore.getState().setDmChannels(newRes.channels);
+        }
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, async (payload: any) => {
+        const roomId = payload.new.room_id;
+        const st = useUIStore.getState();
+        if (roomId === st.activeRoomId) return; // already handled by the room subscription
+        const isMyDm = st.dmChannels.some((ch: any) => ch.rooms?.id === roomId);
+        if (isMyDm) {
+          st.fetchMessagesForRoom(roomId);
+        } else if (payload.new.sender_id !== currentUserId) {
+          // Might be a brand-new DM addressed to me: refresh channel list
+          const newRes = await getDMChannels();
+          if (newRes.channels && newRes.channels.some((ch: any) => ch.rooms?.id === roomId)) {
+            useUIStore.getState().setDmChannels(newRes.channels);
+            useUIStore.getState().fetchMessagesForRoom(roomId);
+          }
+        }
+      })
+      .subscribe();
+
+    return () => {
+      cancelled = true;
+      if (dmSub) supabase.removeChannel(dmSub);
+    };
+  }, [currentUserId])
 
   // Fetch when active room changes
   useEffect(() => {

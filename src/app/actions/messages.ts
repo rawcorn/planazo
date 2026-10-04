@@ -212,10 +212,17 @@ export async function getDMChannels() {
       return { error: 'Error al obtener rooms de DM channels' }
     }
 
+    const otherIds = channels.map(ch => ch.user1_id === user.id ? ch.user2_id : ch.user1_id)
+    const { data: otherUsers } = await supabase
+      .from('users')
+      .select('id, username, avatar_url, region, instagram, facebook')
+      .in('id', otherIds)
+
     const mappedChannels = channels.map(ch => {
        const room = rooms?.find(r => r.reference_id === ch.id)
        const otherUserId = ch.user1_id === user.id ? ch.user2_id : ch.user1_id
-       return { ...ch, other_user_id: otherUserId, rooms: room ? { id: room.id } : null }
+       const otherUser = (otherUsers as any[])?.find(u => u.id === otherUserId) || null
+       return { ...ch, other_user_id: otherUserId, other_user: otherUser, rooms: room ? { id: room.id } : null }
     })
 
     return { channels: mappedChannels }

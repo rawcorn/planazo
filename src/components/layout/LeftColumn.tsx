@@ -57,12 +57,9 @@ export function LeftColumn() {
 
   if (!currentUser) return null;
   
-  const regionRoomIds = regions.map(r => r.room_id);
-  const dmRoomIds = Object.keys(messages).filter(id => !regionRoomIds.includes(id) && !events.some(e => e.id === id));
-  
-  if (!regionRoomIds.includes(activeRoomId) && !events.some(e => e.id === activeRoomId) && !dmRoomIds.includes(activeRoomId)) {
-    dmRoomIds.push(activeRoomId);
-  }
+  const dmRoomIds: string[] = Array.from(new Set(
+    (dmChannels || []).map((ch: any) => ch.rooms?.id).filter(Boolean)
+  ));
 
   return (
     <div className="flex flex-col h-full w-full bg-transparent text-slate-900 border-r border-[#D5CAFA]/30">

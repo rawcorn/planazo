@@ -151,7 +151,7 @@ export const useUIStore = create<AppState>((set, get) => ({
   login: (user) => set({ currentUser: user }),
   logout: async () => {
     await signOut();
-    set({ currentUser: null });
+    set({ currentUser: null, myEvents: [], dmChannels: [], messages: {} });
   },
   
   setActiveRoom: (roomId) => {
@@ -178,7 +178,22 @@ export const useUIStore = create<AppState>((set, get) => ({
   setActiveThreadId: (threadId) => set({ activeThreadId: threadId, mobileView: 'chat' }),
   setRightColumnView: (view) => set({ activeView: view }),
   setMobileView: (view) => set({ mobileView: view }),
-  setDmChannels: (channels) => set({ dmChannels: channels }),
+  setDmChannels: (channels) => set(state => {
+    const mergedUsers = [...state.users];
+    channels.forEach((ch: any) => {
+      const ou = ch.other_user;
+      if (!ou) return;
+      const nu: User = {
+        id: ou.id, username: ou.username || 'Usuario Desconocido', avatarUrl: ou.avatar_url || '',
+        email: '', age: 0, gender: 'X', region: ou.region || '', interests: [],
+        instagram: ou.instagram, facebook: ou.facebook
+      } as User;
+      const idx = mergedUsers.findIndex(u => u.id === nu.id);
+      if (idx === -1) mergedUsers.push(nu);
+      else if (mergedUsers[idx].username === 'Usuario Desconocido') mergedUsers[idx] = { ...mergedUsers[idx], ...nu };
+    });
+    return { dmChannels: channels, users: mergedUsers };
+  }),
   setSelectedEvent: (eventId) => set({ selectedEventId: eventId, activeView: eventId ? 'event_details' : 'cartelera' }),
   setSelectedUser: (userId) => set({ selectedUserId: userId, activeView: userId ? 'profile' : 'cartelera' }),
   setDuplicateWarning: (event) => set({ duplicateWarning: event }),
