@@ -458,8 +458,10 @@ export const useUIStore = create<AppState>((set, get) => ({
     // 3. Enviar al backend asincrónicamente
     try {
       const result = await sendMessageAPI(roomId, text, parentId);
+      if (result.error) alert('Error: ' + result.error);
       console.log("SEND MESSAGE RESULT:", result);
-    } catch (e) {
+    } catch (e: any) {
+      alert('Error: ' + e.message);
       console.error("Error enviando mensaje optimista:", e);
     }
     

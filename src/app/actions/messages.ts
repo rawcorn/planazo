@@ -26,9 +26,7 @@ export async function sendMessage(roomId: string, text: string, parentId?: strin
       room_id: parsed.data.roomId,
       sender_id: user.id,
       text: parsed.data.text,
-      type: 'text',
-      // @ts-ignore
-      parent_id: parentId || null // <-- AHORA SÍ SE GUARDA LA RESPUESTA
+      type: 'text'
     }).select()
 
     if (error) {
@@ -37,8 +35,7 @@ export async function sendMessage(roomId: string, text: string, parentId?: strin
     }
     console.log("SERVER ACTION INSERT SUCCESS:", data)
 
-
-    return { success: true }
+    return { success: true, message: data[0] }
   } catch (err) {
     console.error("SERVER ACTION CATCH ERROR:", err)
     return { error: 'Error interno del servidor' }
