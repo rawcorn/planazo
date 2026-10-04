@@ -148,7 +148,7 @@ export const useUIStore = create<AppState>((set, get) => ({
   selectedUserId: null,
   duplicateWarning: null,
 
-  login: (user) => set({ currentUser: user }),
+  login: (user) => set({ currentUser: { ...user, username: user.username?.toLowerCase() } }),
   logout: async () => {
     await signOut();
     set({ currentUser: null, myEvents: [], dmChannels: [], messages: {} });
@@ -184,13 +184,13 @@ export const useUIStore = create<AppState>((set, get) => ({
       const ou = ch.other_user;
       if (!ou) return;
       const nu: User = {
-        id: ou.id, username: ou.username || 'Usuario Desconocido', avatarUrl: ou.avatar_url || '',
+        id: ou.id, username: ou.username?.toLowerCase() || 'usuario desconocido', avatarUrl: ou.avatar_url || '',
         email: '', age: 0, gender: 'X', region: ou.region || '', interests: [],
         instagram: ou.instagram, facebook: ou.facebook
       } as User;
       const idx = mergedUsers.findIndex(u => u.id === nu.id);
       if (idx === -1) mergedUsers.push(nu);
-      else if (mergedUsers[idx].username === 'Usuario Desconocido') mergedUsers[idx] = { ...mergedUsers[idx], ...nu };
+      else if (mergedUsers[idx].username === 'usuario desconocido') mergedUsers[idx] = { ...mergedUsers[idx], ...nu };
     });
     return { dmChannels: channels, users: mergedUsers };
   }),
@@ -507,7 +507,7 @@ export const useUIStore = create<AppState>((set, get) => ({
           if (e.creator) {
               newUsers.push({
                id: e.creator_id,
-               username: e.creator.username,
+               username: e.creator.username?.toLowerCase() || 'usuario',
                avatarUrl: e.creator.avatar_url,
                email: '', age: 0, gender: 'X', region: '', interests: [],
                instagram: e.creator.instagram, facebook: e.creator.facebook
@@ -518,7 +518,7 @@ export const useUIStore = create<AppState>((set, get) => ({
                if (ea.users) {
                  newUsers.push({
                    id: ea.user_id,
-                   username: ea.users.username,
+                   username: ea.users.username?.toLowerCase() || 'usuario',
                    avatarUrl: ea.users.avatar_url,
                    age: ea.users.age || 0,
                    gender: ea.users.gender || 'X',
@@ -615,7 +615,7 @@ export const useUIStore = create<AppState>((set, get) => ({
               const senderObj = Array.isArray(rawSender) ? rawSender[0] : rawSender;
                newUsers.push({
                  id: m.sender_id,
-                 username: senderObj?.username || 'Usuario Desconocido',
+                 username: senderObj?.username?.toLowerCase() || 'usuario desconocido',
                  avatarUrl: senderObj?.avatar_url || '',
                  email: '', age: 0, gender: 'X', region: senderObj?.region || '', interests: [],
                  instagram: senderObj?.instagram, facebook: senderObj?.facebook
@@ -641,7 +641,7 @@ export const useUIStore = create<AppState>((set, get) => ({
            const existingIdx = mergedUsers.findIndex(u => u.id === nu.id);
            if (existingIdx === -1) {
              mergedUsers.push(nu);
-           } else if (mergedUsers[existingIdx].username === 'Usuario Desconocido' && nu.username !== 'Usuario Desconocido') {
+           } else if (mergedUsers[existingIdx].username === 'usuario desconocido' && nu.username !== 'usuario desconocido') {
              mergedUsers[existingIdx] = { ...mergedUsers[existingIdx], ...nu };
            }
          });

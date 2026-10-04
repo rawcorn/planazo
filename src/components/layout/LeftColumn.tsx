@@ -1,4 +1,4 @@
-import { useUIStore } from '@/store/uiStore'
+﻿import { useUIStore } from '@/store/uiStore'
 import { LogOut, X, MapPin, MessageCircle, Info, Calendar } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
 import { useState, useEffect } from 'react'
@@ -85,7 +85,7 @@ export function LeftColumn() {
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <button onClick={logout} className="p-2 text-slate-400 hover:text-slate-700 hover:bg-[#EFE9FB] rounded-xl transition-colors" title="Cerrar sesión">
+          <button onClick={logout} className="p-2 text-slate-400 hover:text-slate-700 hover:bg-[#EFE9FB] rounded-xl transition-colors" title="Cerrar sesiÃ³n">
             <LogOut className="h-5 w-5" />
           </button>
           <button onClick={() => setMobileView('chat')} className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-[#EFE9FB] rounded-xl transition-colors">
@@ -106,12 +106,12 @@ export function LeftColumn() {
               const pastelIconBgs = ['bg-[#A7F3D0]', 'bg-[#FBCFE8]', 'bg-[#FDE047]', 'bg-[#C7D2FE]', 'bg-[#FECACA]'];
               const iconBg = pastelIconBgs[region.name.length % pastelIconBgs.length];
               const getIcon = () => {
-                if (region.name.includes('CABA')) return '🗺️';
-                if (region.name.includes('GBA')) return '🏘️';
-                if (region.name.includes('Córdoba')) return '🏞️';
-                if (region.name.includes('Mendoza')) return '🍷';
-                if (region.name.includes('Rosario')) return '🚢';
-                return '📍';
+                if (region.name.includes('CABA')) return 'ðŸ—ºï¸';
+                if (region.name.includes('GBA')) return 'ðŸ˜ï¸';
+                if (region.name.includes('CÃ³rdoba')) return 'ðŸžï¸';
+                if (region.name.includes('Mendoza')) return 'ðŸ·';
+                if (region.name.includes('Rosario')) return 'ðŸš¢';
+                return 'ðŸ“';
               };
               return (
               <button
@@ -136,11 +136,11 @@ export function LeftColumn() {
         {/* MIS PLANAZOS */}
         <div>
           <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3 px-3 flex items-center gap-1.5">
-            <span className="text-amber-500 text-sm">✨</span> Mis Planazos
+            <span className="text-amber-500 text-sm">âœ¨</span> Mis Planazos
           </h2>
           {myEvents.length === 0 ? (
             <div className="px-3 py-5 bg-[#EFE9FB]/50 rounded-2xl text-center">
-              <p className="text-sm text-slate-500">No estás anotado en nada.</p>
+              <p className="text-sm text-slate-500">No estÃ¡s anotado en nada.</p>
             </div>
           ) : (
             <div className="space-y-1">

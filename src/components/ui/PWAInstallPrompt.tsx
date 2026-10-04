@@ -66,18 +66,6 @@ export function PWAInstallPrompt() {
     setIsDismissed(true);
   };
 
-  useEffect(() => {
-    const shouldShow = !(isStandalone || isDismissed || (!isIOS && !deferredPrompt));
-    if (shouldShow) {
-      document.body.style.paddingBottom = '90px';
-    } else {
-      document.body.style.paddingBottom = '0px';
-    }
-    return () => {
-      document.body.style.paddingBottom = '0px';
-    };
-  }, [isStandalone, isDismissed, isIOS, deferredPrompt]);
-
   // Do not render if already installed or dismissed
   if (isStandalone || isDismissed) {
     return null;
@@ -129,7 +117,7 @@ export function PWAInstallPrompt() {
             </p>
             <button
               onClick={() => setShowIOSPrompt(false)}
-              className="w-full rounded-xl bg-[#86E2B5] py-3.5 font-bold text-teal-950 shadow-md hover:bg-[#75D1A4] transition-colors"
+              className="w-full rounded-xl bg-[#86E2B5] py-3.5 font-bold text-white shadow-md hover:bg-[#75D1A4] transition-colors"
             >
               Entendido
             </button>
