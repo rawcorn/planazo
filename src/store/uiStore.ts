@@ -397,19 +397,38 @@ export const useUIStore = create<AppState>((set, get) => ({
   },
 
   joinEvent: async (eventId) => {
-    const { fetchEventsForRegion, fetchMyEvents, events } = get();
-    await joinEvent(eventId);
+    const { currentUser, events, myEvents, fetchEventsForRegion, fetchMyEvents } = get();
+    if (!currentUser) return;
     const ev = events.find(e => e.id === eventId);
-    if(ev) await fetchEventsForRegion(ev.region);
-    await fetchMyEvents();
+    if (!ev) return;
+    
+    // Optimistic update
+    set({ 
+      myEvents: [...myEvents, ev],
+      events: events.map(e => e.id === eventId ? { ...e, attendeesIds: [...(e.attendeesIds || []), currentUser.id] } : e)
+    });
+
+    joinEvent(eventId).then(() => {
+      fetchEventsForRegion(ev.region);
+      fetchMyEvents();
+    });
   },
 
   leaveEvent: async (eventId) => {
-    const { fetchEventsForRegion, fetchMyEvents, events } = get();
-    await leaveEvent(eventId);
+    const { currentUser, events, myEvents, fetchEventsForRegion, fetchMyEvents } = get();
+    if (!currentUser) return;
     const ev = events.find(e => e.id === eventId);
-    if(ev) await fetchEventsForRegion(ev.region);
-    await fetchMyEvents();
+    
+    // Optimistic update
+    set({
+      myEvents: myEvents.filter(e => e.id !== eventId),
+      events: events.map(e => e.id === eventId ? { ...e, attendeesIds: (e.attendeesIds || []).filter(id => id !== currentUser.id) } : e)
+    });
+
+    leaveEvent(eventId).then(() => {
+      if(ev) fetchEventsForRegion(ev.region);
+      fetchMyEvents();
+    });
   },
 
   sendMessage: async (roomId, text, parentId) => {
@@ -607,6 +626,8 @@ export const useUIStore = create<AppState>((set, get) => ({
            const existingIdx = mergedUsers.findIndex(u => u.id === nu.id);
            if (existingIdx === -1) {
              mergedUsers.push(nu);
+           } else if (mergedUsers[existingIdx].username === 'Usuario Desconocido' && nu.username !== 'Usuario Desconocido') {
+             mergedUsers[existingIdx] = { ...mergedUsers[existingIdx], ...nu };
            }
          });
          return { 

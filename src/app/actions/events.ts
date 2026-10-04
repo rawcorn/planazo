@@ -35,6 +35,14 @@ export async function createEvent(eventData: any) {
       return { error: 'Error al crear el evento: ' + error.message }
     }
 
+    // Unir automáticamente al creador como asistente
+    await supabase
+      .from('event_attendees')
+      .insert({
+        event_id: data.id,
+        user_id: user.id,
+      })
+
 
     return { success: true, event: data }
   } catch (err) {

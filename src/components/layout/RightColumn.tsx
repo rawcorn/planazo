@@ -1001,7 +1001,7 @@ export function RightColumn() {
                 )}
               </div>
             ) : (
-              <Button className="w-full py-3.5 shadow-sm" onClick={() => { joinEvent(eventToShow.id); resetRightColumn(); }}>
+              <Button className="w-full py-3.5 shadow-sm text-white" onClick={() => { joinEvent(eventToShow.id); resetRightColumn(); }}>
                 Sumarme al Planazo
               </Button>
             )}

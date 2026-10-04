@@ -154,7 +154,7 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
                 </div>
               </div>
 
-              <Button disabled={loading} type="submit" className="w-full h-12 mt-2 text-[16px] rounded-full bg-[#7ac7ac] hover:bg-[#7ac7ac] hover:opacity-100 text-white [text-shadow:0px_1px_2px_rgba(26,54,45,0.7)] font-bold border-0 transition-all shadow-none tracking-wide">
+              <Button disabled={loading} type="submit" className="w-full h-12 mt-2 text-[16px] rounded-full bg-[#7ac7ac] hover:bg-[#7ac7ac] hover:opacity-100 text-white font-bold border-0 transition-all shadow-none tracking-wide">
                 {loading ? 'Cargando...' : 'Entrar'}
               </Button>
               

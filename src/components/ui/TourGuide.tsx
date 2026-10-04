@@ -92,7 +92,6 @@ export function TourGuide() {
       target: 'body',
       content: (
         <div className="text-center">
-          <h2 className="text-[18px] font-black mb-2 text-white leading-tight">¡Bienvenido a Planazo!</h2>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Hagamos un recorrido súper rápido para que sepas cómo usar la app en el celu.
           </p>
@@ -104,7 +103,6 @@ export function TourGuide() {
       target: '#tour-hamburger',
       content: (
         <div className="text-left">
-          <h3 className="font-black text-[16px] mb-1.5 text-white">Tus Zonas y Chats</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Tocando este menú vas a poder ver todas las zonas, los Planazos a los que te sumaste y tus chats privados.
           </p>
@@ -115,12 +113,9 @@ export function TourGuide() {
       offset: OFFSET_MOBILE,
     },
     {
-      // La tarjeta cuelga del encabezado del chat (la flecha señala el título)
-      // y no se oscurece la pantalla para que se vea todo el chat iluminado.
       target: '#tour-center-header',
       content: (
         <div className="text-center">
-          <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Acá vas a estar viendo el chat de la zona o del Planazo que selecciones.
           </p>
@@ -128,14 +123,13 @@ export function TourGuide() {
       ),
       placement: 'bottom-start',
       arrowSpacing: CHAT_ARROW_SPACING_MOBILE,
-      offset: OFFSET_MOBILE,
+      offset: 0,
       hideOverlay: true,
     },
     {
       target: '#tour-right-panel-btn',
       content: (
         <div className="text-left">
-          <h3 className="font-black text-[16px] mb-1.5 text-white">La Cartelera</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Tocando esta flechita abrís la cartelera con los Planazos de cada zona, sus detalles y tu perfil de usuario cuando lo selecciones.
           </p>
@@ -150,7 +144,6 @@ export function TourGuide() {
       target: 'body',
       content: (
         <div className="text-center">
-          <h2 className="text-[18px] font-black mb-2 text-white leading-tight">¡Bienvenido a Planazo!</h2>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Hagamos un recorrido súper rápido para que sepas cómo usar la app.
           </p>
@@ -162,7 +155,6 @@ export function TourGuide() {
       target: '#tour-step-1',
       content: (
         <div className="text-left">
-          <h3 className="font-black text-[16px] mb-1.5 text-white">Tus Zonas y Chats</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Acá podés ver todas las zonas, los Planazos a los que te sumaste y tus chats privados.
           </p>
@@ -172,13 +164,10 @@ export function TourGuide() {
       offset: OFFSET_DESKTOP,
     },
     {
-      // Se ilumina toda la columna central (spotlightTarget) pero la tarjeta
-      // se ancla al encabezado: queda dentro de la columna y la flecha señala el título.
       target: '#tour-center-header',
       spotlightTarget: '#tour-step-2',
       content: (
         <div className="text-center">
-          <h3 className="font-black text-[16px] mb-1.5 text-white">El Chat Principal</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Acá va a estar el chat de la zona o del Planazo que selecciones.
           </p>
@@ -186,13 +175,12 @@ export function TourGuide() {
       ),
       placement: 'bottom-start',
       arrowSpacing: CHAT_ARROW_SPACING_DESKTOP,
-      offset: OFFSET_DESKTOP,
+      offset: 0,
     },
     {
       target: '#tour-step-3',
       content: (
         <div className="text-left">
-          <h3 className="font-black text-[16px] mb-1.5 text-white">La Cartelera</h3>
           <p className="text-white/90 text-[14px] leading-snug font-medium">
             Acá ves los Planazos por zona, sus detalles y tu perfil de usuario cuando lo selecciones.
           </p>
