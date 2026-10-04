@@ -13,7 +13,7 @@ export async function signUp(data: any) {
 
     let { email } = parsed.data
     const username = parsed.data.username.toLowerCase();
-    const { password, age, gender, region, instagram, facebook, avatarUrl } = parsed.data
+    const { password, age, gender, region, instagram, tiktok, facebook, avatarUrl } = parsed.data
 
     if (!email) {
       email = `${username.replace(/[^a-z0-9]/g, '')}@planazo.local`
@@ -60,7 +60,7 @@ export async function registerFullFlow(data: any, interests: string[]) {
 
     let { email } = parsed.data
     const username = parsed.data.username.toLowerCase();
-    const { password, age, gender, region, instagram, facebook, avatarUrl } = parsed.data
+    const { password, age, gender, region, instagram, tiktok, facebook, avatarUrl } = parsed.data
 
     if (!email) {
       email = `${username.replace(/[^a-z0-9]/g, '')}@planazo.local`

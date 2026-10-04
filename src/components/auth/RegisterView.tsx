@@ -14,7 +14,7 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
 
   const [formData, setFormData] = useState({ 
     username: '', email: '', password: '', age: '', gender: 'X', region: regions[0]?.name || '', interests: [] as string[],
-    avatarUrl: '', avatarFile: null as File | null, instagram: '', facebook: ''
+    avatarUrl: '', avatarFile: null as File | null, instagram: '', tiktok: '', facebook: ''
   });
   
   const [showPassword, setShowPassword] = useState(false);
@@ -343,12 +343,16 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label className="text-xs font-bold text-[#52525B] tracking-wider block mb-1"><span className="uppercase">Instagram</span> <span className="normal-case">(Opcional)</span></label>
-                  <input className="w-full bg-slate-100 border-[1.5px] border-[#8D96D6] rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all placeholder:text-slate-400" placeholder="@usuario" value={formData.instagram} onChange={e => setFormData({...formData, instagram: e.target.value})} />
+              <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold text-[#52525B] tracking-wider block mb-1"><span className="uppercase">Instagram</span> <span className="normal-case">(Opcional)</span></label>
+                    <input className="w-full bg-slate-100 border-[1.5px] border-[#8D96D6] rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all placeholder:text-slate-400" placeholder="@usuario" value={formData.instagram} onChange={e => setFormData({...formData, instagram: e.target.value})} />
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold text-[#52525B] tracking-wider block mb-1"><span className="uppercase">TikTok</span> <span className="normal-case">(Opcional)</span></label>
+                    <input className="w-full bg-slate-100 border-[1.5px] border-[#8D96D6] rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all placeholder:text-slate-400" placeholder="@usuario" value={formData.tiktok} onChange={e => setFormData({...formData, tiktok: e.target.value})} />
+                  </div>
                 </div>
-              </div>
             </div>
 
             <div className="mt-6">

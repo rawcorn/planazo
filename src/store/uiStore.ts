@@ -186,7 +186,7 @@ export const useUIStore = create<AppState>((set, get) => ({
       const nu: User = {
         id: ou.id, username: ou.username?.toLowerCase() || 'usuario desconocido', avatarUrl: ou.avatar_url || '',
         email: '', age: 0, gender: 'X', region: ou.region || '', interests: [],
-        instagram: ou.instagram, facebook: ou.facebook
+        instagram: ou.instagram, tiktok: ou.tiktok, facebook: ou.facebook
       } as User;
       const idx = mergedUsers.findIndex(u => u.id === nu.id);
       if (idx === -1) mergedUsers.push(nu);
@@ -488,8 +488,8 @@ export const useUIStore = create<AppState>((set, get) => ({
       .from('events')
       .select(`
         *,
-        creator:users!events_creator_id_fkey(username, avatar_url, instagram, facebook),
-        event_attendees(user_id, users!event_attendees_user_id_fkey(username, avatar_url, age, gender, instagram, facebook))
+        creator:users!events_creator_id_fkey(username, avatar_url, instagram, tiktok, facebook),
+        event_attendees(user_id, users!event_attendees_user_id_fkey(username, avatar_url, age, gender, instagram, tiktok, facebook))
       `)
       .eq('region_id', regionId)
       .order('event_datetime', { ascending: true })
@@ -510,7 +510,7 @@ export const useUIStore = create<AppState>((set, get) => ({
                username: e.creator.username?.toLowerCase() || 'usuario',
                avatarUrl: e.creator.avatar_url,
                email: '', age: 0, gender: 'X', region: '', interests: [],
-               instagram: e.creator.instagram, facebook: e.creator.facebook
+               instagram: e.creator.instagram, tiktok: e.creator.tiktok, facebook: e.creator.facebook
              });
           }
           if (e.event_attendees && Array.isArray(e.event_attendees)) {
@@ -523,7 +523,7 @@ export const useUIStore = create<AppState>((set, get) => ({
                    age: ea.users.age || 0,
                    gender: ea.users.gender || 'X',
                    email: '', region: '', interests: [],
-                   instagram: ea.users.instagram, facebook: ea.users.facebook
+                   instagram: ea.users.instagram, tiktok: ea.users.tiktok, facebook: ea.users.facebook
                  });
                }
              });
@@ -593,7 +593,7 @@ export const useUIStore = create<AppState>((set, get) => ({
       .from('messages')
       .select(`
         *,
-        sender:users(username, avatar_url, region, instagram, facebook),
+        sender:users(username, avatar_url, region, instagram, tiktok, facebook),
         event:events(title, description)
       `)
       .eq('room_id', roomId)
@@ -618,7 +618,7 @@ export const useUIStore = create<AppState>((set, get) => ({
                  username: senderObj?.username?.toLowerCase() || 'usuario desconocido',
                  avatarUrl: senderObj?.avatar_url || '',
                  email: '', age: 0, gender: 'X', region: senderObj?.region || '', interests: [],
-                 instagram: senderObj?.instagram, facebook: senderObj?.facebook
+                 instagram: senderObj?.instagram, tiktok: senderObj?.tiktok, facebook: senderObj?.facebook
               });
            }
            return {
