@@ -141,7 +141,7 @@ export function RightColumn() {
       setFormErrorField(null);
     } else if (activeView === 'edit_profile' && currentUser && prevActiveViewRef.current !== 'edit_profile') {
       setEditProfileData({
-        email: '',
+          email: (currentUser.email && !currentUser.email.endsWith('@planazo.local')) ? currentUser.email : '',
         newPassword: '',
         instagram: currentUser.instagram || '',
           tiktok: currentUser.tiktok || '',
@@ -448,9 +448,9 @@ export function RightColumn() {
     
     setFormSuccess('Cambios guardados con éxito');
     const freshUser = useUIStore.getState().currentUser;
-    if (freshUser) {
-      setEditProfileData({
-        email: '',
+      if (freshUser) {
+        setEditProfileData({
+          email: (freshUser.email && !freshUser.email.endsWith('@planazo.local')) ? freshUser.email : '',
         instagram: freshUser.instagram || '',
           tiktok: freshUser.tiktok || '',
           avatarUrl: freshUser.avatarUrl || '',
