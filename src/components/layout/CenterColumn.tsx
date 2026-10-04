@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect, useMemo } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { useUIStore } from '@/store/uiStore'
 import { useShallow } from 'zustand/react/shallow'
 import { Menu, ChevronLeft, Send, MessageSquare, X, CornerUpLeft, CornerUpRight, Copy, Trash2, Calendar } from 'lucide-react'
@@ -142,7 +142,7 @@ export function CenterColumn() {
     return users.find(u => u.id === id) || { username: 'usuario desconocido', avatarUrl: '', interests: [], region: '' };
   }
 
-  // --- LÃ“GICA DE GESTOS ---
+  // --- LÓGICA DE GESTOS ---
   const handlePointerDown = (e: React.TouchEvent | React.MouseEvent, msgId: string) => {
     const clientX = 'touches' in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
     const target = e.currentTarget as HTMLElement;
@@ -229,7 +229,7 @@ export function CenterColumn() {
             <button onClick={() => setActiveThreadId(null)} className="p-2 -ml-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors">
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <h2 className="font-black text-lg text-slate-900">Hilo de conversaciÃ³n</h2>
+            <h2 className="font-black text-lg text-slate-900">Hilo de conversación</h2>
           </div>
         ) : (
           <div className="flex items-center gap-3 overflow-hidden">
@@ -261,15 +261,15 @@ export function CenterColumn() {
                 const bgClass = pastelIconBgs[activeRegion.name.length % pastelIconBgs.length];
                 headerIconClass += `rounded-xl ${bgClass} text-lg shadow-sm`;
                 
-                if (activeRegion.name.includes('CABA')) headerIconContent = 'ðŸ—ºï¸';
-                else if (activeRegion.name.includes('GBA')) headerIconContent = 'ðŸ˜ï¸';
-                else if (activeRegion.name.includes('CÃ³rdoba')) headerIconContent = 'ðŸžï¸';
-                else if (activeRegion.name.includes('Mendoza')) headerIconContent = 'ðŸ·';
-                else if (activeRegion.name.includes('Rosario')) headerIconContent = 'ðŸš¢';
-                else headerIconContent = 'ðŸ“';
+                if (activeRegion.name.includes('CABA')) headerIconContent = '🗺️';
+                else if (activeRegion.name.includes('GBA')) headerIconContent = '🏘️';
+                else if (activeRegion.name.includes('Córdoba')) headerIconContent = '🏞️';
+                else if (activeRegion.name.includes('Mendoza')) headerIconContent = '🍷';
+                else if (activeRegion.name.includes('Rosario')) headerIconContent = '🚢';
+                else headerIconContent = '📍';
               } else {
                 headerIconClass += "rounded-full bg-[#FFB5B5] text-white";
-                headerIconContent = 'ðŸ“';
+                headerIconContent = '📍';
               }
 
               return (
@@ -286,12 +286,12 @@ export function CenterColumn() {
                 {isEventRoom && activeEvent ? (
                   <>
                     <span>{activeEvent.attendees.length} asist.</span>
-                    <span className="text-slate-300">â€¢</span>
+                    <span className="text-slate-300">•</span>
                     <Calendar className="h-3 w-3 text-slate-400" />
                     <span>
                       {new Date(activeEvent.date).toLocaleDateString('es-AR', { weekday: 'short' }).replace('.', '')} {new Date(activeEvent.date).getDate()}/{new Date(activeEvent.date).getMonth() + 1}
                     </span>
-                    <span className="text-slate-300">â€¢</span>
+                    <span className="text-slate-300">•</span>
                     <span>
                       {new Date(activeEvent.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}
                     </span>
@@ -329,7 +329,7 @@ export function CenterColumn() {
       {/* MESSAGES */}
       <div className="flex-1 overflow-y-auto custom-scrollbar p-6 z-0 pb-24 flex flex-col relative">
         
-        {/* CAPA INVISIBLE PARA CERRAR EL MENÃš */}
+        {/* CAPA INVISIBLE PARA CERRAR EL MENÚ */}
         {activeMessageMenu && (
           <div 
             className="fixed inset-0 z-30"
@@ -343,7 +343,7 @@ export function CenterColumn() {
         {displayMessages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <div className="bg-[#FCF8F2] px-6 py-3 rounded-full text-sm font-medium text-slate-500">
-              {activeThreadId ? 'EnvÃ­a la primera respuesta en este hilo...' : (isDMRoom ? `Empieza a chatear con ${dmUser?.username}...` : `EnvÃ­a el primer mensaje a ${isEventRoom ? 'este grupo' : 'la zona'}...`)}
+              {activeThreadId ? 'Envía la primera respuesta en este hilo...' : (isDMRoom ? `Empieza a chatear con ${dmUser?.username}...` : `Envía el primer mensaje a ${isEventRoom ? 'este grupo' : 'la zona'}...`)}
             </div>
           </div>
         ) : (
@@ -406,7 +406,7 @@ export function CenterColumn() {
                   style={{ marginTop: index === 0 ? '0px' : '8px' }}
                   className={`message-row flex w-full relative ${isMine ? 'justify-end' : 'justify-start items-end gap-2'} ${isMenuActive ? 'z-40' : 'z-10'} ${isSystem ? 'opacity-80 hover:opacity-100 transition-opacity' : ''}`}
                 >
-                  {/* Ãcono de Responder oculto para el Swipe */}
+                  {/* Ícono de Responder oculto para el Swipe */}
                   {canReply && (
                     <div className={`reply-icon absolute top-1/2 -translate-y-1/2 flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 opacity-0 scale-50 pointer-events-none z-0 ${isMine ? 'left-4' : 'left-14'}`}>
                       <MessageSquare className="h-4 w-4 text-slate-500" />
@@ -436,13 +436,13 @@ export function CenterColumn() {
                     <div 
                       className={`px-4 py-2 relative z-10 touch-pan-y select-none flex flex-col ${
                         isSystem 
-                          ? 'bg-slate-50 text-slate-500 border border-slate-200/70 shadow-none' // DISEÃ‘O SUTIL PARA SISTEMA
+                          ? 'bg-slate-50 text-slate-500 border border-slate-200/70 shadow-none' // DISEÑO SUTIL PARA SISTEMA
                           : isMine 
                             ? 'bg-[#D1EBDD] text-slate-900 shadow-sm' 
                             : `${othersColor} shadow-sm`
                       }`}
                       style={{
-                        // Si es sistema, las 4 esquinas son redondeadas siempre. Si es texto, aplica la lÃ³gica de colitas.
+                        // Si es sistema, las 4 esquinas son redondeadas siempre. Si es texto, aplica la lógica de colitas.
                         borderTopLeftRadius: isSystem ? BUBBLE_RADIUS : (!isMine && isGroupedWithPrev ? FLAT_RADIUS : BUBBLE_RADIUS),
                         borderBottomLeftRadius: isSystem ? BUBBLE_RADIUS : (!isMine ? (isGroupedWithNext ? FLAT_RADIUS : TAIL_RADIUS) : BUBBLE_RADIUS),
                         borderTopRightRadius: isSystem ? BUBBLE_RADIUS : (isMine && isGroupedWithPrev ? FLAT_RADIUS : BUBBLE_RADIUS),
@@ -494,12 +494,12 @@ export function CenterColumn() {
                           }}
                         >
                           <p className="text-[13px] leading-snug break-words whitespace-pre-wrap font-medium text-slate-500">
-                            {senderUser?.username || 'usuario desconocido'} ha armado un nuevo planazo. Â¡Sumate!
+                            {senderUser?.username || 'usuario desconocido'} ha armado un nuevo planazo. ¡Sumate!
                           </p>
                           <div className="mt-2 p-2 bg-white/60 rounded-xl border border-slate-200/50">
                             <div className="mb-1.5">
                               <span className="text-[9px] font-black uppercase tracking-wider bg-slate-200/60 text-slate-500 px-2 py-0.5 rounded-full">
-                                âœ¨ Planazo
+                                ✨ Planazo
                               </span>
                             </div>
                             <p className="font-bold text-[13px] text-slate-700">
@@ -525,7 +525,7 @@ export function CenterColumn() {
                         <div className="flex items-end justify-between gap-2 min-w-[60px] w-full">
                           {msg.isDeleted ? (
                             <p className="text-[14px] italic opacity-50 flex items-center gap-1.5 py-0.5">
-                              ðŸš« Este mensaje fue eliminado
+                              🚫 Este mensaje fue eliminado
                             </p>
                           ) : (
                             <div className="flex flex-col w-full">
@@ -556,11 +556,11 @@ export function CenterColumn() {
                       )}
                     </div>
 
-                    {/* MENÃš CONTEXTUAL */}
+                    {/* MENÚ CONTEXTUAL */}
                     {isMenuActive && (
                       <div className={`absolute z-50 flex flex-col gap-2 w-[240px] ${isMine ? 'right-0 items-end' : 'left-0 items-start'} top-full mt-2 animate-in zoom-in-95 duration-200`}>
                         <div className="bg-white px-4 py-2 rounded-full shadow-lg shadow-black/5 border border-slate-100 flex items-center gap-4 overflow-x-auto custom-scrollbar w-max max-w-full">
-                          {['ðŸ‘', 'â¤ï¸', 'ðŸ˜‚', 'ðŸ˜®', 'ðŸ˜¢', 'ðŸ™'].map(emoji => (
+                          {['👍', '❤️', '😂', '😮', '😢', '🙏'].map(emoji => (
                             <button 
                               key={emoji} 
                               onClick={(e) => { e.stopPropagation(); setActiveMessageMenu(null); }} 
@@ -602,7 +602,7 @@ export function CenterColumn() {
                                 onClick={(e) => { e.stopPropagation(); deleteMessageForMe(msg.id, msg.roomId); setActiveMessageMenu(null); }} 
                                 className="w-full text-left px-4 py-3 hover:bg-red-100/50 text-red-600 transition-colors font-medium border-b border-red-100"
                               >
-                                Eliminar para mÃ­
+                                Eliminar para mí
                               </button>
                               {isMine && (
                                 <button 
@@ -684,8 +684,8 @@ export function CenterColumn() {
         const senderName = originalSender.username || 'Usuario';
         const senderZone = originalSender.region || 'Zona desconocida';
         
-        // Armamos el prefijo dinÃ¡mico
-        const forwardPrefix = `â†ªï¸ *Reenviado por ${senderName} de ${senderZone}:*\n\n`;
+        // Armamos el prefijo dinámico
+        const forwardPrefix = `↪️ *Reenviado por ${senderName} de ${senderZone}:*\n\n`;
 
         return (
           <div className="absolute inset-0 z-50 bg-black/40 flex flex-col justify-end" onClick={() => setForwardingMsg(null)}>
@@ -717,12 +717,12 @@ export function CenterColumn() {
                     {(() => {
                       const pastelIconBgs = ['bg-[#A7F3D0]', 'bg-[#FBCFE8]', 'bg-[#FDE047]', 'bg-[#C7D2FE]', 'bg-[#FECACA]'];
                       const bgClass = pastelIconBgs[r.name.length % pastelIconBgs.length];
-                      let iconContent = 'ðŸ“';
-                      if (r.name.includes('CABA')) iconContent = 'ðŸ—ºï¸';
-                      else if (r.name.includes('GBA')) iconContent = 'ðŸ˜ï¸';
-                      else if (r.name.includes('CÃ³rdoba')) iconContent = 'ðŸžï¸';
-                      else if (r.name.includes('Mendoza')) iconContent = 'ðŸ·';
-                      else if (r.name.includes('Rosario')) iconContent = 'ðŸš¢';
+                      let iconContent = '📍';
+                      if (r.name.includes('CABA')) iconContent = '🗺️';
+                      else if (r.name.includes('GBA')) iconContent = '🏘️';
+                      else if (r.name.includes('Córdoba')) iconContent = '🏞️';
+                      else if (r.name.includes('Mendoza')) iconContent = '🍷';
+                      else if (r.name.includes('Rosario')) iconContent = '🚢';
                       
                       return (
                         <div className={`w-12 h-12 rounded-xl ${bgClass} flex items-center justify-center text-xl shadow-sm shrink-0`}>
@@ -732,7 +732,7 @@ export function CenterColumn() {
                     })()}
                     <div className="min-w-0">
                       <span className="font-bold text-slate-800 block truncate">{r.name}</span>
-                      <span className="text-xs text-slate-500">Sala pÃºblica</span>
+                      <span className="text-xs text-slate-500">Sala pública</span>
                     </div>
                   </button>
                 ))}

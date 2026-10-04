@@ -250,7 +250,7 @@ export function RightColumn() {
       setRightColumnView('event_details');
     } else if (res.error) {
       setFormError(res.error);
-      if (res.error.toLowerCase().includes('tÃ­tulo')) setFormErrorField('title');
+      if (res.error.toLowerCase().includes('título')) setFormErrorField('title');
       else if (res.error.toLowerCase().includes('fecha')) setFormErrorField('date');
     }
   };
@@ -261,7 +261,7 @@ export function RightColumn() {
     setFormErrorField(null);
     
     if (!newPlan.title.trim()) {
-      setFormError('Por favor, ingresa un tÃ­tulo para el planazo.');
+      setFormError('Por favor, ingresa un título para el planazo.');
       setFormErrorField('title');
       return;
     }
@@ -278,7 +278,7 @@ export function RightColumn() {
 
     const eventDateTime = new Date(`${newPlan.date}T${newPlan.hour}:${newPlan.minute}`);
     if (eventDateTime.getTime() < Date.now()) {
-      setFormError('El horario no puede ser en el pasado. Â¡ElegÃ­ uno a futuro!');
+      setFormError('El horario no puede ser en el pasado. ¡Elegí uno a futuro!');
       setFormErrorField('time');
       return;
     }
@@ -400,13 +400,13 @@ export function RightColumn() {
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (editProfileData.email && !emailRegex.test(editProfileData.email)) {
-       setFormError('Email invÃ¡lido.');
+       setFormError('Email inválido.');
        setFormErrorField('email');
        return;
     }
 
     if (editProfileData.newPassword && editProfileData.newPassword.length < 8) {
-       setFormError('La contraseÃ±a debe tener al menos 8 caracteres.');
+       setFormError('La contraseña debe tener al menos 8 caracteres.');
        setFormErrorField('password');
        return;
     }
@@ -434,7 +434,7 @@ export function RightColumn() {
        return;
     }
     
-    setFormSuccess('Cambios guardados con Ã©xito');
+    setFormSuccess('Cambios guardados con éxito');
     const freshUser = useUIStore.getState().currentUser;
     if (freshUser) {
       setEditProfileData({
@@ -490,9 +490,9 @@ export function RightColumn() {
         <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
             <div className="p-6 text-center">
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Â¿Salir sin guardar?</h3>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">¿Salir sin guardar?</h3>
               <p className="text-sm text-slate-500">
-                TenÃ©s cambios sin guardar. Â¿EstÃ¡s seguro de que querÃ©s salir?
+                Tenés cambios sin guardar. ¿Estás seguro de que querés salir?
               </p>
             </div>
             <div className="flex border-t border-slate-100">
@@ -524,9 +524,9 @@ export function RightColumn() {
               <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-4">
                 <Trash2 className="h-6 w-6 text-rose-500" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Â¿Eliminar planazo?</h3>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">¿Eliminar planazo?</h3>
               <p className="text-sm text-slate-500">
-                Esta acciÃ³n no se puede deshacer. Se borrarÃ¡ el planazo y todos sus mensajes.
+                Esta acción no se puede deshacer. Se borrará el planazo y todos sus mensajes.
               </p>
             </div>
             <div className="flex border-t border-slate-100">
@@ -549,7 +549,7 @@ export function RightColumn() {
                 disabled={isDeleting}
                 className="flex-1 px-4 py-4 text-sm font-bold text-rose-500 hover:bg-rose-50 transition-colors border-l border-slate-100"
               >
-                {isDeleting ? 'Eliminando...' : 'SÃ­, eliminar'}
+                {isDeleting ? 'Eliminando...' : 'Sí, eliminar'}
               </button>
             </div>
           </div>
@@ -564,9 +564,9 @@ export function RightColumn() {
               <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle className="h-6 w-6 text-rose-500" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 mb-2">Â¿Eliminar tu cuenta?</h3>
+              <h3 className="text-lg font-bold text-slate-900 mb-2">¿Eliminar tu cuenta?</h3>
               <p className="text-sm text-slate-500">
-                Esta acciÃ³n no se puede deshacer. Todos tus datos, planes y mensajes se borrarÃ¡n permanentemente.
+                Esta acción no se puede deshacer. Todos tus datos, planes y mensajes se borrarán permanentemente.
               </p>
             </div>
             <div className="flex border-t border-slate-100">
@@ -582,7 +582,7 @@ export function RightColumn() {
                 disabled={isDeleting}
                 className="flex-1 px-4 py-4 text-sm font-bold text-rose-500 hover:bg-rose-50 transition-colors border-l border-slate-100"
               >
-                {isDeleting ? 'Eliminando...' : 'SÃ­, eliminar'}
+                {isDeleting ? 'Eliminando...' : 'Sí, eliminar'}
               </button>
             </div>
           </div>
@@ -655,7 +655,7 @@ export function RightColumn() {
                 <button 
                   onClick={() => setRightColumnView('edit_profile')} 
                   className="absolute top-0 right-0 p-2 text-slate-400 hover:text-slate-700 bg-slate-50 hover:bg-slate-200 rounded-full transition-colors shadow-sm border border-slate-100"
-                  title="ConfiguraciÃ³n de la cuenta"
+                  title="Configuración de la cuenta"
                 >
                   <Settings className="h-5 w-5" />
                 </button>
@@ -669,8 +669,8 @@ export function RightColumn() {
               )}
               <h3 className="text-2xl font-black text-[#3f3f46] mb-1 tracking-tight">{profileToShow.username}</h3>
               <p className="text-sm font-medium text-slate-600 flex items-center justify-center gap-2">
-                 <span>{profileToShow.age} aÃ±os</span> â€¢ 
-                 <span>{profileToShow.gender === 'F' ? 'Mujer' : profileToShow.gender === 'M' ? 'Hombre' : 'No Binario'}</span> â€¢ 
+                 <span>{profileToShow.age} años</span> • 
+                 <span>{profileToShow.gender === 'F' ? 'Mujer' : profileToShow.gender === 'M' ? 'Hombre' : 'No Binario'}</span> • 
                  <span className="flex items-center gap-1"><MapPin className="h-3 w-3"/>{profileToShow.region}</span>
               </p>
             </div>
@@ -685,7 +685,7 @@ export function RightColumn() {
                     {i}
                   </span>
                 )) : (
-                  <span className="text-sm text-slate-600 italic">No especificÃ³ intereses.</span>
+                  <span className="text-sm text-slate-600 italic">No especificó intereses.</span>
                 )}
               </div>
             </div>
@@ -765,7 +765,7 @@ export function RightColumn() {
               )}
 
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Email <span className="text-slate-400 font-normal lowercase">(solo para iniciar sesiÃ³n)</span></label>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Email <span className="text-slate-400 font-normal lowercase">(solo para iniciar sesión)</span></label>
                 <input 
                   type="email"
                   className={`w-full bg-slate-100 border rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'email' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
@@ -776,12 +776,12 @@ export function RightColumn() {
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Nueva ContraseÃ±a</label>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Nueva Contraseña</label>
                 <div className="relative">
                   <input 
                     type={showPassword ? "text" : "password"}
                     className={`w-full bg-slate-100 border rounded-xl pl-4 pr-10 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'password' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="••••••••"
                     value={editProfileData.newPassword} 
                     onChange={e => { setEditProfileData({...editProfileData, newPassword: e.target.value}); if (formErrorField === 'password') { setFormError(null); setFormErrorField(null); } }} 
                   />
@@ -841,7 +841,7 @@ export function RightColumn() {
 
               <div className="pt-6 pb-2 flex flex-col items-center gap-4">
                 <button type="button" onClick={logout} className="text-sm font-bold text-slate-500 hover:text-slate-700 underline-offset-4 hover:underline transition-all">
-                  Cerrar SesiÃ³n
+                  Cerrar Sesión
                 </button>
                 <button type="button" onClick={confirmDeleteAccount} className="text-sm font-bold text-rose-500 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-4 py-2 rounded-full transition-all">
                   Eliminar cuenta
@@ -879,7 +879,7 @@ export function RightColumn() {
                 )}
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">TÃ­tulo corto y directo</label>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Título corto y directo</label>
                 <input 
                   className={`w-full bg-slate-100 border rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400 ${formErrorField === 'title' ? 'border-rose-500 ring-1 ring-rose-500' : 'border-slate-200'}`} 
                   placeholder="Ej: Bar Boliche en Plaza Serrano..." 
@@ -888,11 +888,11 @@ export function RightColumn() {
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">De quÃ© va la onda <span className="text-slate-400 font-normal lowercase">(Opcional)</span></label>
-                <textarea className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 min-h-[100px] resize-none focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400" placeholder="Contanos mÃ¡s..." value={newPlan.description} onChange={e => setNewPlan({...newPlan, description: e.target.value})} />
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">De qué va la onda <span className="text-slate-400 font-normal lowercase">(Opcional)</span></label>
+                <textarea className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 min-h-[100px] resize-none focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400" placeholder="Contanos más..." value={newPlan.description} onChange={e => setNewPlan({...newPlan, description: e.target.value})} />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">DirecciÃ³n Exacta <span className="text-slate-400 font-normal lowercase">(Opcional)</span></label>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Dirección Exacta <span className="text-slate-400 font-normal lowercase">(Opcional)</span></label>
                 <input className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-slate-400" placeholder="Ej: El Salvador 1234" value={newPlan.address} onChange={e => setNewPlan({...newPlan, address: e.target.value})} />
               </div>
               <div>
@@ -902,7 +902,7 @@ export function RightColumn() {
                 </select>
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">CategorÃ­a (InterÃ©s)</label>
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Categoría (Interés)</label>
                 <select className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 outline-none transition-all" value={newPlan.interest} onChange={e => setNewPlan({...newPlan, interest: e.target.value})}>
                   {interests.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
                 </select>
@@ -917,7 +917,7 @@ export function RightColumn() {
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">DÃ­a</label>
+                  <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1.5">Día</label>
                   <DatePicker 
                     value={newPlan.date} 
                     onChange={(d) => {
@@ -952,7 +952,7 @@ export function RightColumn() {
               </div>
 
               <div className="pt-4 space-y-2 flex flex-col items-center">
-                <Button type="submit" className="w-full py-3.5 bg-[#9fbdd0] hover:bg-[#86aec6] text-white shadow-sm font-bold transition-all flex items-center justify-center gap-2" disabled={duplicateWarning !== null || isSavingEvent}>
+                <Button type="submit" className="w-full py-3.5 bg-[#b4a9e8] hover:bg-[#a698e3] text-white shadow-sm font-bold transition-all flex items-center justify-center gap-2" disabled={duplicateWarning !== null || isSavingEvent}>
                   {isSavingEvent && <Loader2 className="h-4 w-4 animate-spin" />}
                   {isSavingEvent ? 'Guardando...' : (activeView === 'edit_event' ? 'Guardar Cambios' : 'Crear Planazo')}
                 </Button>
@@ -970,8 +970,8 @@ export function RightColumn() {
                 <div className="flex gap-3">
                   <AlertTriangle className="h-5 w-5 text-rose-500 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-sm font-bold text-rose-700">Â¡Plan similar creado!</p>
-                    <p className="text-xs text-rose-600 mt-1 mb-4">Ya existe &quot;{duplicateWarning.title}&quot; cerca de ese horario o lugar. Â¿Quieres proponer el tuyo de todos modos?</p>
+                    <p className="text-sm font-bold text-rose-700">¡Plan similar creado!</p>
+                    <p className="text-xs text-rose-600 mt-1 mb-4">Ya existe &quot;{duplicateWarning.title}&quot; cerca de ese horario o lugar. ¿Quieres proponer el tuyo de todos modos?</p>
                     <div className="flex gap-2">
                       <Button type="button" variant="outline" className="flex-1 py-2 text-xs" onClick={() => setDuplicateWarning(null)}>Editar</Button>
                       <Button type="button" variant="danger" className="flex-1 py-2 text-xs bg-rose-500 hover:bg-rose-600 text-white" onClick={executeCreation}>Publicar igual</Button>
@@ -990,10 +990,10 @@ export function RightColumn() {
               {eventToShow.creatorId === currentUser.id ? (
                 <>
                   <button onClick={() => setRightColumnView('edit_event')} className="text-[13px] text-slate-500 hover:text-slate-800 font-medium underline underline-offset-4 decoration-slate-300 hover:decoration-slate-800 transition-colors">
-                    editar
+                    Editar
                   </button>
                   <button onClick={() => setShowDeleteEventModal(true)} className="text-xs text-rose-600 bg-rose-100 hover:bg-rose-200 px-3 py-1.5 rounded-lg transition-colors">
-                    eliminar
+                    Eliminar
                   </button>
                 </>
               ) : (
@@ -1019,7 +1019,7 @@ export function RightColumn() {
                 {eventToShow.description?.match(/<!--edited.*?-->/) && (() => { const match = eventToShow.description.match(/<!--edited:(.*?)-->/); const edits = match ? match[1] : ''; return <span className="bg-slate-200 text-slate-500 text-[10px] px-2 py-0.5 rounded-md uppercase font-bold border border-slate-300">{edits && edits !== 'algo' ? `Editado: ${edits}` : 'Editado'}</span>; })()}
               </h3>
               <span className="inline-block bg-slate-100 border border-slate-200 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">
-                {interests.find(i => i.id === eventToShow.interest)?.name || 'InterÃ©s'}
+                {interests.find(i => i.id === eventToShow.interest)?.name || 'Interés'}
               </span>
             </div>
 
@@ -1027,7 +1027,7 @@ export function RightColumn() {
               <div className="flex flex-col items-center gap-1.5 pt-2">
                 <div className="flex items-center gap-2 text-sm text-emerald-600 font-bold bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-100">
                   <span className="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                  Ya estÃ¡s adentro
+                  Ya estás adentro
                 </div>
                 {eventToShow.creatorId !== currentUser.id && (
                   <button onClick={() => leaveEvent(eventToShow.id)} className="text-[11px] text-slate-400 hover:text-rose-500 underline underline-offset-2 transition-colors mt-1 font-medium">
@@ -1054,7 +1054,7 @@ export function RightColumn() {
                     <Clock className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">CuÃ¡ndo</p>
+                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">Cuándo</p>
                     <p className="text-slate-900 font-medium">{new Date(eventToShow.date).toLocaleDateString('es-AR', { weekday: 'long' })} {new Date(eventToShow.date).getDate()}/{new Date(eventToShow.date).getMonth() + 1} a las {new Date(eventToShow.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}</p>
                   </div>
                 </div>
@@ -1064,7 +1064,7 @@ export function RightColumn() {
                     <MapPin className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">DÃ³nde</p>
+                    <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider mb-1">Dónde</p>
                     <p className="text-slate-900 font-medium">{regions.find(r => r.id === eventToShow.region)?.name || 'Zona'}{eventToShow.address ? ` - ${eventToShow.address}` : ''}</p>
                     {eventToShow.address && (
                       <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventToShow.address + ', ' + (regions.find(r => r.id === eventToShow.region)?.name || ''))}`} target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:text-blue-900 inline-flex items-center gap-1.5 mt-2 font-bold bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">
@@ -1082,7 +1082,7 @@ export function RightColumn() {
                   <Users className="h-4 w-4 text-sky-500" />
                   Asistentes ({eventToShow.attendees.length})
                 </p>
-                <span className="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded-full">Sin restricciÃ³n</span>
+                <span className="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-1 rounded-full">Sin restricción</span>
               </div>
               <div className="bg-slate-100 rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
                 {eventToShow.attendees.map((attendeeId, index) => {
@@ -1102,7 +1102,7 @@ export function RightColumn() {
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-bold text-slate-900 truncate">{u.username}</p>
-                        <p className="text-xs text-slate-600">{u.age} aÃ±os â€¢ {u.gender}</p>
+                        <p className="text-xs text-slate-600">{u.age} años • {u.gender}</p>
                       </div>
                       {attendeeId === eventToShow.creatorId && (
                         <span className="text-[10px] bg-blue-100 text-blue-900 px-2 py-1 rounded-md font-bold uppercase tracking-wider">Creador</span>
@@ -1134,10 +1134,10 @@ export function RightColumn() {
             {regionEvents.length === 0 ? (
               <div className="text-center py-16 text-slate-600">
                 <div className="bg-sky-100 border border-sky-200 h-20 w-20 rounded-[2rem] flex items-center justify-center mx-auto mb-4 shadow-sm text-4xl">
-                  ðŸ–ï¸
+                  🏖️
                 </div>
-                <p className="font-bold text-[#3f3f46] text-lg">No hay Planazos prÃ³ximos en esta zona.</p>
-                <p className="text-sm mt-1">Â¡SÃ© el primero en armar uno!</p>
+                <p className="font-bold text-[#3f3f46] text-lg">No hay Planazos próximos en esta zona.</p>
+                <p className="text-sm mt-1">¡Sé el primero en armar uno!</p>
               </div>
             ) : (
               <div className="space-y-4">
@@ -1175,7 +1175,7 @@ export function RightColumn() {
                         </div>
                       ) : isAttending ? (
                         <div className="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-bl-[1.5rem] z-10 shadow-sm">
-                          Me unÃ­
+                          Me uní
                         </div>
                       ) : isRecommended ? (
                         <div className="absolute top-0 right-0 bg-sky-400 text-white text-[10px] font-bold uppercase tracking-wider px-4 py-1.5 rounded-bl-[1.5rem] z-10 shadow-sm">
@@ -1200,10 +1200,10 @@ export function RightColumn() {
                       <div className="flex items-center justify-between text-xs font-bold text-slate-700">
                         <div className="flex gap-2">
                           <span className="flex items-center gap-1.5 bg-white/60 px-3 py-1.5 rounded-full">
-                            <Clock className="h-3.5 w-3.5 text-slate-500" /> {new Date(event.date).toLocaleDateString('es-AR', { weekday: 'long' })} {new Date(event.date).getDate()}/{new Date(event.date).getMonth() + 1} â€¢ {new Date(event.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}
+                            <Clock className="h-3.5 w-3.5 text-slate-500" /> {new Date(event.date).toLocaleDateString('es-AR', { weekday: 'long' })} {new Date(event.date).getDate()}/{new Date(event.date).getMonth() + 1} • {new Date(event.date).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false })}
                           </span>
                           <span className="flex items-center gap-1.5 bg-white/60 px-3 py-1.5 rounded-full">
-                            {interestName || 'InterÃ©s'}
+                            {interestName || 'Interés'}
                           </span>
                         </div>
                         <span className="flex items-center gap-1 bg-white/60 px-3 py-1.5 rounded-full">
@@ -1247,3 +1247,5 @@ export function RightColumn() {
     </div>
   )
 }
+
+
