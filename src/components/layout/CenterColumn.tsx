@@ -475,7 +475,7 @@ export function CenterColumn() {
                           }}
                         >
                           <p className="text-[13px] leading-snug break-words whitespace-pre-wrap font-medium text-slate-500">
-                            @{senderUser?.username || 'Usuario Desconocido'} ha armado un nuevo planazo. ¡Sumate!
+                            {senderUser?.username || 'Usuario Desconocido'} ha armado un nuevo planazo. ¡Sumate!
                           </p>
                           <div className="mt-2 p-2 bg-white/60 rounded-xl border border-slate-200/50">
                             <div className="mb-1.5">

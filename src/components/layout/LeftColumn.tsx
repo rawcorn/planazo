@@ -1,6 +1,7 @@
 import { useUIStore } from '@/store/uiStore'
 import { LogOut, X, MapPin, MessageCircle, Info, Calendar } from 'lucide-react'
 import { useShallow } from 'zustand/react/shallow'
+import { useState, useEffect } from 'react'
 
 export function LeftColumn() {
   const { 
@@ -34,6 +35,25 @@ export function LeftColumn() {
     setSelectedEvent: state.setSelectedEvent,
     selectedEventId: state.selectedEventId
   })))
+
+  const [lastReadMap, setLastReadMap] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('planazo_last_read')
+      if (stored) setLastReadMap(JSON.parse(stored))
+    }
+  }, [])
+
+  useEffect(() => {
+    if (activeRoomId && typeof window !== 'undefined') {
+      setLastReadMap(prev => {
+        const next = { ...prev, [activeRoomId]: Date.now() }
+        localStorage.setItem('planazo_last_read', JSON.stringify(next))
+        return next
+      })
+    }
+  }, [activeRoomId])
 
   if (!currentUser) return null;
   
@@ -195,6 +215,11 @@ export function LeftColumn() {
                 const otherUser = otherUserId ? users.find(u => u.id === otherUserId) : null;
                 if (!otherUser) return null;
 
+                const chMessages = messages[dmId] || [];
+                const lastReadTime = lastReadMap[dmId] || 0;
+                const unreadCount = chMessages.filter(m => new Date(m.timestamp).getTime() > lastReadTime && m.senderId !== currentUser?.id).length;
+                const hasUnread = unreadCount > 0 && activeRoomId !== dmId;
+
                 return (
                   <button
                     key={dmId}
@@ -202,17 +227,22 @@ export function LeftColumn() {
                       setActiveRoom(dmId);
                       if(window.innerWidth < 1024) setMobileView('chat');
                     }}
-                    className={`w-full text-left px-4 py-3 rounded-[1.5rem] flex items-center gap-4 transition-colors ${activeRoomId === dmId ? 'bg-[#D5CAFA] text-slate-900 font-bold' : 'hover:bg-[#EFE9FB] text-slate-700 font-medium'}`}
+                    className={`w-full text-left px-4 py-3 rounded-[1.5rem] flex items-center gap-4 transition-colors ${activeRoomId === dmId ? 'bg-[#D5CAFA] text-slate-900 font-bold' : hasUnread ? 'bg-[#EFE9FB] text-slate-900 font-black' : 'hover:bg-[#EFE9FB] text-slate-700 font-medium'}`}
                   >
-                    <div className="h-9 w-9 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center font-bold text-white">
+                    <div className="h-9 w-9 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center font-bold text-white relative shrink-0">
                       {otherUser.avatarUrl ? (
                         <img src={otherUser.avatarUrl} alt={otherUser.username} className="h-full w-full object-cover" />
                       ) : (
                         <span>{otherUser.username.charAt(0).toUpperCase()}</span>
                       )}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="truncate text-[15px]">@{otherUser.username}</p>
+                    <div className="flex-1 min-w-0 flex items-center justify-between">
+                      <p className={`truncate text-[15px] ${hasUnread ? 'font-black' : ''}`}>{otherUser.username}</p>
+                      {hasUnread && (
+                        <div className="bg-emerald-500 text-white text-[10px] font-black h-5 min-w-[20px] px-1.5 rounded-full flex items-center justify-center shrink-0">
+                          {unreadCount}
+                        </div>
+                      )}
                     </div>
                   </button>
                 )

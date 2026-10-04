@@ -73,6 +73,17 @@ export default function Home() {
               }
             })).catch(console.error);
           }
+
+          // Subscribe to new DM channels
+          const supabase = createBrowserClient();
+          supabase.channel('dm_channels_updates')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'dm_channels' }, async (payload) => {
+               if (payload.new.user1_id === userRes.id || payload.new.user2_id === userRes.id) {
+                 const newRes = await getDMChannels();
+                 if (newRes.channels) useUIStore.getState().setDmChannels(newRes.channels);
+               }
+            })
+            .subscribe();
         }
       } catch (e) {
         console.error("Failed to init", e)

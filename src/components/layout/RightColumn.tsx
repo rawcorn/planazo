@@ -1066,7 +1066,7 @@ export function RightColumn() {
                          </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-slate-900 truncate">@{u.username}</p>
+                        <p className="text-sm font-bold text-slate-900 truncate">{u.username}</p>
                         <p className="text-xs text-slate-600">{u.age} años • {u.gender}</p>
                       </div>
                       {attendeeId === eventToShow.creatorId && (

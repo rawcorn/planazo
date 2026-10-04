@@ -688,8 +688,21 @@ export const useUIStore = create<AppState>((set, get) => ({
   },
 
   startDirectMessage: async (targetUserId) => {
-    const { currentUser, fetchMessagesForRoom } = get();
+    const { currentUser, fetchMessagesForRoom, dmChannels } = get();
     if (!currentUser) return;
+    
+    const existingChannel = dmChannels.find(ch => ch.other_user_id === targetUserId);
+    if (existingChannel && existingChannel.rooms?.id) {
+      set({
+        activeRoomId: existingChannel.rooms.id,
+        activeView: 'cartelera',
+        mobileView: 'chat',
+        selectedUserId: null,
+        selectedEventId: null
+      });
+      fetchMessagesForRoom(existingChannel.rooms.id).catch(console.error);
+      return;
+    }
     
     const res = await getOrCreateDMRoom(targetUserId);
     if (res.roomId) {

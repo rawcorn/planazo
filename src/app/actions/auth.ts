@@ -11,11 +11,12 @@ export async function signUp(data: any) {
       return { error: parsed.error.issues[0].message }
     }
 
-    const { password, username, age, gender, region, instagram, facebook, avatarUrl } = parsed.data
     let { email } = parsed.data
+    const username = parsed.data.username.toLowerCase();
+    const { password, age, gender, region, instagram, facebook, avatarUrl } = parsed.data
 
     if (!email) {
-      email = `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}@planazo.local`
+      email = `${username.replace(/[^a-z0-9]/g, '')}@planazo.local`
     }
 
     const supabase = await createClient()
@@ -57,11 +58,12 @@ export async function registerFullFlow(data: any, interests: string[]) {
       return { error: parsed.error.issues[0].message }
     }
 
-    const { password, username, age, gender, region, instagram, facebook, avatarUrl } = parsed.data
     let { email } = parsed.data
+    const username = parsed.data.username.toLowerCase();
+    const { password, age, gender, region, instagram, facebook, avatarUrl } = parsed.data
 
     if (!email) {
-      email = `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}@planazo.local`
+      email = `${username.replace(/[^a-z0-9]/g, '')}@planazo.local`
     }
 
     const supabase = await createClient()
