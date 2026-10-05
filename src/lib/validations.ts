@@ -11,6 +11,7 @@ export const signUpSchema = z.object({
   gender: z.enum(['F', 'M', 'X'], { error: 'Género inválido' }),
   region: z.string().min(1, 'La región es obligatoria'),
   instagram: z.string().optional().or(z.literal('')),
+  tiktok: z.string().optional().or(z.literal('')),
   facebook: z.string().optional().or(z.literal('')),
   avatarUrl: z.string().optional().or(z.literal(''))
 })
@@ -48,6 +49,7 @@ export const profileUpdateSchema = z.object({
   region: z.string().optional(),
   avatar_url: z.string().url().optional().or(z.literal('')),
   instagram: z.string().optional(),
+  tiktok: z.string().optional(),
   facebook: z.string().optional(),
   email: z.string().trim().email('Email inválido').optional().or(z.literal(''))
 })
