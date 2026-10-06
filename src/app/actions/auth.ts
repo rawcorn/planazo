@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 
 async function sendWelcomeEmail(email: string, username: string) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
@@ -248,14 +249,72 @@ export async function resetPassword(email: string) {
       return { error: 'Correo no registrado.' }
     }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://planazo.online',
-    })
-    
-    if (error) {
-      console.error(error)
-      return { error: 'No se pudo enviar el correo de recuperación.' }
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('Missing SUPABASE_SERVICE_ROLE_KEY');
+      return { error: 'Error interno de configuración.' };
     }
+
+    const supabaseAdmin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY,
+      { auth: { autoRefreshToken: false, persistSession: false } }
+    );
+
+    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+      type: 'recovery',
+      email: email,
+      options: {
+        redirectTo: 'https://planazo.online'
+      }
+    });
+
+    if (linkError || !linkData || !linkData.properties || !linkData.properties.action_link) {
+      console.error(linkError);
+      return { error: 'No se pudo generar el enlace de recuperación.' }
+    }
+
+    const actionLink = linkData.properties.action_link;
+    const RESEND_API_KEY = process.env.RESEND_API_KEY;
+    
+    if (RESEND_API_KEY) {
+      const htmlContent = `
+        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Recuperá tu contraseña</h1>
+          </div>
+          <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola,</p>
+          <p style="color: #334155; font-size: 16px; line-height: 1.5;">Recibimos una solicitud para restablecer la contraseña de tu cuenta en Planazo. Podés crear una nueva haciendo clic en el siguiente botón:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${actionLink}" style="background-color: #75d1a4; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">Restablecer contraseña</a>
+          </div>
+          <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
+          <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">Si no solicitaste este cambio, podés ignorar este correo sin problemas.</p>
+        </div>
+      `;
+
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${RESEND_API_KEY}`
+        },
+        body: JSON.stringify({
+          from: 'Planazo <noreply@planazo.online>',
+          to: email,
+          subject: 'Recuperá tu contraseña de Planazo',
+          html: htmlContent
+        })
+      });
+      
+      if (!res.ok) {
+        console.error('Resend error:', await res.text());
+        return { error: 'No se pudo enviar el correo de recuperación.' }
+      }
+    } else {
+      console.warn('RESEND_API_KEY missing, skipping email send');
+    }
+
     return { success: true }
   } catch (err) {
     console.error(err)
