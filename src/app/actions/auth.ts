@@ -9,15 +9,15 @@ async function sendWelcomeEmail(email: string, username: string) {
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: #A698E3; font-size: 28px; margin: 0;">¡Bienvenido a Planazo!</h1>
+        <h1 style="color: #A5E3C7; font-size: 28px; margin: 0;">¡ya sos parte de Planazo!</h1>
       </div>
-      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
-      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Qué lindo tenerte por acá. Ya sos parte de la comunidad donde se arman y descubren los mejores planes.</p>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">hola <strong>${username}</strong>,</p>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Que lindo tenerte por aca. Ya podes empezar a conocer gente por tu zona y armar planes para salir.</p>
       <div style="text-align: center; margin: 30px 0;">
-        <a href="https://planazo.online" style="background-color: #A698E3; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">Empezar a explorar</a>
+        <a href="https://planazo.online" style="background-color: #A5E3C7; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">Ir a la app</a>
       </div>
       <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
-      <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">¡Nos vemos adentro!</p>
+      <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">Nos vemos adentro!</p>
     </div>
   `;
 
@@ -31,7 +31,7 @@ async function sendWelcomeEmail(email: string, username: string) {
       body: JSON.stringify({
         from: 'Planazo <noreply@planazo.online>',
         to: email,
-        subject: '¡Bienvenido a Planazo!',
+        subject: 'ya sos parte de Planazo!',
         html: htmlContent
       })
     });
