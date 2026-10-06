@@ -253,8 +253,9 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                 <div>
                   <label className="text-xs font-bold text-[#52525B] tracking-wider block mb-1"><span className="uppercase">Correo</span> <span className="normal-case">(Opcional)</span></label>
                   <input type="email" className={`w-full bg-slate-100 border-[1.5px] ${errors.email ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all placeholder:text-slate-400`} placeholder="tu@email.com" value={formData.email} onChange={e => { setFormData({...formData, email: e.target.value}); setErrors({...errors, email: ''}); setGlobalError(''); }} />
-                  {errors.email && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.email}</p>}
-                </div>
+                    <p className="text-slate-400 text-[10px] mt-1 leading-tight">Solo lo usaremos para recuperar tu cuenta si olvidás tu contraseña.</p>
+                    {errors.email && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.email}</p>}
+                  </div>
                 <div>
                   <label className="text-xs font-bold text-[#52525B] uppercase tracking-wider block mb-1">Contraseña</label>
                   <div className="relative">
@@ -288,8 +289,9 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                     <option value="M">Hombre</option>
                     <option value="X">No Binario</option>
                   </select>
-                  {errors.gender && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.gender}</p>}
-                </div>
+                    <p className="text-slate-400 text-[10px] mt-1 leading-tight">Solo lo usaremos para sugerirte planes y grupos que se ajusten a vos.</p>
+                    {errors.gender && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.gender}</p>}
+                  </div>
               </div>
               
               <div>
