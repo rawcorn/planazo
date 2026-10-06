@@ -187,7 +187,10 @@ export async function signIn(data: any) {
     let email = identifier
     if (!identifier.includes('@')) {
       const username = identifier.toLowerCase().trim();
-      const { data: userProfile } = await supabase
+      const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      const adminSupabase = SUPABASE_SERVICE_ROLE_KEY ? createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { autoRefreshToken: false, persistSession: false } }) : supabase;
+      
+      const { data: userProfile } = await adminSupabase
         .from('users')
         .select('email')
         .eq('username', username)
@@ -239,7 +242,19 @@ export async function resetPassword(email: string) {
   try {
     const supabase = await createClient()
 
-    const { data: userProfile } = await supabase
+    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!SUPABASE_SERVICE_ROLE_KEY) {
+      console.error('Missing SUPABASE_SERVICE_ROLE_KEY');
+      return { error: 'Error interno del servidor.' };
+    }
+
+    const supabaseAdmin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY,
+      { auth: { autoRefreshToken: false, persistSession: false } }
+    );
+
+    const { data: userProfile } = await supabaseAdmin
       .from('users')
       .select('id')
       .eq('email', email)
@@ -248,18 +263,6 @@ export async function resetPassword(email: string) {
     if (!userProfile) {
       return { error: 'Correo no registrado.' }
     }
-
-    const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!SUPABASE_SERVICE_ROLE_KEY) {
-      console.error('Missing SUPABASE_SERVICE_ROLE_KEY');
-      return { error: 'Error interno de configuración.' };
-    }
-
-    const supabaseAdmin = createAdminClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      SUPABASE_SERVICE_ROLE_KEY,
-      { auth: { autoRefreshToken: false, persistSession: false } }
-    );
 
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
       type: 'recovery',

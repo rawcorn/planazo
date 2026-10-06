@@ -115,7 +115,7 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
         <div className="bg-[#FAF8F2] px-7 pb-8 pt-6">
           {mode === 'login' ? (
             <form onSubmit={handleLogin} className="space-y-4">
-              {error && <div className="p-3 bg-red-100 text-red-600 text-sm rounded-xl text-center font-bold">{error}</div>}
+              {error && <div className="p-3 bg-red-100 text-red-600 text-[13px] rounded-xl text-center font-medium">{error}</div>}
               
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-[#52525B] uppercase tracking-wide ml-2">Usuario o Email</label>
@@ -167,8 +167,8 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
             </form>
           ) : (
             <form onSubmit={handleForgotPassword} className="space-y-4" noValidate>
-              {error && <div className="p-3 bg-red-100 text-red-600 text-sm rounded-xl text-center font-bold">{error}</div>}
-              {successMsg && <div className="p-3 bg-green-100 text-green-700 text-sm rounded-xl text-center font-bold">{successMsg}</div>}
+              {error && <div className="p-3 bg-red-100 text-red-600 text-[13px] rounded-xl text-center font-medium">{error}</div>}
+              {successMsg && <div className="p-3 bg-green-100 text-green-700 text-[13px] rounded-xl text-center font-medium">{successMsg}</div>}
               
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-[#52525B] uppercase tracking-wide ml-2">Email de tu cuenta</label>
@@ -182,11 +182,11 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
                 />
               </div>
 
-              <Button disabled={loading || !!successMsg} type="submit" className="w-full h-12 mt-2 text-[16px] rounded-full bg-[#8D96D6] hover:bg-[#727CB5] text-white font-bold border-0 transition-all shadow-none tracking-wide">
+              <Button disabled={loading || !!successMsg} type="submit" className="w-full h-12 mt-2 text-[15px] rounded-full bg-[#8D96D6] hover:bg-[#727CB5] text-white font-bold border-0 transition-all shadow-none">
                 {loading ? 'Enviando...' : 'Enviar correo de recuperación'}
               </Button>
               <div className="pt-2 text-center">
-                <button type="button" onClick={() => { setMode('login'); setError(''); setSuccessMsg(''); }} className="text-[14px] font-bold text-[#8D96D6] hover:text-[#727CB5] transition-colors underline-offset-4 hover:underline">
+                <button type="button" onClick={() => { setMode('login'); setError(''); setSuccessMsg(''); }} className="text-[13px] font-bold text-[#8D96D6] hover:text-[#727CB5] transition-colors underline-offset-4 hover:underline">
                   Volver al Login
                 </button>
               </div>
