@@ -133,20 +133,34 @@ export async function updateProfile(data: any) {
       }
     }
     
-    // Update email in Auth and users table if provided
+        // Update email in Auth and users table using Admin client to bypass confirmation emails
     if (emailToUpdate !== undefined && emailToUpdate !== user.email) {
-       // Update in Auth
-       const { error: authError } = await supabase.auth.updateUser({ email: emailToUpdate })
+       const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+       if (!SUPABASE_SERVICE_ROLE_KEY) {
+         return { error: 'No se pudo actualizar el email (falta clave de admin)' };
+       }
+
+       const { createClient: createAdminClient } = require('@supabase/supabase-js');
+       const supabaseAdmin = createAdminClient(
+         process.env.NEXT_PUBLIC_SUPABASE_URL,
+         SUPABASE_SERVICE_ROLE_KEY,
+         { auth: { autoRefreshToken: false, persistSession: false } }
+       );
+
+       const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(user.id, { 
+         email: emailToUpdate, 
+         email_confirm: true 
+       });
+
        if (authError) {
-         console.error('Error updating auth email:', authError)
-         return { error: 'Error de seguridad al cambiar email (reintentá en 60 seg)' }
+         console.error('Error updating auth email:', authError);
+         return { error: 'El email ya está en uso o es inválido.' };
        }
        
-       // Update in users table
-       const { error: userTableError } = await supabase.from('users').update({ email: emailToUpdate }).eq('id', user.id);
+       const { error: userTableError } = await supabaseAdmin.from('users').update({ email: emailToUpdate }).eq('id', user.id);
        if (userTableError) {
          console.error('Error updating user table email:', userTableError);
-         return { error: 'El email ya está en uso o es inválido' }
+         return { error: 'No se pudo guardar el email en el perfil.' };
        }
     }
 

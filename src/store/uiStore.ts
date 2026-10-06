@@ -152,6 +152,7 @@ export const useUIStore = create<AppState>((set, get) => ({
   logout: async () => {
     await signOut();
     set({ currentUser: null, myEvents: [], dmChannels: [], messages: {} });
+    if (typeof window !== 'undefined') window.location.href = '/';
   },
   
   setActiveRoom: (roomId) => {
