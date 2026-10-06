@@ -108,7 +108,7 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
           <img src="/logo-planazo.png" alt="Logo Planazo" className="w-32 h-32 object-contain drop-shadow-sm -mb-4" />
           <h1 className="text-3xl font-extrabold text-[#3F3F46] tracking-normal mt-1">Planazo</h1>
           <p className="text-[#333333] text-sm mt-1">
-            {mode === 'login' ? 'Encontrá gente para hacer planes. Rápido, fácil y en tu zona.' : 'Recuperá el acceso a tu cuenta y volvé a los planazos.'}
+            {mode === 'login' ? 'Encontrá gente para hacer planes. Rápido, fácil y en tu zona.' : 'Recuperá el acceso a tu cuenta.'}
           </p>
         </div>
 

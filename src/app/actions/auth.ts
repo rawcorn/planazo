@@ -268,7 +268,7 @@ export async function resetPassword(email: string) {
       type: 'recovery',
       email: email,
       options: {
-        redirectTo: process.env.NEXT_PUBLIC_SITE_URL ? `${process.env.NEXT_PUBLIC_SITE_URL}/update-password` : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/update-password` : 'https://planazo.online/update-password')
+        redirectTo: 'https://planazo.online/update-password'
       }
     });
 
@@ -292,7 +292,7 @@ export async function resetPassword(email: string) {
             <a href="${actionLink}" style="background-color: #75d1a4; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">Restablecer contraseña</a>
           </div>
           <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
-          <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">Si no solicitaste este cambio, podés ignorar este correo sin problemas.</p>
+          <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">Si no solicitaste este cambio, podés ignorar este correo sin problema.</p>
         </div>
       `;
 
