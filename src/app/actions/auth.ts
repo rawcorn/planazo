@@ -182,12 +182,22 @@ export async function signIn(data: any) {
 
     const { email: identifier, password } = parsed.data
     
+    const supabase = await createClient()
     let email = identifier
     if (!identifier.includes('@')) {
-      email = `${identifier.toLowerCase().replace(/[^a-z0-9]/g, '')}@planazo.local`
-    }
+      const username = identifier.toLowerCase().trim();
+      const { data: userProfile } = await supabase
+        .from('users')
+        .select('email')
+        .eq('username', username)
+        .single();
 
-    const supabase = await createClient()
+      if (userProfile && userProfile.email) {
+        email = userProfile.email;
+      } else {
+        email = `${username.replace(/[^a-z0-9]/g, '')}@planazo.local`;
+      }
+    }
 
     const { error } = await supabase.auth.signInWithPassword({
       email,
