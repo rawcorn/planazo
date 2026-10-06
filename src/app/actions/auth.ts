@@ -237,8 +237,19 @@ export async function signOut() {
 export async function resetPassword(email: string) {
   try {
     const supabase = await createClient()
+
+    const { data: userProfile } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle()
+
+    if (!userProfile) {
+      return { error: 'Correo no registrado.' }
+    }
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'http://localhost:3000', // adjust for prod later
+      redirectTo: 'https://planazo.online',
     })
     
     if (error) {
