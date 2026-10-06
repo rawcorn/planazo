@@ -268,7 +268,7 @@ export async function resetPassword(email: string) {
       type: 'recovery',
       email: email,
       options: {
-        redirectTo: process.env.NEXT_PUBLIC_SITE_URL || (process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/?recovery=true` : 'https://planazo.online/?recovery=true')
+        redirectTo: process.env.NEXT_PUBLIC_SITE_URL ? `${process.env.NEXT_PUBLIC_SITE_URL}/update-password` : (process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/update-password` : 'https://planazo.online/update-password')
       }
     });
 
