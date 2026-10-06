@@ -115,7 +115,7 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
         <div className="bg-[#FAF8F2] px-7 pb-8 pt-6">
           {mode === 'login' ? (
             <form onSubmit={handleLogin} className="space-y-4">
-              {error && <div className="p-3 bg-red-100 text-red-600 text-[13px] rounded-xl text-center font-medium">{error}</div>}
+              {error && <div className="p-3 bg-red-100 text-red-600 text-[11.5px] leading-tight rounded-xl text-center font-medium">{error}</div>}
               
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-[#52525B] uppercase tracking-wide ml-2">Usuario o Email</label>
@@ -167,8 +167,8 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
             </form>
           ) : (
             <form onSubmit={handleForgotPassword} className="space-y-4" noValidate>
-              {error && <div className="p-3 bg-red-100 text-red-600 text-[13px] rounded-xl text-center font-medium">{error}</div>}
-              {successMsg && <div className="p-3 bg-green-100 text-green-700 text-[13px] rounded-xl text-center font-medium">{successMsg}</div>}
+              {error && <div className="p-3 bg-red-100 text-red-600 text-[11.5px] leading-tight rounded-xl text-center font-medium">{error}</div>}
+              {successMsg && <div className="p-3 bg-green-100 text-green-700 text-[11.5px] leading-tight rounded-xl text-center font-medium">{successMsg}</div>}
               
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-[#52525B] uppercase tracking-wide ml-2">Email de tu cuenta</label>
