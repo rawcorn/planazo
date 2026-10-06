@@ -268,7 +268,7 @@ export async function resetPassword(email: string) {
       type: 'recovery',
       email: email,
       options: {
-        redirectTo: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/update-password` : 'https://planazo.online/update-password'
+        redirectTo: 'https://planazo.online/update-password'
       }
     });
 
