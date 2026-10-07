@@ -793,7 +793,7 @@ export function RightColumn() {
         {/* EDITAR PERFIL */}
         {activeView === 'edit_profile' && (
           <div className="relative">
-            <form onSubmit={handleSaveProfile} className="space-y-4" noValidate>
+            <form id="edit-profile-form" onSubmit={handleSaveProfile} className="space-y-4" noValidate>
               <div className="flex justify-center mb-6 relative w-24 mx-auto">
                 <label className="relative cursor-pointer group block">
                   <div className="h-24 w-24 rounded-full bg-blue-50 border-2 border-dashed border-blue-200 flex flex-col items-center justify-center text-sky-500 group-hover:bg-blue-100 group-hover:border-blue-300 transition-colors overflow-hidden">
@@ -1311,6 +1311,7 @@ export function RightColumn() {
           </button>
           <button 
               type="submit"
+              form="edit-profile-form"
               disabled={!hasProfileChanges || isSavingProfile}
               className={`text-sm font-bold px-6 py-2.5 rounded-full text-white transition-all flex items-center gap-2 ${
               (hasProfileChanges && !isSavingProfile) 

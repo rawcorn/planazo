@@ -150,9 +150,9 @@ export const useUIStore = create<AppState>((set, get) => ({
 
   login: (user) => set({ currentUser: { ...user, username: user.username?.toLowerCase() } }),
   logout: async () => {
-    await signOut();
-    if (typeof window !== 'undefined') window.location.href = '/';
-  },
+      await signOut();
+      set({ currentUser: null, activeRoomId: null, activeView: 'events', myEvents: [], events: [], messages: {}, dmChannels: [] });
+    },
   
   setActiveRoom: (roomId) => {
     const { events, myEvents } = get();
