@@ -99,7 +99,7 @@ export function RightColumn() {
   const [isSavingEvent, setIsSavingEvent] = useState(false);
 
   useEffect(() => {
-    if (duplicateWarning || formError) {
+    if (duplicateWarning || formError || formSuccess) {
       setTimeout(() => {
         if (scrollContainerRef.current) {
           scrollContainerRef.current.scrollTo({
@@ -109,7 +109,7 @@ export function RightColumn() {
         }
       }, 100);
     }
-  }, [duplicateWarning, formError]);
+  }, [duplicateWarning, formError, formSuccess, activeView]);
 
   // Ensure newPlan has valid defaults if it loaded before catalogs
   useEffect(() => {

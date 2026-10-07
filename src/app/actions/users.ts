@@ -129,7 +129,7 @@ export async function updateProfile(data: any) {
       const { error } = await supabase.from('users').update(updateData).eq('id', user.id)
       if (error) {
         console.error(error)
-        return { error: 'Error al actualizar el perfil' }
+        return { error: 'Error al actualizar el perfil: ' + error.message }
       }
     }
     
