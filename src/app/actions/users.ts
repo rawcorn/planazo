@@ -4,6 +4,46 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { profileUpdateSchema } from '@/lib/validations'
 
+async function sendEmailAssignedNotice(email: string, username: string) {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  if (!RESEND_API_KEY) return;
+
+  const htmlContent = `
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">¡Email asignado!</h1>
+      </div>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Te escribimos para avisarte que este correo (<strong>${email}</strong>) fue asignado exitosamente a tu cuenta de Planazo.</p>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">A partir de ahora, vas a usar este email para iniciar sesión o para recuperar tu contraseña si te la olvidás.</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="https://planazo.online" style="background-color: #75d1a4; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">Ir a Planazo</a>
+      </div>
+      <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
+      <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">Si no solicitaste este cambio, por favor contactanos respondiendo a este correo.</p>
+    </div>
+  `;
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RESEND_API_KEY}`
+      },
+      body: JSON.stringify({
+        from: 'Planazo <noreply@planazo.online>',
+        to: email,
+        subject: 'Email asignado a tu cuenta de Planazo',
+        html: htmlContent
+      })
+    });
+  } catch (error) {
+    console.error('Failed to send email notice:', error);
+  }
+}
+
+
 export async function getCurrentUser() {
   try {
     const supabase = await createClient()
@@ -182,10 +222,11 @@ export async function updateProfile(data: any) {
        }
        
        const { error: userTableError } = await supabaseAdmin.from('users').update({ email: emailToUpdate }).eq('id', user.id);
-       if (userTableError) {
-         console.error('Error updating user table email:', userTableError);
-         return { error: 'No se pudo guardar el email en el perfil.' };
-       }
+         if (userTableError) {
+             console.error('Error updating user table email:', userTableError);
+         }
+         
+         await sendEmailAssignedNotice(emailToUpdate, user.user_metadata?.username || 'Usuario');
     }
 
     return { success: true }
