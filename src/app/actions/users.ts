@@ -117,14 +117,38 @@ export async function updateProfile(data: any) {
     }
     
     const updateData = { ...parsed.data };
-    let emailToUpdate = undefined;
-    
-    if ('email' in updateData) {
-        emailToUpdate = updateData.email;
-        delete updateData.email;
-    }
+      let emailToUpdate = undefined;
+      const metaUpdates: any = {};
+      
+      if ('email' in updateData) {
+          emailToUpdate = updateData.email;
+          delete updateData.email;
+      }
+      if ('instagram' in updateData) {
+          metaUpdates.instagram = updateData.instagram;
+          delete updateData.instagram;
+      }
+      if ('tiktok' in updateData) {
+          metaUpdates.tiktok = updateData.tiktok;
+          delete updateData.tiktok;
+      }
+      if ('facebook' in updateData) {
+          metaUpdates.facebook = updateData.facebook;
+          delete updateData.facebook;
+      }
 
-    // Update custom profile fields in users table
+      // Update Auth user_metadata via standard client
+      if (Object.keys(metaUpdates).length > 0) {
+        const { error: metaError } = await supabase.auth.updateUser({
+          data: metaUpdates
+        });
+        if (metaError) {
+          console.error(metaError);
+          return { error: 'Error al actualizar redes: ' + metaError.message };
+        }
+      }
+
+      // Update custom profile fields in users table
     if (Object.keys(updateData).length > 0) {
       const { error } = await supabase.from('users').update(updateData).eq('id', user.id)
       if (error) {

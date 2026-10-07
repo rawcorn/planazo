@@ -100,14 +100,18 @@ export function RightColumn() {
 
   useEffect(() => {
     if (duplicateWarning || formError || formSuccess) {
-      setTimeout(() => {
-        if (scrollContainerRef.current) {
-          scrollContainerRef.current.scrollTo({
-            top: scrollContainerRef.current.scrollHeight,
-            behavior: 'smooth'
-          });
-        }
-      }, 100);
+        setTimeout(() => {
+          if (scrollContainerRef.current) {
+            if (activeView === 'edit_profile') {
+              scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+              scrollContainerRef.current.scrollTo({
+                top: scrollContainerRef.current.scrollHeight,
+                behavior: 'smooth'
+              });
+            }
+          }
+        }, 100);
     }
   }, [duplicateWarning, formError, formSuccess, activeView]);
 
