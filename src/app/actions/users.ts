@@ -4,6 +4,49 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { profileUpdateSchema } from '@/lib/validations'
 
+
+async function sendSecurityAlertEmail(oldEmail: string, newEmail: string, username: string) {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  if (!RESEND_API_KEY) return;
+
+  const htmlContent = `
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="color: #ef4444; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Aviso de seguridad</h1>
+      </div>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">El correo asociado a tu cuenta de Planazo acaba de ser cambiado.</p>
+      <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <p style="margin: 0; color: #475569; font-size: 14px;">Correo anterior: <strong>${oldEmail}</strong></p>
+        <p style="margin: 8px 0 0 0; color: #475569; font-size: 14px;">Nuevo correo: <strong>${newEmail}</strong></p>
+      </div>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Si fuiste vos quien hizo este cambio, podés ignorar este correo sin problemas.</p>
+      <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
+      <p style="color: #ef4444; font-size: 16px; line-height: 1.5; font-weight: bold; text-align: center;">¿No fuiste vos?</p>
+      <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">Si alguien cambió tu correo sin tu permiso, respondé a este mail inmediatamente para que nuestro equipo de soporte bloquee la cuenta y revierta los cambios.</p>
+    </div>
+  `;
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${RESEND_API_KEY}`
+      },
+      body: JSON.stringify({
+        from: 'Planazo <noreply@planazo.online>',
+        to: oldEmail,
+        reply_to: 'soporte@planazo.online',
+        subject: 'Aviso de seguridad: Tu email de Planazo fue cambiado',
+        html: htmlContent
+      })
+    });
+  } catch (error) {
+    console.error('Failed to send security email:', error);
+  }
+}
+
 async function sendEmailAssignedNotice(email: string, username: string) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   if (!RESEND_API_KEY) return;
@@ -34,6 +77,7 @@ async function sendEmailAssignedNotice(email: string, username: string) {
       body: JSON.stringify({
         from: 'Planazo <noreply@planazo.online>',
         to: email,
+        reply_to: 'soporte@planazo.online',
         subject: 'Email asignado a tu cuenta de Planazo',
         html: htmlContent
       })
@@ -227,6 +271,11 @@ export async function updateProfile(data: any) {
          }
          
          await sendEmailAssignedNotice(emailToUpdate, user.user_metadata?.username || 'Usuario');
+         
+         // Send security alert to old email if it was a real email
+         if (user.email && !user.email.endsWith('@planazo.local')) {
+            await sendSecurityAlertEmail(user.email, emailToUpdate, user.user_metadata?.username || 'Usuario');
+         }
     }
 
     return { success: true }
