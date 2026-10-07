@@ -408,7 +408,7 @@ export function RightColumn() {
     if (e) e.preventDefault();
     setFormError(null);
     setFormErrorField(null);
-    setFormSuccess(false);
+    setFormSuccess(null);
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (editProfileData.email && !emailRegex.test(editProfileData.email)) {
@@ -793,7 +793,7 @@ export function RightColumn() {
         {/* EDITAR PERFIL */}
         {activeView === 'edit_profile' && (
           <div className="relative">
-            <form onSubmit={handleSaveProfile} className="space-y-4">
+            <form onSubmit={handleSaveProfile} className="space-y-4" noValidate>
               <div className="flex justify-center mb-6 relative w-24 mx-auto">
                 <label className="relative cursor-pointer group block">
                   <div className="h-24 w-24 rounded-full bg-blue-50 border-2 border-dashed border-blue-200 flex flex-col items-center justify-center text-sky-500 group-hover:bg-blue-100 group-hover:border-blue-300 transition-colors overflow-hidden">
@@ -934,7 +934,7 @@ export function RightColumn() {
         {/* CREAR / EDITAR EVENTO */}
         {(activeView === 'create_event' || activeView === 'edit_event') && (
           <div className="relative">
-            <form onSubmit={handleCreate} className="space-y-4">
+            <form onSubmit={handleCreate} className="space-y-4" noValidate>
               <div className="flex justify-center mb-6 relative w-24 mx-auto">
                 <label className="relative cursor-pointer group block">
                   <div className="h-24 w-24 rounded-2xl bg-blue-50 border-2 border-dashed border-blue-200 flex flex-col items-center justify-center text-sky-500 group-hover:bg-blue-100 group-hover:border-blue-300 transition-colors overflow-hidden">

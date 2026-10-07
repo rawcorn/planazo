@@ -87,7 +87,6 @@ export async function signUp(data: any) {
       return { error: `DB_ERROR: ${authError.message}`, step: 'signup' }
     }
 
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -165,7 +164,6 @@ export async function registerFullFlow(data: any, interests: string[]) {
       sendWelcomeEmail(email, username);
     }
 
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -213,7 +211,6 @@ export async function signIn(data: any) {
       return { error: `SIGNIN_ERROR: ${error.message}`, step: 'signin' }
     }
 
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -230,7 +227,6 @@ export async function signOut() {
       return { error: 'Error al cerrar sesión' }
     }
     
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
@@ -354,7 +350,6 @@ export async function deleteAccount() {
     }
     
     await supabase.auth.signOut()
-    revalidatePath('/', 'layout')
     return { success: true }
   } catch (err) {
     console.error(err)
