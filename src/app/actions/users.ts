@@ -178,7 +178,7 @@ export async function updateProfile(data: any) {
 
        if (authError) {
          console.error('Error updating auth email:', authError);
-         return { error: 'El email ya está en uso o es inválido.' };
+         return { error: 'Error de email: ' + authError.message };
        }
        
        const { error: userTableError } = await supabaseAdmin.from('users').update({ email: emailToUpdate }).eq('id', user.id);
