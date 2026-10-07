@@ -151,7 +151,6 @@ export const useUIStore = create<AppState>((set, get) => ({
   login: (user) => set({ currentUser: { ...user, username: user.username?.toLowerCase() } }),
   logout: async () => {
     await signOut();
-    set({ currentUser: null, myEvents: [], dmChannels: [], messages: {} });
     if (typeof window !== 'undefined') window.location.href = '/';
   },
   

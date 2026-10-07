@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useUIStore } from '@/store/uiStore';
 import { uploadImage } from '@/app/actions/storage';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ChevronDown } from 'lucide-react';
 
 import { signUp, signIn, registerFullFlow } from '@/app/actions/auth';
 import { getCurrentUser, updateUserInterests } from '@/app/actions/users';
@@ -284,21 +284,27 @@ export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void 
                 </div>
                 <div>
                   <label className="text-xs font-bold text-[#52525B] ml-2 uppercase tracking-wider block mb-1">Género</label>
-                  <select className={`w-full bg-slate-100 border-[1.5px] ${errors.gender ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all`} value={formData.gender} onChange={e => { setFormData({...formData, gender: e.target.value}); setErrors({...errors, gender: ''}); setGlobalError(''); }}>
+                  <div className="relative">
+                      <select className={`w-full appearance-none bg-slate-100 border-[1.5px] ${errors.gender ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl pl-4 pr-10 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all`} value={formData.gender} onChange={e => { setFormData({...formData, gender: e.target.value}); setErrors({...errors, gender: ''}); setGlobalError(''); }}>
                     <option value="F">Mujer</option>
                     <option value="M">Hombre</option>
                     <option value="X">No Binario</option>
                   </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" size={16} />
+                    </div>
                     <p className="text-slate-400 text-[10px] mt-1 ml-2 leading-tight">Pedimos este dato solo para sugerirte planes que se ajusten a vos.</p>
                     {errors.gender && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.gender}</p>}
                   </div>
               </div>
               
               <div>
-                <label className="text-xs font-bold text-[#52525B] ml-2 uppercase tracking-wider block mb-1">Zona Principal</label>
-                <select className={`w-full bg-slate-100 border-[1.5px] ${errors.region ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl px-4 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all`} value={formData.region} onChange={e => { setFormData({...formData, region: e.target.value}); setErrors({...errors, region: ''}); setGlobalError(''); }}>
+                <label className="text-xs font-bold text-[#52525B] ml-2 uppercase tracking-wider block mb-1">Tu Zona</label>
+                <div className="relative">
+                  <select className={`w-full appearance-none bg-slate-100 border-[1.5px] ${errors.region ? 'border-rose-400 focus:ring-rose-500' : 'border-[#8D96D6] focus:ring-[#727CB5]'} rounded-xl pl-4 pr-10 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 transition-all`} value={formData.region} onChange={e => { setFormData({...formData, region: e.target.value}); setErrors({...errors, region: ''}); setGlobalError(''); }}>
                   {regions.map(r => <option key={r.id} value={r.name}>{r.name}</option>)}
                 </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" size={16} />
+                </div>
                 {errors.region && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.region}</p>}
               </div>
 

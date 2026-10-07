@@ -13,7 +13,7 @@ async function sendWelcomeEmail(email: string, username: string) {
         <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">¡Ya sos parte de Planazo!</h1>
       </div>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">hola <strong>${username}</strong>,</p>
-      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Que lindo tenerte por aca. Ya podes empezar a conocer gente por tu zona y armar planes para salir.</p>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Qué lindo tenerte por acá. Ya podés empezar a conocer gente por tu zona y armar planes para salir.</p>
       <div style="text-align: center; margin: 30px 0;">
         <a href="https://planazo.online" style="background-color: #75d1a4; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">Ir a la app</a>
       </div>

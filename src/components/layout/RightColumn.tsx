@@ -408,6 +408,7 @@ export function RightColumn() {
     if (e) e.preventDefault();
     setFormError(null);
     setFormErrorField(null);
+    setFormSuccess(false);
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (editProfileData.email && !emailRegex.test(editProfileData.email)) {
@@ -1309,10 +1310,9 @@ export function RightColumn() {
             Cancelar
           </button>
           <button 
-            type="button"
-            disabled={!hasProfileChanges || isSavingProfile}
-            onClick={() => handleSaveProfile()} 
-            className={`text-sm font-bold px-6 py-2.5 rounded-full text-white transition-all flex items-center gap-2 ${
+              type="submit"
+              disabled={!hasProfileChanges || isSavingProfile}
+              className={`text-sm font-bold px-6 py-2.5 rounded-full text-white transition-all flex items-center gap-2 ${
               (hasProfileChanges && !isSavingProfile) 
                 ? 'bg-[#75D1A4] shadow-sm transform hover:-translate-y-0.5' 
                 : 'bg-[#86E2B5] cursor-not-allowed shadow-none'
