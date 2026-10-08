@@ -397,3 +397,15 @@ export async function deleteAccount() {
     return { error: 'Error interno del servidor' }
   }
 }
+
+export async function notifyPasswordChanged() {
+  try {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user?.email && !user.email.endsWith('@planazo.local')) {
+      await sendPasswordChangedEmail(user.email, user.user_metadata?.username || 'Usuario');
+    }
+  } catch (err) {
+    console.error('Failed to notify password change', err);
+  }
+}

@@ -19,8 +19,8 @@ async function sendSecurityAlertEmail(oldEmail: string, newEmail: string, userna
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">El correo asociado a tu cuenta de Planazo acaba de ser cambiado.</p>
       <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
-        <p style="margin: 0; color: #475569; font-size: 14px;">Correo anterior: <a href="mailto:${oldEmail}" style="color: #475569; text-decoration: none; font-weight: normal;">${oldEmail}</a></p>
-          <p style="margin: 8px 0 0 0; color: #475569; font-size: 14px;">Nuevo correo: <a href="mailto:${newEmail}" style="color: #475569; text-decoration: none; font-weight: normal;">${newEmail}</a></p>
+        <p style="margin: 0; color: #475569; font-size: 14px;">Correo anterior: <a href="mailto:${oldEmail}" style="color: #475569 !important; text-decoration: none !important; font-weight: normal !important;">${oldEmail}</a></p>
+          <p style="margin: 8px 0 0 0; color: #475569; font-size: 14px;">Nuevo correo: <a href="mailto:${newEmail}" style="color: #475569 !important; text-decoration: none !important; font-weight: normal !important;">${newEmail}</a></p>
       </div>
       <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
       <p style="color: #ef4444; font-size: 16px; line-height: 1.5; text-align: center;">¿No fuiste vos?</p>
@@ -59,7 +59,7 @@ async function sendEmailAssignedNotice(email: string, username: string) {
           <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">¡Email asignado!</h1>
       </div>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
-      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Te escribimos para avisarte que este correo (<a href="mailto:${email}" style="color: #334155 !important; text-decoration: none !important; font-weight: normal !important;">${email}</a>) fue asignado exitosamente a tu cuenta de Planazo.</p>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Te escribimos para avisarte que este correo (<a href="mailto:${email}" style="color: #334155 !important; text-decoration: none !important; font-weight: bold !important;">${email}</a>) fue asignado exitosamente a tu cuenta de Planazo.</p>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">A partir de ahora, vas a poder usar este email para iniciar sesión o para recuperar tu contraseña si te la olvidás.</p>
       <div style="text-align: center; margin: 30px 0;">
         <a href="https://planazo.online" style="background-color: #75d1a4; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">Ir a Planazo</a>

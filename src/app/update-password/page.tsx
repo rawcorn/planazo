@@ -2,12 +2,15 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { updatePassword } from '@/app/actions/auth'
+import { notifyPasswordChanged } from '@/app/actions/auth'
+import { createClient } from '@/lib/supabase/client'
+import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function UpdatePasswordPage() {
   const router = useRouter()
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -24,10 +27,12 @@ export default function UpdatePasswordPage() {
     }
 
     try {
-      const res = await updatePassword(password)
-      if (res.error) {
-        setError(res.error)
+      const supabase = createClient()
+      const { error } = await supabase.auth.updateUser({ password })
+      if (error) {
+        setError('Error al actualizar la contraseña: ' + error.message)
       } else {
+        await notifyPasswordChanged();
         setSuccess(true)
         setTimeout(() => {
           router.push('/')
@@ -55,14 +60,24 @@ export default function UpdatePasswordPage() {
               
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-[#52525B] uppercase tracking-wide ml-2">Nueva Contraseña</label>
-                <input 
-                  required 
-                  type="password" 
-                  className="w-full bg-[#E4E6F8] border-[1.5px] border-[#8D96D6] rounded-full px-5 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all" 
-                  placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 especial" 
-                  value={password} 
-                  onChange={e => setPassword(e.target.value)} 
-                />
+                <div className="relative">
+                  <input 
+                    required 
+                    type={showPassword ? "text" : "password"} 
+                    className="w-full bg-[#E4E6F8] border-[1.5px] border-[#8D96D6] rounded-full px-5 pr-12 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all" 
+                    placeholder="••••••••" 
+                    value={password} 
+                    onChange={e => setPassword(e.target.value)} 
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8D96D6] hover:text-[#727CB5] transition-colors"
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                <p className="text-[#8D96D6] text-[10px] mt-1 ml-2 leading-tight">Mínimo 8 caracteres, 1 mayúscula y 1 caracter especial.</p>
               </div>
 
               <Button disabled={loading} type="submit" className="w-full h-12 mt-2 text-[15px] rounded-full bg-[#7ac7ac] hover:bg-[#7ac7ac] text-white font-bold border-0 transition-all shadow-none">

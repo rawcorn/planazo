@@ -273,7 +273,7 @@ tiktok: userRes.tiktok || '',
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
-                  <p className="text-slate-400 text-[10px] mt-1 ml-2 leading-tight">Mínimo 8 caracteres, 1 mayúscula y 1 carácter especial.</p>
+                  <p className="text-slate-400 text-[10px] mt-1 ml-2 leading-tight">Mínimo 8 caracteres, 1 mayúscula y 1 caracter especial.</p>
                     {errors.password && <p className="text-rose-500 text-[10px] mt-1 font-medium">{errors.password}</p>}
                 </div>
               </div>
