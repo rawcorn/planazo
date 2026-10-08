@@ -17,12 +17,12 @@ async function sendSecurityAlertEmail(oldEmail: string, newEmail: string, userna
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">El correo asociado a tu cuenta de Planazo acaba de ser cambiado.</p>
       <div style="background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
-        <p style="margin: 0; color: #475569; font-size: 14px;">Correo anterior: <strong>${oldEmail}</strong></p>
-        <p style="margin: 8px 0 0 0; color: #475569; font-size: 14px;">Nuevo correo: <strong>${newEmail}</strong></p>
+        <p style="margin: 0; color: #475569; font-size: 14px;">Correo anterior: <a href="mailto:${oldEmail}" style="color: #475569; text-decoration: none; font-weight: normal;">${oldEmail}</a></p>
+          <p style="margin: 8px 0 0 0; color: #475569; font-size: 14px;">Nuevo correo: <a href="mailto:${newEmail}" style="color: #475569; text-decoration: none; font-weight: normal;">${newEmail}</a></p>
       </div>
       <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
-      <p style="color: #ef4444; font-size: 16px; line-height: 1.5; font-weight: bold; text-align: center;">¿No fuiste vos?</p>
-      <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">Si no fuiste vos quien hizo este cambio, respondé a este mail para que bloqueemos temporalmente tu cuenta y revirtamos el cambio.</p>
+      <p style="color: #ef4444; font-size: 16px; line-height: 1.5; text-align: center;">¿No fuiste vos?</p>
+        <p style="color: #94a3b8; font-size: 12px; text-align: center; margin: 0; line-height: 1.3;">Si no fuiste vos quien hizo este cambio, respondé a este mail para que bloqueemos temporalmente tu cuenta y revirtamos el cambio.</p>
     </div>
   `;
 
@@ -261,7 +261,10 @@ export async function updateProfile(data: any) {
 
        if (authError) {
          console.error('Error updating auth email:', authError);
-         return { error: 'Error de email: ' + authError.message };
+         if (authError.message.includes('Error updating user') || authError.message.includes('already')) {
+              return { error: 'Email ya registrado.' };
+           }
+           return { error: 'Error de email: ' + authError.message };
        }
        
        const { error: userTableError } = await supabaseAdmin.from('users').update({ email: emailToUpdate }).eq('id', user.id);
