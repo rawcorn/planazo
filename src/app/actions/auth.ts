@@ -347,7 +347,7 @@ async function sendPasswordChangedEmail(email: string, username: string) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': \`Bearer ${RESEND_API_KEY}\`
+        'Authorization': `Bearer ${RESEND_API_KEY}`
       },
       body: JSON.stringify({
         from: 'Planazo <noreply@planazo.online>',

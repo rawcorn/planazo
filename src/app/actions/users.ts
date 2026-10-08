@@ -58,7 +58,7 @@ async function sendEmailAssignedNotice(email: string, username: string) {
           <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">¡Email asignado!</h1>
       </div>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
-      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Te escribimos para avisarte que este correo (<a href="mailto:${email}" style="color: #334155; text-decoration: none; font-weight: normal;">${email}</a>) fue asignado exitosamente a tu cuenta de Planazo.</p>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Te escribimos para avisarte que este correo (<a href="mailto:${email}" style="color: #334155 !important; text-decoration: none !important; font-weight: normal !important;">${email}</a>) fue asignado exitosamente a tu cuenta de Planazo.</p>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">A partir de ahora, vas a poder usar este email para iniciar sesión o para recuperar tu contraseña si te la olvidás.</p>
       <div style="text-align: center; margin: 30px 0;">
         <a href="https://planazo.online" style="background-color: #75d1a4; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">Ir a Planazo</a>
