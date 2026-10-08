@@ -88,6 +88,7 @@ export async function signUp(data: any) {
       return { error: `DB_ERROR: ${authError.message}`, step: 'signup' }
     }
 
+    await notifyPasswordChanged();
     return { success: true }
   } catch (err) {
     console.error(err)

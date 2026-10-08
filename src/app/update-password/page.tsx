@@ -7,7 +7,20 @@ import { createClient } from '@/lib/supabase/client'
 import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+import { useEffect } from 'react'
+
 export default function UpdatePasswordPage() {
+  const supabase = createClient()
+
+  useEffect(() => {
+    supabase.auth.getSession()
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        console.log('Recovery session ready');
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [])
   const router = useRouter()
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -27,7 +40,6 @@ export default function UpdatePasswordPage() {
     }
 
     try {
-      const supabase = createClient()
       const { error } = await supabase.auth.updateUser({ password })
       if (error) {
         setError('Error al actualizar la contraseña: ' + error.message)
