@@ -10,9 +10,10 @@ async function sendSecurityAlertEmail(oldEmail: string, newEmail: string, userna
   if (!RESEND_API_KEY) return;
 
   const htmlContent = `
-    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 15px 30px 30px 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Aviso de seguridad</h1>
+          <img src="https://planazo.online/logo-planazo.png" alt="Planazo Logo" style="width: 160px; height: auto; margin-bottom: 15px;" />
+          <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Aviso de seguridad</h1>
       </div>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">El correo asociado a tu cuenta de Planazo acaba de ser cambiado.</p>
@@ -51,9 +52,10 @@ async function sendEmailAssignedNotice(email: string, username: string) {
   if (!RESEND_API_KEY) return;
 
   const htmlContent = `
-    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 15px 30px 30px 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">¡Email asignado!</h1>
+          <img src="https://planazo.online/logo-planazo.png" alt="Planazo Logo" style="width: 160px; height: auto; margin-bottom: 15px;" />
+          <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">¡Email asignado!</h1>
       </div>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">Te escribimos para avisarte que este correo (<strong>${email}</strong>) fue asignado exitosamente a tu cuenta de Planazo.</p>
