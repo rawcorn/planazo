@@ -366,12 +366,20 @@ async function sendPasswordChangedEmail(email: string, username: string) {
 export async function updatePassword(password: string) {
   try {
     const supabase = await createClient()
-    const { error } = await supabase.auth.updateUser({ password })
+    const { data, error } = await supabase.auth.updateUser({ password })
     
     if (error) {
       console.error(error)
+      if (error.message.includes('different from the old password')) {
+        return { error: 'La nueva contraseña debe ser diferente a la anterior.' }
+      }
       return { error: 'Error al actualizar la contraseña.' }
     }
+
+    if (data?.user?.email && !data.user.email.endsWith('@planazo.local')) {
+      await sendPasswordChangedEmail(data.user.email, data.user.user_metadata?.username || 'Usuario');
+    }
+
     return { success: true }
   } catch (err) {
     console.error(err)
