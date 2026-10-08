@@ -10,7 +10,8 @@ async function sendWelcomeEmail(email: string, username: string) {
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">¡Ya sos parte de Planazo!</h1>
+          <img src="https://planazo.online/logo-planazo.png" alt="Planazo Logo" style="width: 160px; height: auto; margin-bottom: 15px;" />
+          <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">¡Ya sos parte de Planazo!</h1>
       </div>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">hola <strong>${username}</strong>,</p>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">Qué lindo tenerte por acá. Ya podés empezar a conocer gente por tu zona y armar planes para salir.</p>
@@ -280,7 +281,8 @@ export async function resetPassword(email: string) {
       const htmlContent = `
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
           <div style="text-align: center; margin-bottom: 20px;">
-            <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Recuperá tu contraseña</h1>
+          <img src="https://planazo.online/logo-planazo.png" alt="Planazo Logo" style="width: 160px; height: auto; margin-bottom: 15px;" />
+          <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Recuperá tu contraseña</h1>
           </div>
           <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola,</p>
           <p style="color: #334155; font-size: 16px; line-height: 1.5;">Recibimos una solicitud para restablecer la contraseña de tu cuenta en Planazo. Podés crear una nueva haciendo clic en el siguiente botón:</p>
