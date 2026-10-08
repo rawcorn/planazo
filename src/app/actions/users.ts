@@ -12,7 +12,7 @@ async function sendSecurityAlertEmail(oldEmail: string, newEmail: string, userna
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: #ef4444; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Aviso de seguridad</h1>
+        <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Aviso de seguridad</h1>
       </div>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
       <p style="color: #334155; font-size: 16px; line-height: 1.5;">El correo asociado a tu cuenta de Planazo acaba de ser cambiado.</p>
@@ -20,10 +20,9 @@ async function sendSecurityAlertEmail(oldEmail: string, newEmail: string, userna
         <p style="margin: 0; color: #475569; font-size: 14px;">Correo anterior: <strong>${oldEmail}</strong></p>
         <p style="margin: 8px 0 0 0; color: #475569; font-size: 14px;">Nuevo correo: <strong>${newEmail}</strong></p>
       </div>
-      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Si fuiste vos quien hizo este cambio, podés ignorar este correo sin problemas.</p>
       <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
       <p style="color: #ef4444; font-size: 16px; line-height: 1.5; font-weight: bold; text-align: center;">¿No fuiste vos?</p>
-      <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">Si alguien cambió tu correo sin tu permiso, respondé a este mail inmediatamente para que nuestro equipo de soporte bloquee la cuenta y revierta los cambios.</p>
+      <p style="color: #64748b; font-size: 14px; text-align: center; margin: 0;">Si no fuiste vos quien hizo este cambio, respondé a este mail para que bloqueemos temporalmente tu cuenta y revirtamos el cambio.</p>
     </div>
   `;
 
