@@ -187,7 +187,7 @@ export async function signIn(data: any) {
     if (!identifier.includes('@')) {
       const username = identifier.toLowerCase().trim();
       const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-      const adminSupabase = SUPABASE_SERVICE_ROLE_KEY ? createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, { auth: { autoRefreshToken: false, persistSession: false } }) : supabase;
+      const adminSupabase = SUPABASE_SERVICE_ROLE_KEY ? createAdminClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY, { auth: { autoRefreshToken: false, persistSession: false } }) : supabase;
       
       const { data: userProfile } = await adminSupabase
         .from('users')
@@ -246,7 +246,7 @@ export async function resetPassword(email: string) {
     }
 
     const supabaseAdmin = createAdminClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
       SUPABASE_SERVICE_ROLE_KEY,
       { auth: { autoRefreshToken: false, persistSession: false } }
     );
