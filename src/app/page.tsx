@@ -28,6 +28,13 @@ export default function Home() {
   const fetchMessagesForRoom = useUIStore(state => state.fetchMessagesForRoom)
   const loadCatalogs = useUIStore(state => state.loadCatalogs)
 
+  // Switch to login view when logged out
+  useEffect(() => {
+    if (!currentUser) {
+      setAuthMode('login');
+    }
+  }, [currentUser]);
+
   useEffect(() => {
     async function initApp() {
       try {

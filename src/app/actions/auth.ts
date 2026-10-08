@@ -253,7 +253,7 @@ export async function resetPassword(email: string) {
 
     const { data: userProfile } = await supabaseAdmin
       .from('users')
-      .select('id')
+      .select('id, username')
       .eq('email', email)
       .maybeSingle()
 
@@ -284,7 +284,7 @@ export async function resetPassword(email: string) {
           <img src="https://planazo.online/logo-planazo.png" alt="Planazo Logo" style="width: 160px; height: auto; margin-bottom: 15px;" />
           <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Recuperá tu contraseña</h1>
           </div>
-          <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola,</p>
+          <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${userProfile.username || 'Usuario'}</strong>,</p>
           <p style="color: #334155; font-size: 16px; line-height: 1.5;">Recibimos una solicitud para restablecer la contraseña de tu cuenta en Planazo. Podés crear una nueva haciendo clic en el siguiente botón:</p>
           <div style="text-align: center; margin: 30px 0;">
             <a href="${actionLink}" style="background-color: #75d1a4; color: white; padding: 14px 28px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 16px; display: inline-block;">Restablecer contraseña</a>
@@ -320,6 +320,45 @@ export async function resetPassword(email: string) {
   } catch (err) {
     console.error(err)
     return { error: 'Error interno del servidor' }
+  }
+}
+
+
+async function sendPasswordChangedEmail(email: string, username: string) {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  if (!RESEND_API_KEY) return;
+
+  const htmlContent = `
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 5px 30px 30px 30px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="https://planazo.online/logo-planazo.png" alt="Planazo Logo" style="width: 160px; height: auto; margin-bottom: 15px;" />
+        <h1 style="color: #75d1a4; font-size: 26px; margin: 0; white-space: nowrap; letter-spacing: -0.5px;">Contraseña actualizada</h1>
+      </div>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Hola <strong>${username}</strong>,</p>
+      <p style="color: #334155; font-size: 16px; line-height: 1.5;">Te avisamos que la contraseña de tu cuenta de Planazo fue modificada exitosamente.</p>
+      <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
+      <p style="color: #ef4444; font-size: 16px; line-height: 1.5; text-align: center;">¿No fuiste vos?</p>
+      <p style="color: #94a3b8; font-size: 12px; text-align: center; margin: 0; line-height: 1.3;">Si no fuiste vos quien hizo este cambio, respondé a este mail para que bloqueemos temporalmente tu cuenta y revirtamos el cambio.</p>
+    </div>
+  `;
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': \`Bearer ${RESEND_API_KEY}\`
+      },
+      body: JSON.stringify({
+        from: 'Planazo <noreply@planazo.online>',
+        to: email,
+        reply_to: 'soporte@planazo.online',
+        subject: 'Aviso de seguridad: Tu contraseña fue cambiada',
+        html: htmlContent
+      })
+    });
+  } catch (error) {
+    console.error('Failed to send password changed email:', error);
   }
 }
 

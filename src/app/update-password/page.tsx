@@ -17,8 +17,8 @@ export default function UpdatePasswordPage() {
     setLoading(true)
     setError('')
 
-    if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.')
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      setError('La contraseña debe tener mínimo 8 caracteres, 1 mayúscula y 1 carácter especial.')
       setLoading(false)
       return
     }
@@ -59,7 +59,7 @@ export default function UpdatePasswordPage() {
                   required 
                   type="password" 
                   className="w-full bg-[#E4E6F8] border-[1.5px] border-[#8D96D6] rounded-full px-5 py-3 text-sm text-[#3F3F46] outline-none focus:ring-2 focus:ring-[#727CB5] transition-all" 
-                  placeholder="Mínimo 6 caracteres" 
+                  placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 especial" 
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
                 />
