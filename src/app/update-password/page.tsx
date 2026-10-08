@@ -13,16 +13,26 @@ export default function UpdatePasswordPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    supabase.auth.getSession()
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY') {
-        console.log('Recovery session ready');
+    // Automatically handle the hash manually in case SSR router strips it
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token')) {
+      const params = new URLSearchParams(hash.substring(1));
+      const access_token = params.get('access_token');
+      const refresh_token = params.get('refresh_token');
+      if (access_token && refresh_token) {
+        supabase.auth.setSession({ access_token, refresh_token }).then(({ data, error }) => {
+          if (error || !data.session) setHasToken(false);
+        });
       }
-    })
-    return () => subscription.unsubscribe()
+    } else {
+      supabase.auth.getSession().then(({ data }) => {
+        if (!data.session) setHasToken(false);
+      })
+    }
   }, [])
   const router = useRouter()
   const [password, setPassword] = useState('')
+  const [hasToken, setHasToken] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -66,7 +76,13 @@ export default function UpdatePasswordPage() {
         </div>
 
         <div className="px-7 pb-8 pt-6">
-          {!success ? (
+          {!hasToken ? (
+            <div className="text-center space-y-4">
+              <div className="p-3 bg-red-100 text-red-700 text-[11.5px] leading-tight rounded-xl font-medium">
+                El enlace de recuperación es inválido o ya expiró. Por favor solicitá uno nuevo.
+              </div>
+            </div>
+          ) : !success ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && <div className="p-3 bg-red-100 text-red-600 text-[11.5px] leading-tight rounded-xl text-center font-medium">{error}</div>}
               
