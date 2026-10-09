@@ -57,6 +57,8 @@ export const LoginView = ({ onSwitchToRegister }: { onSwitchToRegister: () => vo
         } else if (state.regions.length > 0) {
           state.setActiveRoom(state.regions[0].room_id);
         }
+      } else {
+        setError('No se pudo cargar el perfil del usuario.');
       }
     } catch (err: any) {
       setError('Error de conexión');
