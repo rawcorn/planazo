@@ -123,8 +123,7 @@ export async function getCurrentUser() {
         gender: user.user_metadata?.gender || 'X',
         region: user.user_metadata?.region || 'CABA',
         instagram: user.user_metadata?.instagram || null,
-          // @ts-ignore
-tiktok: user.user_metadata?.tiktok || null,
+          
         facebook: user.user_metadata?.facebook || null,
         avatar_url: user.user_metadata?.avatar_url || null
       }).select().single();
@@ -144,10 +143,7 @@ tiktok: user.user_metadata?.tiktok || null,
         updates.instagram = user.user_metadata.instagram;
         needsUpdate = true;
       }
-      if (user.user_metadata?.tiktok && (profile as any).tiktok !== user.user_metadata.tiktok) {
-        updates.tiktok = user.user_metadata.tiktok;
-        needsUpdate = true;
-      }
+      
     if (user.user_metadata?.avatar_url && profile.avatar_url !== user.user_metadata.avatar_url) {
       updates.avatar_url = user.user_metadata.avatar_url;
       needsUpdate = true;
