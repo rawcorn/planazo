@@ -5,7 +5,7 @@ import { uploadImage } from '@/app/actions/storage';
 import { Eye, EyeOff, ChevronDown } from 'lucide-react';
 
 import { signUp, signIn, registerFullFlow } from '@/app/actions/auth';
-import { getCurrentUser, updateUserInterests } from '@/app/actions/users';
+import { getCurrentUser, updateUserInterests, updateProfile } from '@/app/actions/users';
 import { signUpSchema } from '@/lib/validations';
 
 export const RegisterView = ({ onSwitchToLogin }: { onSwitchToLogin: () => void }) => {
@@ -130,37 +130,19 @@ tiktok: '', facebook: ''
     setLoading(true);
 
     try {
-      let finalAvatarUrl = formData.avatarUrl;
-      if (formData.avatarFile) {
-        try {
-          const uploadFormData = new FormData();
-          uploadFormData.append('file', formData.avatarFile);
-          uploadFormData.append('bucket', 'avatars');
-          const uploadedUrl = await uploadImage(uploadFormData);
-          if (uploadedUrl) {
-             finalAvatarUrl = uploadedUrl;
-          }
-        } catch (e: any) {
-          console.error("Upload Image Error:", e);
-          setGlobalError('No se pudo subir la foto de perfil. Intenta con una imagen más liviana (Máx. 4MB).');
-          setLoading(false);
-          return;
-        }
-      }
-
       let res;
       try {
         res = await registerFullFlow({
           ...parsed.data,
-          avatarUrl: finalAvatarUrl,
+          avatarUrl: '', // Se sube despuAs
           instagram: formData.instagram,
-            // @ts-ignore
-tiktok: formData.tiktok,
-            facebook: formData.facebook
+          // @ts-ignore
+          tiktok: formData.tiktok,
+          facebook: formData.facebook
         }, formData.interests);
       } catch (e: any) {
         console.error("Register Error:", e);
-        setGlobalError('Fallo de conexión en Vercel. Asegúrate de haber agregado NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en las Environment Variables de tu proyecto en Vercel.');
+        setGlobalError('Error de red al intentar registrar. ' + (e?.message || ''));
         setLoading(false);
         return;
       }
@@ -187,6 +169,22 @@ tiktok: formData.tiktok,
         }
         setGlobalError(res.error);
         return;
+      }
+
+      // 2. Usuario ya logueado, subimos foto
+      if (formData.avatarFile) {
+        try {
+          const uploadFormData = new FormData();
+          uploadFormData.append('file', formData.avatarFile);
+          uploadFormData.append('bucket', 'avatars');
+          const uploadedUrl = await uploadImage(uploadFormData);
+          if (uploadedUrl) {
+             await updateProfile({ avatar_url: uploadedUrl });
+          }
+        } catch (e: any) {
+          console.error("Upload Image Error:", e);
+          // Ignoramos y dejamos pasar
+        }
       }
 
       let userRes;
